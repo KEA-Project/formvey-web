@@ -26,6 +26,7 @@ const Container = styled.div`
   width: 100vw;
   height: 1000px;
   align-items: center;
+  padding-top: 60px;
 `;
 
 const Slogan = styled.div`
