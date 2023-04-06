@@ -3,6 +3,7 @@ import Header from "../components/common/Header";
 import styled from "@emotion/styled";
 import LoginTextInput from "../components/login/LoginTextInput";
 import kaBtn from "../assets/login/kakao_login_btn.png";
+import { Link } from "react-router-dom";
 
 function Login() {
   return (
@@ -11,11 +12,17 @@ function Login() {
       <Container>
         <LoginSection>
           <LoginTitle>Login</LoginTitle>
-          <LoginTextInput placeholder="이메일" />
-          <LoginTextInput placeholder="비밀번호" />
+          <TextInputContainer>
+            <LoginTextInput placeholder="이메일" />
+          </TextInputContainer>
+          <TextInputContainer>
+            <LoginTextInput placeholder="비밀번호" />
+          </TextInputContainer>
           <BtnsContainer>
             <LoginBtn>로그인</LoginBtn>
-            <SigninBtn>회원가입</SigninBtn>
+            <Link to="/signin">
+              <SigninBtn>회원가입</SigninBtn>
+            </Link>
           </BtnsContainer>
           <Line />
           <KaBtn src={kaBtn} />
@@ -34,7 +41,7 @@ const Container = styled.div`
   width: 100vw;
   height: 1000px;
   align-items: center;
-  //padding-top: 60px;
+  padding-top: 60px;
 `;
 
 const LoginSection = styled.div`
@@ -42,7 +49,6 @@ const LoginSection = styled.div`
   padding-top: 59px;
   width: 550px;
   height: 646px;
-  opacity: 1;
   border: 0.1px solid #000000;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
@@ -59,6 +65,10 @@ const LoginTitle = styled.div`
   font-size: 30px;
   color: black;
   margin-bottom: 28px;
+`;
+
+const TextInputContainer = styled.div`
+  margin-top: 23px;
 `;
 
 const BtnsContainer = styled.div`
@@ -92,6 +102,7 @@ const SigninBtn = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
+  color: black;
 `;
 
 const Line = styled.hr`
