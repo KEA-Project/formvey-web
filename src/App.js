@@ -1,5 +1,6 @@
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import Signin from "./pages/Signin";
 import { Route, Routes } from "react-router-dom";
 import styled from "@emotion/styled";
 import "./App.css";
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Signin />} />
       </Routes>
     </Container>
   );

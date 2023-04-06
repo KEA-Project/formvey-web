@@ -20,7 +20,7 @@ const Input = styled.input`
   padding-left: 19px;
   padding-right: 19px;
 
-  margin-top: 23px;
+  //margin-top: 23px;
 `;
 
 export default LoginTextInput;
