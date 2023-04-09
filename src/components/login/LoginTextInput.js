@@ -2,11 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 
 function LoginTextInput(props) {
-  return (
-    <>
-      <Input placeholder={props.placeholder} />
-    </>
-  );
+  return <Input placeholder={props.placeholder} />;
 }
 
 const Input = styled.input`

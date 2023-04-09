@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
-import LoginTextInput from "../components/login/LoginTextInput";
+//import LoginTextInput from "../components/login/LoginTextInput";
 import kaBtn from "../assets/login/kakao_login_btn.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [PW, setPW] = useState("");
+
+  const loginBtnClicked = async () => {
+    const result = await axios.post(`http://localhost:8080/login`, {
+      email: email,
+      password: PW,
+    });
+
+    console.log(result.data);
+
+    if (result.data.isSuccess) {
+      //const response = result.data.result;
+
+      navigate("/main");
+    } else {
+      alert("invalid user!");
+    }
+  };
+
   return (
     <>
       <Header />
@@ -13,15 +36,26 @@ function Login() {
         <LoginSection>
           <LoginTitle>Login</LoginTitle>
           <TextInputContainer>
-            <LoginTextInput placeholder="이메일" />
+            <Input
+              placeholder="이메일"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
           </TextInputContainer>
           <TextInputContainer>
-            <LoginTextInput placeholder="비밀번호" />
+            <Input
+              placeholder="비밀번호"
+              type="password"
+              onChange={(e) => {
+                setPW(e.target.value);
+              }}
+            />
           </TextInputContainer>
           <BtnsContainer>
-            <LoginBtn>로그인</LoginBtn>
-            <Link to="/signin">
-              <SigninBtn>회원가입</SigninBtn>
+            <LoginBtn onClick={loginBtnClicked}>로그인</LoginBtn>
+            <Link to="/signup">
+              <SignupBtn>회원가입</SignupBtn>
             </Link>
           </BtnsContainer>
           <Line />
@@ -71,6 +105,20 @@ const TextInputContainer = styled.div`
   margin-top: 23px;
 `;
 
+const Input = styled.input`
+  width: 336px;
+  height: 48px;
+  background: #f7f7f7;
+  border: 0.3px solid #000000;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 15px;
+  padding-left: 19px;
+  padding-right: 19px;
+
+  //margin-top: 23px;
+`;
+
 const BtnsContainer = styled.div`
   margin-top: 29px;
   width: 335px;
@@ -89,9 +137,11 @@ const LoginBtn = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
+
+  cursor: pointer;
 `;
 
-const SigninBtn = styled.div`
+const SignupBtn = styled.div`
   width: 156px;
   height: 48px;
   line-height: 48px;

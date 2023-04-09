@@ -1,8 +1,9 @@
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
-import Signin from "./pages/Signin";
+import SignUp from "./pages/SignUp";
 import { Route, Routes } from "react-router-dom";
 import styled from "@emotion/styled";
+import Main from "./pages/Main";
 import "./App.css";
 
 function App() {
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/main" element={<Main />} />
       </Routes>
     </Container>
   );
