@@ -13,7 +13,7 @@ function Login() {
   const [PW, setPW] = useState("");
 
   const loginBtnClicked = async () => {
-    const result = await axios.post(`http://localhost:8080/login`, {
+    const result = await axios.post(`http://formvey.site:9000/login`, {
       email: email,
       password: PW,
     });
