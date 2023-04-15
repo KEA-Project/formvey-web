@@ -29,12 +29,16 @@ function SignUp() {
     //console.log(`${email} ${nickname} ${PW} ${confirmPW} ${phone}`);
 
     if (PW === confirmPW) {
-      const result = await axios.post(`http://localhost:8080/members/signup`, {
-        email: email,
-        nickname: nickname,
-        password: PW,
-        phone: phone,
-      });
+      const result = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/members/signup`,
+        {
+          email: email,
+          nickname: nickname,
+          password: PW,
+        }
+      );
+
+      console.log(result.data);
 
       if (result.data.isSuccess) {
         navigate("/login");
@@ -76,16 +80,6 @@ function SignUp() {
               </div>
             );
           })}
-
-          <ItemContainer>
-            <div>휴대폰 번호 (챗봇 제공용)</div>
-            <Input
-              placeholder="ex) 01012345678"
-              onChange={(e) => {
-                setPhone(e.target.value);
-              }}
-            />
-          </ItemContainer>
           <Btn onClick={signupBtnClicked}>가입하기</Btn>
         </SigninSection>
       </Container>
@@ -97,7 +91,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 1000px;
+  height: 800px;
   align-items: center;
   padding-top: 60px;
 `;
@@ -106,7 +100,7 @@ const SigninSection = styled.div`
   margin-top: 35px;
   padding-top: 19px;
   width: 550px;
-  height: 671px;
+  height: 580px;
   border: 0.1px solid #000000;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;

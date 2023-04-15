@@ -13,10 +13,13 @@ function Login() {
   const [PW, setPW] = useState("");
 
   const loginBtnClicked = async () => {
-    const result = await axios.post(`http://formvey.site:9000/login`, {
-      email: email,
-      password: PW,
-    });
+    const result = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/login/email`,
+      {
+        email: email,
+        password: PW,
+      }
+    );
 
     console.log(result.data);
 
@@ -25,7 +28,7 @@ function Login() {
 
       navigate("/main");
     } else {
-      alert("invalid user!");
+      alert(result.data.message);
     }
   };
 
