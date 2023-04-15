@@ -21,11 +21,11 @@ function Login() {
       }
     );
 
-    console.log(result.data);
+    console.log(result.data.result);
 
     if (result.data.isSuccess) {
-      //const response = result.data.result;
-
+      localStorage.setItem("jwt", result.data.result.jwt);
+      localStorage.setItem("memberId", result.data.result.id);
       navigate("/main");
     } else {
       alert(result.data.message);
