@@ -36,9 +36,11 @@ const Container = styled.div`
 
 const DescAnim = keyframes`
   0%{
+    opacity: 0;
     margin-bottom: 200px;
   }
   100%{
+    opacity: 1;
     margin-bottom: 0px;
   }
 `;

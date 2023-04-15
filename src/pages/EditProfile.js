@@ -1,37 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
-//import LoginTextInput from "../components/login/LoginTextInput";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+function EditProfile() {
+  const getUserInfo = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/members/info/${localStorage.getItem(
+        "memberId"
+      )}`
+    );
+
+    console.log(response.data);
+    setNickname(response.data.result.nickname);
+
+    var temp = [...requiredItem];
+    temp[0].value = response.data.result.nickname;
+
+    setRequiredItem(temp);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   const navigate = useNavigate();
 
-  const requiredItem = [
-    { key: 0, name: "이메일", placeholder: "ex) formvey@google.com" },
-    { key: 1, name: "닉네임", placeholder: "ex) 송재민" },
-    { key: 2, name: "비밀번호", placeholder: "대 소문자 + 숫자 (8자 이상)" },
+  const [requiredItem, setRequiredItem] = useState([
+    { key: 0, name: "닉네임", placeholder: "ex) 송재민", value: "" },
     {
-      key: 3,
+      key: 1,
+      name: "비밀번호",
+      placeholder: "대 소문자 + 숫자 (8자 이상)",
+      value: "",
+    },
+    {
+      key: 2,
       name: "비밀번호 확인",
       placeholder: "대 소문자 + 숫자 (8자 이상)",
+      value: "",
     },
-  ];
+  ]);
 
-  const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [PW, setPW] = useState("");
   const [confirmPW, setConfirmPW] = useState("");
 
-  const signupBtnClicked = async () => {
-    //console.log(`${email} ${nickname} ${PW} ${confirmPW} ${phone}`);
-
+  const editBtnClicked = async () => {
     if (PW === confirmPW) {
-      const result = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/members/signup`,
+      const result = await axios.patch(
+        `${process.env.REACT_APP_BASE_URL}/members/edit/${localStorage.getItem(
+          "memberId"
+        )}`,
         {
-          email: email,
           nickname: nickname,
           password: PW,
         }
@@ -40,7 +62,7 @@ function SignUp() {
       console.log(result.data);
 
       if (result.data.isSuccess) {
-        navigate("/login");
+        navigate(-1);
       } else {
         alert(result.data.message);
       }
@@ -54,7 +76,7 @@ function SignUp() {
       <Header />
       <Container>
         <SigninSection>
-          <SigninTitle>Sign up</SigninTitle>
+          <SigninTitle>Edit Profile</SigninTitle>
           {requiredItem.map((a, i) => {
             return (
               <div key={a.key}>
@@ -64,13 +86,12 @@ function SignUp() {
                   </div>
                   <Input
                     placeholder={a.placeholder}
-                    type={i === 2 || i === 3 ? "password" : "email"}
+                    defaultValue={a.value}
+                    type={i === 1 || i === 2 ? "password" : "email"}
                     onChange={(e) => {
                       i === 0
-                        ? setEmail(e.target.value)
-                        : i === 1
                         ? setNickname(e.target.value)
-                        : i === 2
+                        : i === 1
                         ? setPW(e.target.value)
                         : setConfirmPW(e.target.value);
                     }}
@@ -79,7 +100,7 @@ function SignUp() {
               </div>
             );
           })}
-          <Btn onClick={signupBtnClicked}>가입하기</Btn>
+          <Btn onClick={editBtnClicked}>수정하기</Btn>
         </SigninSection>
       </Container>
     </div>
@@ -90,7 +111,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 800px;
+  height: 720px;
   align-items: center;
   padding-top: 60px;
 `;
@@ -99,7 +120,7 @@ const SigninSection = styled.div`
   margin-top: 35px;
   padding-top: 19px;
   width: 550px;
-  height: 580px;
+  height: 500px;
   border: 0.1px solid #000000;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
@@ -157,4 +178,4 @@ const Btn = styled.div`
   cursor: pointer;
 `;
 
-export default SignUp;
+export default EditProfile;
