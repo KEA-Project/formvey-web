@@ -23,7 +23,6 @@ function SignUp() {
   const [nickname, setNickname] = useState("");
   const [PW, setPW] = useState("");
   const [confirmPW, setConfirmPW] = useState("");
-  const [phone, setPhone] = useState("");
 
   const signupBtnClicked = async () => {
     //console.log(`${email} ${nickname} ${PW} ${confirmPW} ${phone}`);
