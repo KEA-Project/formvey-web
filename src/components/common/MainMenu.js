@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import logo from "../../assets/common/logo.png";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -36,7 +37,9 @@ function MainMenu() {
     <Container>
       <Logo src={logo} />
       <UserName>{userName}</UserName>
-      <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
+      <Link to="/editprofile">
+        <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
+      </Link>
       {menu.map((a, i) => {
         return selected === i ? (
           <SelectedMenuBtn>{a}</SelectedMenuBtn>
@@ -75,6 +78,7 @@ const UserName = styled.div`
   margin-top: 27px;
   font-weight: 700;
   font-size: 18px;
+  color: #444444;
 `;
 
 const ModifyProfileBtn = styled.div`
@@ -90,6 +94,7 @@ const ModifyProfileBtn = styled.div`
   align-items: center;
   margin-bottom: 30px;
   cursor: pointer;
+  color: black;
 `;
 
 const MenuBtn = styled.div`
@@ -101,6 +106,7 @@ const MenuBtn = styled.div`
   font-size: 18px;
   color: #444444;
   margin-top: 20px;
+  cursor: pointer;
 `;
 
 const SelectedMenuBtn = styled.div`
@@ -114,6 +120,7 @@ const SelectedMenuBtn = styled.div`
   margin-top: 20px;
   background: #ffffff;
   border-radius: 10px;
+  cursor: pointer;
 `;
 
 export default MainMenu;
