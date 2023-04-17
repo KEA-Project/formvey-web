@@ -5,6 +5,7 @@ import EditProfile from "./pages/EditProfile";
 import { Route, Routes } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "./pages/Main";
+import FormGPT from "./components/Build/FormGPT";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/editprofile" element={<EditProfile />} />
         <Route path="/main" element={<Main />} />
+        <Route path="/formgpt" element={<FormGPT />} />
       </Routes>
     </Container>
   );
