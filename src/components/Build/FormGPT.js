@@ -4,6 +4,9 @@ import xBtn from "../../assets/common/x_button.png";
 import sendBtn from "../../assets/formgpt/send_btn.png";
 import createBtn from "../../assets/formgpt/create_question_btn.png";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { css } from "@emotion/react";
 
 function FormGPT(props) {
   const scrollRef = useRef();
@@ -29,21 +32,6 @@ function FormGPT(props) {
       msg: "설문조사 키워드를 입력해주세요! (ex.풋살장 증설 수요도 조사)",
       from: "gpt",
     },
-    {
-      msg: [
-        "1. 만족도에 대한 전반적인 평가를 해주세요.",
-        "2. 제품의 성능에 대해 어떻게 생각하시나요?",
-        "3. 제품의 디자인에 대해 어떻게 생각하시나요?",
-        "4. 제품의 편의성에 대해 어떻게 생각하시나요?",
-        "5. 제품의 가격 대비 만족도에 대해 어떻게 생각하시나요?",
-        "6. 제품을 사용함으로써 얻을 수 있는 기능에 대해 어떻게 생각하시나요?",
-        "7. 제품 구매 전 구체적인 정보에 대해 어떻게 생각하시나요?",
-        "8. 제품을 구매한 후 얻은 서비스에 대해 어떻게 생각하시나요?",
-        "9. 제품을 추천하고 싶은가요?",
-        "10. 제품에 대한 추가적인 의견이나 개선사항이 있다면 알려주세요.",
-      ],
-      from: "gptAns",
-    },
   ]);
 
   const [currentMsg, setCurrentMsg] = useState("");
@@ -51,7 +39,13 @@ function FormGPT(props) {
   /*선택된 질문문항들*/
   const [selectedList, setSelectedList] = useState([]);
 
+  /*폼 gpt 로딩 스피너 보이기*/
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const sendGPT = async (msg) => {
+    //응답 오기 전까지 스피너 출력
+    setShowSpinner(true);
+
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
@@ -75,6 +69,9 @@ function FormGPT(props) {
         },
       }
     );
+
+    //응답 받고 스피너 숨기기
+    setShowSpinner(false);
 
     //console.log(response.data.choices[0].message.content.split("\n"));
     const temp = [...chatList];
@@ -140,6 +137,15 @@ function FormGPT(props) {
         />
       </Header>
       <Body ref={scrollRef}>
+        {showSpinner ? (
+          <FontAwesomeIcon
+            icon={faSpinner}
+            spinPulse
+            size="2xl"
+            className="spinner"
+          />
+        ) : null}
+
         {chatList.map((a, i) => {
           return a.from === "me" ? (
             <SentMsg>{a.msg}</SentMsg>
@@ -244,6 +250,14 @@ const Body = styled.div`
   width: 100%;
   background: #f1f2f4;
   overflow-y: scroll;
+
+  .spinner {
+    color: #6e91f1;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const Bottom = styled.div`
