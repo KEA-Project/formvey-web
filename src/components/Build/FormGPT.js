@@ -2,11 +2,27 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "@emotion/styled";
 import xBtn from "../../assets/common/x_button.png";
 import sendBtn from "../../assets/formgpt/send_btn.png";
+import createBtn from "../../assets/formgpt/create_question_btn.png";
 import axios from "axios";
 import { Configuration, OpenAIApi } from "openai";
 
 function FormGPT() {
   const scrollRef = useRef();
+  /**{
+      msg: [
+        "1. 만족도에 대한 전반적인 평가를 해주세요.",
+        "2. 제품의 성능에 대해 어떻게 생각하시나요?",
+        "3. 제품의 디자인에 대해 어떻게 생각하시나요?",
+        "4. 제품의 편의성에 대해 어떻게 생각하시나요?",
+        "5. 제품의 가격 대비 만족도에 대해 어떻게 생각하시나요?",
+        "6. 제품을 사용함으로써 얻을 수 있는 기능에 대해 어떻게 생각하시나요?",
+        "7. 제품 구매 전 구체적인 정보에 대해 어떻게 생각하시나요?",
+        "8. 제품을 구매한 후 얻은 서비스에 대해 어떻게 생각하시나요?",
+        "9. 제품을 추천하고 싶은가요?",
+        "10. 제품에 대한 추가적인 의견이나 개선사항이 있다면 알려주세요.",
+      ],
+      from: "gptAns",
+    },*/
   const [chatList, setChatList] = useState([
     {
       msg: "설문조사 키워드를 입력해주세요! (ex.풋살장 증설 수요도 조사)",
@@ -41,12 +57,15 @@ function FormGPT() {
       }
     );
 
-    //console.log(response.data.choices[0].message.content);
+    //console.log(response.data.choices[0].message.content.split("\n"));
     const temp = [...chatList];
     temp.push({ msg: msg, from: "me" });
-    temp.push({ msg: response.data.choices[0].message.content, from: "gpt" });
+    temp.push({
+      msg: response.data.choices[0].message.content.split("\n"),
+      from: "gptAns",
+    });
     setChatList(temp);
-    console.log(chatList);
+    //console.log(chatList);
   };
 
   const sendMsg = async () => {
@@ -76,8 +95,31 @@ function FormGPT() {
         {chatList.map((a, i) => {
           return a.from === "me" ? (
             <SentMsg>{a.msg}</SentMsg>
-          ) : (
+          ) : a.from === "gpt" ? (
             <ReceivedMsg>{a.msg}</ReceivedMsg>
+          ) : (
+            <FlexDiv>
+              <ReceivedMsg>
+                {a.msg.map((a, i) => {
+                  if (i === 0) {
+                    return (
+                      <div>
+                        <input type="checkbox" />
+                        {a.substr(a.indexOf(".") + 1)}
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <SelectQuestion>
+                        <input type="checkbox" />
+                        {a.substr(a.indexOf(".") + 1)}
+                      </SelectQuestion>
+                    );
+                  }
+                })}
+              </ReceivedMsg>
+              <CreateBtn src={createBtn} />
+            </FlexDiv>
           );
         })}
       </Body>
@@ -104,6 +146,10 @@ const Container = styled.div`
   height: 604.8px;
   background: #f1f2f4;
   border-radius: 10px;
+  position: fixed;
+  bottom: 30px;
+  z-index: 999;
+  left: 110px;
 `;
 
 const Header = styled.div`
@@ -160,22 +206,45 @@ const SendBtn = styled.img`
 const SentMsg = styled.div`
   width: 231px;
   height: auto;
-  padding: 5px 5px 10px 10px;
+  padding: 10px 10px 10px 10px;
   background: #cedcff;
   margin-top: 15px;
   border-radius: 10px;
   margin-left: 120px;
   border-bottom-right-radius: 10px;
+  font-size: 15px;
 `;
 
 const ReceivedMsg = styled.div`
   width: 231px;
   height: auto;
-  padding: 5px 5px 10px 10px;
+  padding: 10px 10px 10px 10px;
   background: white;
   margin-top: 15px;
   border-radius: 10px;
   margin-left: 10px;
+  font-size: 15px;
+`;
+
+const SelectQuestion = styled.div`
+  margin-top: 10px;
+`;
+
+const CreateBtn = styled.img`
+  width: 40px;
+  height: 40px;
+  bottom: 0px;
+  left: 250px;
+  //box-shadow: inset 0px -3px 10px rgba(0, 0, 0, 0.3),
+    inset 3px 2px 10px rgba(255, 255, 255, 0.45);
+  filter: drop-shadow(0px 10px 40px rgba(251, 251, 251, 0.3));
+  position: absolute;
+  cursor: pointer;
+`;
+
+const FlexDiv = styled.div`
+  display: flex;
+  position: relative;
 `;
 
 export default FormGPT;
