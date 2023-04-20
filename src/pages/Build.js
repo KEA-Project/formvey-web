@@ -32,6 +32,8 @@ function Build() {
       isEssential: false,
     },*/
   const [questionList, setQuestionList] = useState([]);
+  const [title, setTitle] = useState(""); //설문 제목
+  const [desc, setDesc] = useState(""); //설문 설명
 
   const addGPTQuestion = (selectedList) => {
     var temp = [...questionList];
@@ -94,10 +96,20 @@ function Build() {
     setQuestionList(temp);
   };
 
+  //객관식 보기 내용 넣기
+  const addOptionContent = (e, i, j) => {
+    var temp = [...questionList];
+    temp[i].select[j] = e.target.value;
+
+    setQuestionList(temp);
+  };
+
   //객관식 보기 삭제
   const deleteOption = (i, j) => {
+    console.log(j);
     var temp = [...questionList];
-    temp[i].select.pop(j);
+    console.log(temp[i].select);
+    temp[i].select.splice(j, 1);
 
     setQuestionList(temp);
   };
@@ -127,8 +139,18 @@ function Build() {
         {/*설문조사 제목 + 설명*/}
         <FormContainer>
           <FormHeader>
-            <FormTitle placeholder="제목을 입력해주세요" />
-            <FormDesc placeholder="설문조사 설명을 입력해주세요" />
+            <FormTitle
+              placeholder="제목을 입력해주세요"
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            />
+            <FormDesc
+              placeholder="설문조사 설명을 입력해주세요"
+              onChange={(e) => {
+                setDesc(e.target.value);
+              }}
+            />
           </FormHeader>
           {/*설문조사 각 문항*/}
           {questionList.map((a, i) => {
@@ -141,7 +163,7 @@ function Build() {
                 >
                   <QuestionNumber>Q{i + 1}. </QuestionNumber>
                   <QuestionTitle
-                    placeholder="질문을 입력해주세요."
+                    placeholder="질문을 입력해주세요"
                     defaultValue={a.title}
                   />
                   <br />
@@ -150,12 +172,16 @@ function Build() {
                       {a.select.map((a, j) => {
                         return (
                           <OptionContainer>
-                            <XBtn onClick={() => deleteOption(i, j)}>x</XBtn>
                             <OptionSelect />
                             <OptionContent
                               placeholder="보기를 입력해주세요"
                               defaultValue={a}
+                              onChange={(e) => {
+                                addOptionContent(e, i, j);
+                              }}
+                              value={a}
                             />
+                            <XBtn onClick={() => deleteOption(i, j)}>x</XBtn>
                           </OptionContainer>
                         );
                       })}
@@ -334,7 +360,7 @@ const XBtn = styled.span`
   font-size: 15px;
   color: red;
   cursor: pointer;
-  position: absolute;
+  //position: absolute;
 `;
 
 const PlusBtn = styled.img`
