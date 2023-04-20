@@ -2,9 +2,11 @@ import React from "react";
 import styled from "@emotion/styled";
 import logo from "../../assets/common/logo.png";
 import labtopMock from "../../assets/landing/labtop_mock.png";
-import { Keyframes, keyframes } from "@emotion/react";
+import { keyframes } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 function Section1() {
+  const navigate = useNavigate();
   return (
     <Container>
       <Slogan>
@@ -15,7 +17,17 @@ function Section1() {
         설문조사 플랫폼
       </Slogan>
       <Logo src={logo} />
-      <Btn>시작하기</Btn>
+      <Btn
+        onClick={() => {
+          if (localStorage.getItem("jwt") === null) {
+            navigate("/login");
+          } else {
+            navigate("/main");
+          }
+        }}
+      >
+        시작하기
+      </Btn>
       <LabtopMock src={labtopMock} />
     </Container>
   );

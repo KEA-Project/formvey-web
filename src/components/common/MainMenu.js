@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import logo from "../../assets/common/logo.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import logoutIcon from "../../assets/common/logout_icon.png";
+//import * as Functions from "../../Functions.js";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
 
   const getUserInfo = async () => {
     const response = await axios.get(
@@ -21,6 +25,32 @@ function MainMenu() {
   useEffect(() => {
     getUserInfo();
   }, []);
+
+  /*함수 재사용 하려면 어떻게 해야되지?*/
+  const logoutBtnClicked = async () => {
+    const response = await axios.patch(
+      `${process.env.REACT_APP_BASE_URL}/logout/${localStorage.getItem(
+        "memberId"
+      )}`,
+      {},
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+
+    console.log(response);
+
+    if (response.data.isSuccess) {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("memberId");
+
+      navigate("/");
+    } else {
+      alert(response.data.message);
+    }
+  };
 
   const menu = [
     "메인",
@@ -53,6 +83,10 @@ function MainMenu() {
           </MenuBtn>
         );
       })}
+      <LogoutContainer onClick={logoutBtnClicked}>
+        <LogoutIcon src={logoutIcon} />
+        <LogoutText>로그아웃</LogoutText>
+      </LogoutContainer>
     </Container>
   );
 }
@@ -116,11 +150,37 @@ const SelectedMenuBtn = styled.div`
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
-  color: #7097ff;
   margin-top: 20px;
-  background: #ffffff;
-  border-radius: 10px;
+  background: #edf2ff;
+  /* emoboss-button-1 */
+
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.06), 4px 4px 8px rgba(0, 0, 0, 0.08),
+    -2px -2px 2px rgba(255, 255, 255, 0.6),
+    -4px -4px 8px rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
   cursor: pointer;
+  color: #7097ff;
+`;
+
+const LogoutContainer = styled.div`
+  display: flex;
+  position: fixed;
+  bottom: 12px;
+  left: 15px;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const LogoutIcon = styled.img`
+  width: 18px;
+  height: 18px;
+`;
+
+const LogoutText = styled.div`
+  font-weight: 700;
+  font-size: 15px;
+  color: #5280fd;
+  margin-left: 5px;
 `;
 
 export default MainMenu;

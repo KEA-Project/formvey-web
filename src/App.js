@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "./pages/Main";
 import FormGPT from "./components/Build/FormGPT";
+import Build from "./pages/Build";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/editprofile" element={<EditProfile />} />
         <Route path="/main" element={<Main />} />
         <Route path="/formgpt" element={<FormGPT />} />
+        <Route path="/build" element={<Build />} />
       </Routes>
     </Container>
   );
