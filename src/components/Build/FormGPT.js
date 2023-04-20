@@ -4,9 +4,8 @@ import xBtn from "../../assets/common/x_button.png";
 import sendBtn from "../../assets/formgpt/send_btn.png";
 import createBtn from "../../assets/formgpt/create_question_btn.png";
 import axios from "axios";
-import { Configuration, OpenAIApi } from "openai";
 
-function FormGPT() {
+function FormGPT(props) {
   const scrollRef = useRef();
   /**{
       msg: [
@@ -23,14 +22,34 @@ function FormGPT() {
       ],
       from: "gptAns",
     },*/
+
+  /**폼 gpt 세팅 */
   const [chatList, setChatList] = useState([
     {
       msg: "설문조사 키워드를 입력해주세요! (ex.풋살장 증설 수요도 조사)",
       from: "gpt",
     },
+    {
+      msg: [
+        "1. 만족도에 대한 전반적인 평가를 해주세요.",
+        "2. 제품의 성능에 대해 어떻게 생각하시나요?",
+        "3. 제품의 디자인에 대해 어떻게 생각하시나요?",
+        "4. 제품의 편의성에 대해 어떻게 생각하시나요?",
+        "5. 제품의 가격 대비 만족도에 대해 어떻게 생각하시나요?",
+        "6. 제품을 사용함으로써 얻을 수 있는 기능에 대해 어떻게 생각하시나요?",
+        "7. 제품 구매 전 구체적인 정보에 대해 어떻게 생각하시나요?",
+        "8. 제품을 구매한 후 얻은 서비스에 대해 어떻게 생각하시나요?",
+        "9. 제품을 추천하고 싶은가요?",
+        "10. 제품에 대한 추가적인 의견이나 개선사항이 있다면 알려주세요.",
+      ],
+      from: "gptAns",
+    },
   ]);
 
   const [currentMsg, setCurrentMsg] = useState("");
+
+  /*선택된 질문문항들*/
+  const [selectedList, setSelectedList] = useState([]);
 
   const sendGPT = async (msg) => {
     const response = await axios.post(
@@ -78,18 +97,47 @@ function FormGPT() {
     setCurrentMsg("");
   };
 
+  const checkHandler = ({ target }, title) => {
+    console.log(title);
+    console.log(target.checked);
+    var temp = [];
+
+    if (target.checked) {
+      temp = [...selectedList];
+      temp.push(title);
+      setSelectedList(temp);
+    } else {
+      temp = [...selectedList];
+      var i = temp.indexOf(title);
+      temp.splice(i, 1);
+      setSelectedList(temp);
+    }
+  };
+
+  /*선택된 문항들 추가하기*/
+  const addQuestion = () => {
+    //console.log(selectedList);
+    props.addGPTQuestion(selectedList);
+    props.setShowGPT(false);
+  };
+
   /*스크롤 항상 아래로 내리기*/
   useEffect(() => {
     // 현재 스크롤 위치 === scrollRef.current.scrollTop
     // 스크롤 길이 === scrollRef.current.scrollHeight
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  });
+  }, [chatList]);
 
   return (
     <Container>
       <Header>
         <Title>폼GPT</Title>
-        <XBtn src={xBtn} />
+        <XBtn
+          src={xBtn}
+          onClick={() => {
+            props.setShowGPT(false);
+          }}
+        />
       </Header>
       <Body ref={scrollRef}>
         {chatList.map((a, i) => {
@@ -104,21 +152,36 @@ function FormGPT() {
                   if (i === 0) {
                     return (
                       <div>
-                        <input type="checkbox" />
+                        <input
+                          type="checkbox"
+                          onChange={(e) => {
+                            checkHandler(e, a.substr(a.indexOf(".") + 1));
+                          }}
+                        />
                         {a.substr(a.indexOf(".") + 1)}
                       </div>
                     );
                   } else {
                     return (
                       <SelectQuestion>
-                        <input type="checkbox" />
+                        <input
+                          type="checkbox"
+                          onChange={(e) => {
+                            checkHandler(e, a.substr(a.indexOf(".") + 1));
+                          }}
+                        />
                         {a.substr(a.indexOf(".") + 1)}
                       </SelectQuestion>
                     );
                   }
                 })}
               </ReceivedMsg>
-              <CreateBtn src={createBtn} />
+              <CreateBtn
+                src={createBtn}
+                onClick={() => {
+                  addQuestion();
+                }}
+              />
             </FlexDiv>
           );
         })}
@@ -173,6 +236,7 @@ const Title = styled.div`
 const XBtn = styled.img`
   width: 27.36px;
   height: 27.36px;
+  cursor: pointer;
 `;
 
 const Body = styled.div`

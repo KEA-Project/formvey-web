@@ -33,6 +33,21 @@ function Build() {
     },*/
   const [questionList, setQuestionList] = useState([]);
 
+  const addGPTQuestion = (selectedList) => {
+    var temp = [...questionList];
+    for (let i = 0; i < selectedList.length; i++) {
+      temp.push({
+        title: selectedList[i],
+        select: [""],
+        type: "단일선택",
+        isShort: false,
+        isEssential: false,
+      });
+    }
+
+    setQuestionList(temp);
+  };
+
   //문항 추가
   const addQuestion = () => {
     var temp = [...questionList];
@@ -92,7 +107,9 @@ function Build() {
       <Header />
       <Container>
         {/*폼 GPT 관련 부분*/}
-        {showGPT ? <FormGPT /> : null}
+        {showGPT ? (
+          <FormGPT setShowGPT={setShowGPT} addGPTQuestion={addGPTQuestion} />
+        ) : null}
         <GPTBtnContainer>
           <GPTBtn
             src={gptBtn}
