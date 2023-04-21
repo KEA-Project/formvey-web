@@ -48,7 +48,7 @@ function EditProfile() {
   const [confirmPW, setConfirmPW] = useState("");
 
   const editBtnClicked = async () => {
-    if (PW === confirmPW) {
+    if (PW === confirmPW && PW !== "") {
       const result = await axios.patch(
         `${process.env.REACT_APP_BASE_URL}/members/edit/${localStorage.getItem(
           "memberId"
