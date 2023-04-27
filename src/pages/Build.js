@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
-import gptBtn from "../assets/build/gpt_btn.png";
+
 import FormGPT from "../components/Build/FormGPT";
-import plusBtn from "../assets/common/add_btn.png";
-//import QuestionContainer from "../components/Build/QuestionContainer";
+import FormOption from "../components/Build/FormOption";
+import { keyframes } from "@emotion/react";
+
 import Dropdown from "../components/Build/Dropdown";
 import Toggle from "../components/Build/Toggle";
 
+import gptBtn from "../assets/build/gpt_btn.png";
+import plusBtn from "../assets/common/add_btn.png";
+import optionBtn from "../assets/build/option_btn.png";
+
 function Build() {
   const [showGPT, setShowGPT] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+
   /*
     {
       title: "객관식 단일",
@@ -135,6 +142,15 @@ function Build() {
             도움을 요청해보세요!
           </GPTDesc>
         </GPTBtnContainer>
+        {/**옵션 설정 부분*/}
+        <OptionBtn
+          src={optionBtn}
+          onClick={() => {
+            setShowOption(!showOption);
+          }}
+          className={showOption ? "optionOnLeft" : "optionOnRight"}
+        />
+        <FormOption showOption={showOption} />
         {/*설문조사 작성 부분*/}
         {/*설문조사 제목 + 설명*/}
         <FormContainer>
@@ -161,12 +177,13 @@ function Build() {
                     width: "80%",
                   }}
                 >
-                  <QuestionNumber>Q{i + 1}. </QuestionNumber>
-                  <QuestionTitle
-                    placeholder="질문을 입력해주세요"
-                    defaultValue={a.title}
-                  />
-                  <br />
+                  <div style={{}}>
+                    <QuestionNumber>Q{i + 1}. </QuestionNumber>
+                    <QuestionTitle
+                      placeholder="질문을 입력해주세요"
+                      defaultValue={a.title}
+                    />
+                  </div>
                   {a.type === "단일선택" || a.type === "다중선택" ? ( //단일 객관식
                     <>
                       {a.select.map((a, j) => {
@@ -228,6 +245,16 @@ const Container = styled.div`
   padding-top: 60px;
   padding-bottom: 60px;
   width: 100vw;
+
+  .optionOnLeft {
+    right: 290px;
+    transform: rotate(180deg);
+    transition: 0.5s;
+  }
+  .optionOnRight {
+    right: 30px;
+    transition: 0.5s;
+  }
 `;
 
 const GPTBtnContainer = styled.div`
@@ -366,6 +393,15 @@ const XBtn = styled.span`
 const PlusBtn = styled.img`
   width: 40px;
   height: auto;
+  cursor: pointer;
+`;
+
+const OptionBtn = styled.img`
+  width: 50px;
+  height: auto;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
   cursor: pointer;
 `;
 
