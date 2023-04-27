@@ -119,8 +119,9 @@ const ModifyProfileBtn = styled.div`
   margin-top: 11px;
   width: 85px;
   height: 26px;
-  border: 2px solid #a3bcff;
-  border-radius: 10px;
+  background: #f3f7ff;
+  box-shadow: -5px -5px 10px #ffffff, 10px 10px 20px rgba(174, 174, 192, 0.4);
+  border-radius: 98px;
   font-weight: 700;
   font-size: 10px;
   justify-content: center;
@@ -128,7 +129,7 @@ const ModifyProfileBtn = styled.div`
   align-items: center;
   margin-bottom: 30px;
   cursor: pointer;
-  color: black;
+  color: #444444;
 `;
 
 const MenuBtn = styled.div`
