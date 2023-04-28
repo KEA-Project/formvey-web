@@ -247,7 +247,7 @@ const Container = styled.div`
   width: 100vw;
 
   .optionOnLeft {
-    right: 290px;
+    right: 360px;
     transform: rotate(180deg);
     transition: 0.5s;
   }
