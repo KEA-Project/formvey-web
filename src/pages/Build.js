@@ -4,7 +4,6 @@ import styled from "@emotion/styled";
 
 import FormGPT from "../components/Build/FormGPT";
 import FormOption from "../components/Build/FormOption";
-import { keyframes } from "@emotion/react";
 
 import Dropdown from "../components/Build/Dropdown";
 import Toggle from "../components/Build/Toggle";

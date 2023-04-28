@@ -86,7 +86,9 @@ const LoginSection = styled.div`
   padding-top: 59px;
   width: 550px;
   height: 646px;
-  border: 0.1px solid #000000;
+  //border: 0px solid #000000;
+  border: solid;
+  border-color: rgba(0, 0, 0, 0.01);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 
@@ -112,7 +114,8 @@ const Input = styled.input`
   width: 336px;
   height: 48px;
   background: #f7f7f7;
-  border: 0.3px solid #000000;
+  border: solid;
+  border-color: rgba(0, 0, 0, 0.005);
   border-radius: 5px;
   font-weight: 400;
   font-size: 15px;
@@ -135,12 +138,13 @@ const LoginBtn = styled.div`
   height: 48px;
   line-height: 48px;
   background: #a3bcff;
+  border: 1px solid #dadada;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  border-radius: 15px;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
-
+  color: white;
   cursor: pointer;
 `;
 
@@ -149,9 +153,9 @@ const SignupBtn = styled.div`
   height: 48px;
   line-height: 48px;
   background: #ffffff;
-  border: 0.1px solid #000000;
+  border: 0.5px solid #dadada;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  border-radius: 15px;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;

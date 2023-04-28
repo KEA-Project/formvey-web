@@ -1,4 +1,6 @@
+/** @jsxImportSource @emotion/react */
 import React, { Component } from "react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import { DatePicker } from "antd";
@@ -9,7 +11,12 @@ function BuildCalendar() {
   return (
     <Container>
       <DatePicker size="medium" />
-      <TimePicker size="medium" style={{ marginLeft: "10px" }} />
+      <TimePicker
+        size="medium"
+        css={css`
+          margin-left: 10px;
+        `}
+      />
     </Container>
   );
   /*

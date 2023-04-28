@@ -8,6 +8,7 @@ import Main from "./pages/Main";
 import FormGPT from "./components/Build/FormGPT";
 import Build from "./pages/Build";
 import "./App.css";
+import ImageUploader from "./components/Build/ImageUploader";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/formgpt" element={<FormGPT />} />
         <Route path="/build" element={<Build />} />
+        <Route path="/uploader" element={<ImageUploader />} />
       </Routes>
     </Container>
   );
