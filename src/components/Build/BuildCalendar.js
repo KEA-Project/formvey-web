@@ -5,12 +5,22 @@ import styled from "@emotion/styled";
 
 import { DatePicker } from "antd";
 import { TimePicker } from "antd";
-import { Calendar } from "antd";
 
-function BuildCalendar() {
+function BuildCalendar(props) {
   return (
     <Container>
-      <DatePicker size="medium" />
+      <DatePicker
+        onChange={(e) => {
+          //console.log(e);
+          const year = `${e.$y}`.substring(2);
+          const month = e.$M + 1 < 10 ? `0${e.$M + 1}` : `${e.$M + 1}`;
+          const day = e.$D < 10 ? `0${e.$D}` : `${e.$D}`;
+
+          //console.log(`${year}-${month}-${day}`);
+          props.setEndDate(`${year}/${month}/${day}`);
+        }}
+        size="medium"
+      />
       <TimePicker
         size="medium"
         css={css`
