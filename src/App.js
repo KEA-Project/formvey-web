@@ -9,6 +9,7 @@ import FormGPT from "./components/Build/FormGPT";
 import Build from "./pages/Build";
 import "./App.css";
 import ImageUploader from "./components/Build/ImageUploader";
+import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/formgpt" element={<FormGPT />} />
         <Route path="/build" element={<Build />} />
         <Route path="/uploader" element={<ImageUploader />} />
+        <Route path="/kakao" element={<KakaoRedirectHandler />} />
       </Routes>
     </Container>
   );
