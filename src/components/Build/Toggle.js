@@ -9,7 +9,7 @@ function Toggle(props) {
         <SelectedContainer
           onClick={() => {
             setSelected(false);
-            props.setShortAndEssential(props.index, props.type, false);
+            props.setShortAndEssential(props.index, props.type, 0);
           }}
         >
           {props.option}
@@ -18,7 +18,7 @@ function Toggle(props) {
         <Container
           onClick={() => {
             setSelected(true);
-            props.setShortAndEssential(props.index, props.type, true);
+            props.setShortAndEssential(props.index, props.type, 1);
           }}
         >
           {props.option}

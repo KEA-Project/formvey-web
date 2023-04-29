@@ -6,7 +6,6 @@ import createBtn from "../../assets/formgpt/create_question_btn.png";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { css } from "@emotion/react";
 
 function FormGPT(props) {
   const scrollRef = useRef();
@@ -90,13 +89,13 @@ function FormGPT(props) {
     temp.push({ msg: currentMsg, from: "me" });
     setChatList(temp);
     sendGPT(currentMsg);
-    console.log(chatList);
+    //console.log(chatList);
     setCurrentMsg("");
   };
 
   const checkHandler = ({ target }, title) => {
-    console.log(title);
-    console.log(target.checked);
+    //console.log(title);
+    //console.log(target.checked);
     var temp = [];
 
     if (target.checked) {
@@ -114,6 +113,7 @@ function FormGPT(props) {
   /*선택된 문항들 추가하기*/
   const addQuestion = () => {
     //console.log(selectedList);
+
     props.addGPTQuestion(selectedList);
     props.setShowGPT(false);
   };
