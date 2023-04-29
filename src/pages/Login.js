@@ -12,6 +12,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [PW, setPW] = useState("");
 
+  const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT}&response_type=code`;
+
   const loginBtnClicked = async () => {
     const result = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/login/email`,
@@ -30,6 +32,11 @@ function Login() {
     } else {
       alert(result.data.message);
     }
+  };
+
+  const kakaoBtnClicked = async () => {
+    console.log(kakaoUrl);
+    window.location.href = kakaoUrl;
   };
 
   return (
@@ -62,7 +69,7 @@ function Login() {
             </Link>
           </BtnsContainer>
           <Line />
-          <KaBtn src={kaBtn} />
+          <KaBtn src={kaBtn} onClick={kakaoBtnClicked} />
           <Notice>
             카카오계정으로 간편하고 안전하게 로그인(회원가입)할 수 있습니다.
           </Notice>
@@ -170,6 +177,7 @@ const Line = styled.hr`
 const KaBtn = styled.img`
   width: 335px;
   margin-top: 29px;
+  cursor: pointer;
 `;
 
 const Notice = styled.div`
