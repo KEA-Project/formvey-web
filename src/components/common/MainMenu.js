@@ -15,7 +15,12 @@ function MainMenu() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/members/info/${localStorage.getItem(
         "memberId"
-      )}`
+      )}`,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
     );
 
     console.log(response.data);
