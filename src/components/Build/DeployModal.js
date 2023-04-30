@@ -1,21 +1,31 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import xBtn from "../../assets/common/x_button.png";
 import { css } from "@emotion/react";
 import axios from "axios";
 
 function DeployModal(props) {
+  const navigate = useNavigate();
+
   const clickDeploy = async () => {
     console.log(props.payload);
-    const result = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/surveys/create/${localStorage.getItem(
-        "memberId"
-      )}`,
-      props.payload
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+      props.payload,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
     );
 
-    console.log(result);
+    console.log(response.data);
+
+    if (response.data.isSuccess) {
+      navigate("/build-complete", { state: { url: props.payload.url } });
+    }
   };
 
   const option = [
