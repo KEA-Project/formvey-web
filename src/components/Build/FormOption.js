@@ -1,58 +1,148 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import BuildCalendar from "./BuildCalendar";
+import DeployModal from "./DeployModal";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function FormOption(props) {
-  /*
-  useEffect(() => {
-    console.log(props.showOption);
-  }, [props.showOption]);*/
+  let navigate = useNavigate();
 
-  const [isPublic, setIsPublic] = useState(false); //공개 설정
-  const [isAnonymous, setIsAnonymous] = useState(false); //익명 설정
-  const [exitUrl, setExitUrl] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [showModal, setShowModal] = useState(false); //배포 모달창 보이기
+
+  //오늘 날짜 받아오기 (설문 시작일)
+  const getToday = () => {
+    var date = new Date();
+
+    return date.toISOString();
+  };
+
+  //설문 url 생성을 위한 uuid 생성 함수
+  const uuid = () => {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
+  };
+
+  //임시저장 버튼 눌렀을 때 이벤트
+  const clickTempSave = async () => {
+    //console.log(getToday());
+
+    const payload = {
+      endDate: endDate,
+      exitUrl: props.exitUrl,
+      isAnonymous: props.isAnonymous,
+      isPublic: props.isPublic,
+      questions: props.questions,
+      responseCnt: 0,
+      startDate: getToday(),
+      surveyContent: props.surveyContent,
+      surveyTitle: props.surveyTitle,
+      url: null,
+    };
+
+    console.log(payload);
+
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+      payload,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+
+    console.log(response);
+    //성공시 이전 페이지로
+    if (response.data.isSuccess) {
+      //console.log("test");
+      navigate(-1);
+    }
+  };
+
+  //배포 버튼 눌렀을 때 이벤트
+  const clickDeploy = () => {
+    setShowModal(true);
+  };
 
   return (
-    <Container
-      style={
-        props.showOption
-          ? { right: "0px", transition: "0.5s" }
-          : { right: "-350px", transition: "0.5s" }
-      }
-    >
-      <SettingTitle>설정</SettingTitle>
+    <>
+      {showModal ? (
+        <DeployModal
+          setShowModal={setShowModal}
+          payload={{
+            endDate: endDate,
+            exitUrl: props.exitUrl,
+            isAnonymous: props.isAnonymous,
+            isPublic: props.isPublic,
+            questions: props.questions,
+            responseCnt: 0,
+            startDate: getToday(),
+            surveyContent: props.surveyContent,
+            surveyTitle: props.surveyTitle,
+            url: `http://www.formvey.site/participate/${uuid()}`,
+          }}
+        />
+      ) : null}
+      <Container
+        style={
+          props.showOption
+            ? { right: "0px", transition: "0.5s" }
+            : { right: "-350px", transition: "0.5s" }
+        }
+      >
+        <SettingTitle>설정</SettingTitle>
 
-      {/**공개 설정 */}
-      <div className="flexDiv">
-        <OptionTitle>공개</OptionTitle>
-        <ToggleContainer
-          onClick={() => {
-            setIsPublic(!isPublic);
+        {/**공개 설정 */}
+        <div className="flexDiv">
+          <OptionTitle>공개</OptionTitle>
+          <ToggleContainer
+            onClick={() => {
+              props.setIsPublic(props.isPublic === 1 ? 0 : 1);
+            }}
+          >
+            <ToggleCircle
+              className={props.isPublic === 1 ? "toggleOn" : "toggleOff"}
+            />
+          </ToggleContainer>
+        </div>
+        <OptionDesc>공개 전환 시 설문이 게시판에 등록됩니다.</OptionDesc>
+        {/**익명 설정 */}
+        <div className="flexDiv">
+          <OptionTitle>익명</OptionTitle>
+          <ToggleContainer
+            onClick={() => {
+              props.setIsAnonymous(props.isAnonymous === 1 ? 0 : 1);
+            }}
+          >
+            <ToggleCircle
+              className={props.isAnonymous === 1 ? "toggleOn" : "toggleOff"}
+            />
+          </ToggleContainer>
+        </div>
+        <OptionDesc>설문 응답을 익명으로 받습니다.</OptionDesc>
+        {/**응답 기한 설정*/}
+        <OptionTitle>응답 기한 설정</OptionTitle>
+        <BuildCalendar setEndDate={setEndDate} />
+        {/**나가기 링크 설정 */}
+        <OptionTitle>나가기 링크</OptionTitle>
+        <ExitUrlInut
+          onChange={(e) => {
+            props.setExitUrl(e.target.value);
           }}
-        >
-          <ToggleCircle className={isPublic ? "toggleOn" : "toggleOff"} />
-        </ToggleContainer>
-      </div>
-      <OptionDesc>공개 전환 시 설문이 게시판에 등록됩니다.</OptionDesc>
-      {/**익명 설정 */}
-      <div className="flexDiv">
-        <OptionTitle>익명</OptionTitle>
-        <ToggleContainer
-          onClick={() => {
-            setIsAnonymous(!isAnonymous);
-          }}
-        >
-          <ToggleCircle className={isAnonymous ? "toggleOn" : "toggleOff"} />
-        </ToggleContainer>
-      </div>
-      <OptionDesc>설문 응답을 익명으로 받습니다.</OptionDesc>
-      {/**응답 기한 설정*/}
-      <OptionTitle>응답 기한 설정</OptionTitle>
-      <BuildCalendar />
-      {/**나가기 링크 설정 */}
-      <OptionTitle>나가기 링크</OptionTitle>
-      <ExitUrlInut />
-    </Container>
+        />
+        {/**임시 저장/배포 버튼 */}
+        <div className="deployBtnContainer">
+          <DeployBtn onClick={clickTempSave}>임시 저장</DeployBtn>
+          <DeployBtn onClick={clickDeploy}>배포하기</DeployBtn>
+        </div>
+      </Container>
+    </>
   );
 }
 
@@ -67,6 +157,15 @@ const Container = styled.div`
   .flexDiv {
     display: flex;
     align-items: center;
+  }
+
+  .deployBtnContainer {
+    display: flex;
+    margin-left: 15px;
+    position: fixed;
+    bottom: 5%;
+    width: 279px;
+    justify-content: space-between;
   }
 
   padding: 23px 23px 40px 23px;
@@ -143,6 +242,24 @@ const ExitUrlInut = styled.input`
   border: 0;
   color: #444444;
   font-size: 13px;
+`;
+
+const DeployBtn = styled.div`
+  width: 125px;
+  height: 40px;
+  line-height: 40px;
+  background: #f4f6ff;
+  /* emoboss-button-1 */
+
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.06), 4px 4px 8px rgba(0, 0, 0, 0.08),
+    -2px -2px 2px rgba(255, 255, 255, 0.6),
+    -4px -4px 8px rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  font-size: 15px;
+  color: #444444;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
 `;
 
 export default FormOption;
