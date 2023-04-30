@@ -58,6 +58,7 @@ function FormOption(props) {
     );
 
     console.log(response);
+    //성공시 이전 페이지로
     if (response.data.isSuccess) {
       //console.log("test");
       navigate(-1);

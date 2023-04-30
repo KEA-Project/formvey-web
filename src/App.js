@@ -10,6 +10,7 @@ import Build from "./pages/Build";
 import "./App.css";
 import ImageUploader from "./components/Build/ImageUploader";
 import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
+import BuildComplete from "./pages/BuildComplete";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/formgpt" element={<FormGPT />} />
         <Route path="/build" element={<Build />} />
+        <Route path="/build-complete" element={<BuildComplete />} />
         <Route path="/uploader" element={<ImageUploader />} />
         <Route path="/kakao" element={<KakaoRedirectHandler />} />
       </Routes>
