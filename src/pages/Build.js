@@ -61,7 +61,7 @@ function Build() {
     var temp = [...questions];
     for (let i = 0; i < selectedList.length; i++) {
       temp.push({
-        qudstionIdx: temp.length,
+        questionIdx: temp.length,
         questionTitle: selectedList[i],
         choices: [{ choiceContent: "", choiceIdx: 0 }],
         type: 0,
@@ -77,7 +77,7 @@ function Build() {
   const addQuestion = () => {
     var temp = [...questions];
     temp.push({
-      qudstionIdx: temp.length,
+      questionIdx: temp.length,
       questionTitle: "",
       choices: [{ choiceContent: "", choiceIdx: 0 }],
       type: 0,
@@ -210,7 +210,7 @@ function Build() {
           {/*설문조사 각 문항*/}
           {questions.map((a, i) => {
             return (
-              <QuestionContainer key={a.qudstionIdx}>
+              <QuestionContainer key={a.questionIdx}>
                 <div
                   style={{
                     width: "80%",

@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import BuildCalendar from "./BuildCalendar";
 import DeployModal from "./DeployModal";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function FormOption(props) {
+  let navigate = useNavigate();
+
   const [endDate, setEndDate] = useState("");
   const [showModal, setShowModal] = useState(false); //배포 모달창 보이기
 
   //오늘 날짜 받아오기 (설문 시작일)
   const getToday = () => {
     var date = new Date();
-    var year = `${date.getFullYear()}`.substring(2);
-    var month = ("0" + (1 + date.getMonth())).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
 
-    return year + "/" + month + "/" + day;
+    return date.toISOString();
   };
 
   //설문 url 생성을 위한 uuid 생성 함수
@@ -28,23 +29,39 @@ function FormOption(props) {
   };
 
   //임시저장 버튼 눌렀을 때 이벤트
-  const clickTempSave = () => {
+  const clickTempSave = async () => {
     //console.log(getToday());
 
     const payload = {
       endDate: endDate,
       exitUrl: props.exitUrl,
       isAnonymous: props.isAnonymous,
+      isPublic: props.isPublic,
       questions: props.questions,
       responseCnt: 0,
-      rewardOption: 0,
       startDate: getToday(),
       surveyContent: props.surveyContent,
       surveyTitle: props.surveyTitle,
-      url: "",
+      url: null,
     };
 
     console.log(payload);
+
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+      payload,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+
+    console.log(response);
+    if (response.data.isSuccess) {
+      //console.log("test");
+      navigate(-1);
+    }
   };
 
   //배포 버튼 눌렀을 때 이벤트
@@ -61,15 +78,14 @@ function FormOption(props) {
             endDate: endDate,
             exitUrl: props.exitUrl,
             isAnonymous: props.isAnonymous,
+            isPublic: props.isPublic,
             questions: props.questions,
             responseCnt: 0,
-            rewardOption: 0,
             startDate: getToday(),
             surveyContent: props.surveyContent,
             surveyTitle: props.surveyTitle,
             url: `http://www.formvey.site/participate/${uuid()}`,
           }}
-          isPublic={props.isPublic}
         />
       ) : null}
       <Container
