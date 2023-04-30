@@ -10,7 +10,13 @@ function Dropdown(props) {
     setType(selected);
     setShowDrop(false);
 
-    props.changeType(props.index, selected);
+    let selectedType = 0;
+    selected === "단일선택"
+      ? (selectedType = 0)
+      : selected === "다중선택"
+      ? (selectedType = 1)
+      : (selectedType = 2);
+    props.changeType(props.index, selectedType);
   };
   return (
     <Container style={showDrop ? { border: "1px solid #7097FF" } : null}>
