@@ -11,6 +11,7 @@ import "./App.css";
 import ImageUploader from "./components/Build/ImageUploader";
 import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
 import BuildComplete from "./pages/BuildComplete";
+import Participate from "./pages/Participate";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/build-complete" element={<BuildComplete />} />
         <Route path="/uploader" element={<ImageUploader />} />
         <Route path="/kakao" element={<KakaoRedirectHandler />} />
+        <Route path="/participate/:surveyId" element={<Participate />} />
       </Routes>
     </Container>
   );
