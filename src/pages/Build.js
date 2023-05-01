@@ -216,16 +216,14 @@ function Build() {
                     width: "80%",
                   }}
                 >
-                  <div style={{}}>
-                    <QuestionNumber>Q{i + 1}. </QuestionNumber>
-                    <QuestionTitle
-                      placeholder="질문을 입력해주세요"
-                      defaultValue={a.questionTitle}
-                      onChange={(e) => {
-                        changeQuestionTitle(i, e.target.value);
-                      }}
-                    />
-                  </div>
+                  <QuestionNumber>Q{i + 1}. </QuestionNumber>
+                  <QuestionTitle
+                    placeholder="질문을 입력해주세요"
+                    defaultValue={a.questionTitle}
+                    onChange={(e) => {
+                      changeQuestionTitle(i, e.target.value);
+                    }}
+                  />
                   {a.type === 0 || a.type === 1 ? ( //단일 객관식
                     <>
                       {a.choices.map((a, j) => {
