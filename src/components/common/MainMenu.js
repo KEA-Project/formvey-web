@@ -5,7 +5,8 @@ import logo from "../../assets/common/logo.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
-//import * as Functions from "../../Functions.js";
+import Main from "../../pages/Main";
+import Built from "../../pages/Built";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -70,33 +71,44 @@ function MainMenu() {
 
   return (
     <Container>
-      <Logo src={logo} />
-      <UserName>{userName}</UserName>
-      <Link to="/editprofile">
-        <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
-      </Link>
-      {menu.map((a, i) => {
-        return selected === i ? (
-          <SelectedMenuBtn>{a}</SelectedMenuBtn>
-        ) : (
-          <MenuBtn
-            onClick={() => {
-              setSelected(i);
-            }}
-          >
-            {a}
-          </MenuBtn>
-        );
-      })}
-      <LogoutContainer onClick={logoutBtnClicked}>
-        <LogoutIcon src={logoutIcon} />
-        <LogoutText>로그아웃</LogoutText>
-      </LogoutContainer>
+      {/**메뉴바 영역 */}
+      <MenuContainer>
+        <Logo src={logo} />
+        <UserName>{userName}</UserName>
+        <Link to="/editprofile">
+          <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
+        </Link>
+        {menu.map((a, i) => {
+          return selected === i ? (
+            <SelectedMenuBtn>{a}</SelectedMenuBtn>
+          ) : (
+            <MenuBtn
+              onClick={() => {
+                setSelected(i);
+              }}
+            >
+              {a}
+            </MenuBtn>
+          );
+        })}
+        <LogoutContainer onClick={logoutBtnClicked}>
+          <LogoutIcon src={logoutIcon} />
+          <LogoutText>로그아웃</LogoutText>
+        </LogoutContainer>
+      </MenuContainer>
+      {/**페이지 라우팅 */}
+      <div>{selected === 0 ? <Main /> : selected === 3 ? <Built /> : null}</div>
     </Container>
   );
 }
 
 const Container = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const MenuContainer = styled.div`
   padding-top: 70px;
   width: 202px;
   height: 100vh;
