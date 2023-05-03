@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
 import axios from "axios";
+import { fetchSurveyInfo } from "../Functions";
 
 function Participate() {
   const { surveyId } = useParams(); //url 파라미터에 survey id 값
@@ -56,19 +57,8 @@ function Participate() {
   });
 
   const fetchData = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/info/${surveyId}`,
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
-
-    if (response.data.isSuccess) {
-      setSurveyInfo(response.data.result);
-    }
-    console.log(response);
+    const response = await fetchSurveyInfo(surveyId);
+    setSurveyInfo(response);
   };
 
   useEffect(() => {
@@ -106,7 +96,7 @@ function Participate() {
                             name="choice"
                             value={a.choiceContent}
                           />
-                          <ChoiceLabel for="choice">
+                          <ChoiceLabel htmlfor="choice">
                             {a.choiceContent}
                           </ChoiceLabel>
                         </ChoiceContainer>
@@ -124,7 +114,7 @@ function Participate() {
                             name="choice"
                             value={a.choiceContent}
                           />
-                          <ChoiceLabel for="choice">
+                          <ChoiceLabel htmlfor="choice">
                             {a.choiceContent}
                           </ChoiceLabel>
                         </ChoiceContainer>

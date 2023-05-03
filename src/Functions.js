@@ -30,3 +30,25 @@ export function LogOut() {
 
   logoutHandler();
 }
+
+//설문 정보 가져오기 api
+export function fetchSurveyInfo(surveyId) {
+  const fetch = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/surveys/info/${surveyId}`,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+
+    if (response.data.isSuccess) {
+      return response.data.result;
+    } else {
+      return alert(response.data.message);
+    }
+  };
+
+  return fetch();
+}
