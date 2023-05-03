@@ -12,12 +12,40 @@ import gptBtn from "../assets/build/gpt_btn.png";
 import plusBtn from "../assets/common/add_btn.png";
 import optionBtn from "../assets/build/option_btn.png";
 
-function Build() {
+import { useLocation } from "react-router-dom";
+import { fetchSurveyInfo } from "../Functions";
+
+function Build(props) {
+  const location = useLocation();
   const [showGPT, setShowGPT] = useState(false);
   const [showOption, setShowOption] = useState(false);
   const [isPublic, setIsPublic] = useState(0); //공개 설정
   const [isAnonymous, setIsAnonymous] = useState(0); //익명 설정
   const [exitUrl, setExitUrl] = useState("");
+  const [questions, setQuestions] = useState([]);
+  const [surveyTitle, setSurveyTitle] = useState(""); //설문 제목
+  const [surveyContent, setSurveyContent] = useState(""); //설문 설명
+  const [responseCnt, setResponseCnt] = useState(0);
+
+  const fetchData = async (surveyId) => {
+    //설문조사 수정하기의 경우 설문의 내용을 받아와야 함
+    const response = await fetchSurveyInfo(surveyId);
+    console.log(response);
+
+    setSurveyTitle(response.surveyTitle);
+    setSurveyContent(response.surveyContent);
+    setIsAnonymous(response.isAnonymous);
+    setQuestions(response.questions);
+    setExitUrl(response.exitUrl);
+    setResponseCnt(response.responseCnt);
+  };
+
+  useEffect(() => {
+    if (location.state) {
+      //console.log(location);
+      fetchData(location.state.surveyId);
+    }
+  }, [location]);
 
   /*
   {
@@ -53,9 +81,6 @@ function Build() {
       isEssential: false,
     },
   */
-  const [questions, setQuestions] = useState([]);
-  const [surveyTitle, setSurveyTitle] = useState(""); //설문 제목
-  const [surveyContent, setSurveyContent] = useState(""); //설문 설명
 
   const addGPTQuestion = (selectedList) => {
     var temp = [...questions];
@@ -189,6 +214,8 @@ function Build() {
           surveyTitle={surveyTitle}
           surveyContent={surveyContent}
           questions={questions}
+          surveyId={location.state.surveyId}
+          responseCnt={responseCnt}
         />
         {/*설문조사 작성 부분*/}
         {/*설문조사 제목 + 설명*/}
@@ -199,12 +226,14 @@ function Build() {
               onChange={(e) => {
                 setSurveyTitle(e.target.value);
               }}
+              value={surveyTitle}
             />
             <FormDesc
               placeholder="설문조사 설명을 입력해주세요"
               onChange={(e) => {
                 setSurveyContent(e.target.value);
               }}
+              value={surveyContent}
             />
           </FormHeader>
           {/*설문조사 각 문항*/}
@@ -252,7 +281,7 @@ function Build() {
                   ) : null}
                 </div>
                 <div>
-                  <Dropdown changeType={changeType} index={i} />
+                  <Dropdown changeType={changeType} index={i} type={a.type} />
                   <Toggle
                     option="짧폼"
                     index={i}

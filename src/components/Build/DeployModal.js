@@ -11,15 +11,29 @@ function DeployModal(props) {
 
   const clickDeploy = async () => {
     console.log(props.payload);
-    const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/surveys/create`,
-      props.payload,
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
+
+    var response;
+    if (props.surveyId === null) {
+      response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+        props.payload,
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    } else {
+      response = await axios.put(
+        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}`,
+        props.payload,
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    }
 
     console.log(response.data);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import styled from "@emotion/styled";
 
@@ -18,6 +18,15 @@ function Dropdown(props) {
       : (selectedType = 2);
     props.changeType(props.index, selectedType);
   };
+
+  useEffect(() => {
+    props.type === 0
+      ? selectType("단일선택")
+      : props.type === 1
+      ? selectType("다중선택")
+      : selectType("주관식");
+  }, []);
+
   return (
     <Container style={showDrop ? { border: "1px solid #7097FF" } : null}>
       <Drop type="checkbox" />

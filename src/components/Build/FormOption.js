@@ -38,24 +38,38 @@ function FormOption(props) {
       isAnonymous: props.isAnonymous,
       isPublic: props.isPublic,
       questions: props.questions,
-      responseCnt: 0,
+      responseCnt: props.responseCnt,
       startDate: getToday(),
       surveyContent: props.surveyContent,
       surveyTitle: props.surveyTitle,
       url: null,
     };
 
-    console.log(payload);
+    //console.log(payload);
 
-    const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/surveys/create`,
-      payload,
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
+    var response;
+
+    if (props.surveyId === null) {
+      response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+        payload,
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    } else {
+      response = await axios.put(
+        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}`,
+        payload,
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    }
 
     console.log(response);
     //성공시 이전 페이지로
@@ -81,12 +95,13 @@ function FormOption(props) {
             isAnonymous: props.isAnonymous,
             isPublic: props.isPublic,
             questions: props.questions,
-            responseCnt: 0,
+            responseCnt: props.responseCnt,
             startDate: getToday(),
             surveyContent: props.surveyContent,
             surveyTitle: props.surveyTitle,
             url: `http://www.formvey.site/participate/${uuid()}`,
           }}
+          surveyId={props.surveyId}
         />
       ) : null}
       <Container
@@ -135,6 +150,7 @@ function FormOption(props) {
           onChange={(e) => {
             props.setExitUrl(e.target.value);
           }}
+          value={props.exitUrl}
         />
         {/**임시 저장/배포 버튼 */}
         <div className="deployBtnContainer">
