@@ -447,6 +447,7 @@ const OptionBtn = styled.img`
   right: 30px;
   bottom: 30px;
   cursor: pointer;
+  z-index: 999;
 `;
 
 export default Build;

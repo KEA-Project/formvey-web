@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import addBtn from "../assets/common/add_btn.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import BuiltSurvey from "../components/Built/BuiltSurvey";
+import ParticipatedSurvey from "../components/Participated/ParticipatedSurvey";
 
-function Built() {
-  const menu = ["전체", "제작중", "진행중", "설문완료"];
+function Participated() {
+  const menu = ["전체", "진행중", "설문완료"];
   const [selectedMenu, setSelectedMenu] = useState(0);
-  const [builtSurvey, setBuiltSurvey] = useState([]);
+  const [participatedSurvey, setParticipatedSurvey] = useState([
+    {
+      endDate: "2023-05-04T04:31:11.615Z",
+      id: 0,
+      status: 1,
+      surveyContent:
+        "차세대 챗봇 LAB 카레팀의 새로운 설문조사 플랫폼 폼베이의 이용 만족도 설문조사",
+      surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
+    },
+    {
+      endDate: "2023-05-04T04:31:11.615Z",
+      id: 1,
+      status: 2,
+      surveyContent: "차세대 챗봇 LAB 카레팀",
+      surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
+    },
+  ]);
 
   const fetchData = async () => {
+    /*
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
         "memberId"
@@ -24,21 +40,15 @@ function Built() {
     console.log(response);
     if (response.data.isSuccess) {
       setBuiltSurvey(response.data.result);
-    }
+    }*/
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div>
       <Container>
-        <Link to="/build">
-          <AddBtn src={addBtn} />
-        </Link>
-
-        <Title>제작한 설문</Title>
+        <Title>응답한 설문</Title>
 
         {/**설문 리스트 메뉴*/}
         <MenuContainer>
@@ -59,14 +69,13 @@ function Built() {
         <hr className="menuHr" />
         {/**설문 리스트 */}
         <SurveyList>
-          {builtSurvey.map((a, i) => {
+          {participatedSurvey.map((a, i) => {
             if (
               selectedMenu === 0 || //전체
-              (selectedMenu === 1 && a.status === 1) || //제작중
-              (selectedMenu === 2 && a.status === 2) || //진행중
-              (selectedMenu === 3 && a.status === 3) //설문완료
+              (selectedMenu === 1 && a.status === 1) || //진행중
+              (selectedMenu === 2 && a.status === 2) //설문완료
             ) {
-              return <BuiltSurvey survey={a} />;
+              return <ParticipatedSurvey survey={a} />;
             } else {
               return null;
             }
@@ -90,21 +99,13 @@ const Container = styled.div`
     width: 80vw;
   }
 `;
-const AddBtn = styled.img`
-  position: fixed;
-  right: 30px;
-  bottom: 50px;
-  width: 52.5px;
-  height: auto;
-  cursor: pointer;
-`;
 const Title = styled.div`
   font-weight: 700;
   font-size: 26px;
   margin-bottom: 30px;
 `;
 const MenuContainer = styled.div`
-  width: 302px;
+  width: 220px;
   display: flex;
   justify-content: space-between;
 `;
@@ -126,4 +127,4 @@ const SurveyList = styled.div`
   padding-left: 32px;
 `;
 
-export default Built;
+export default Participated;

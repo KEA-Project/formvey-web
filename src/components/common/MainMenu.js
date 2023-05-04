@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
 import Main from "../../pages/Main";
 import Built from "../../pages/Built";
+import Participated from "../../pages/Participated";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -97,7 +98,15 @@ function MainMenu() {
         </LogoutContainer>
       </MenuContainer>
       {/**페이지 라우팅 */}
-      <div>{selected === 0 ? <Main /> : selected === 3 ? <Built /> : null}</div>
+      <div>
+        {selected === 0 ? ( //메인
+          <Main />
+        ) : selected === 3 ? ( //제작한 설문
+          <Built />
+        ) : selected === 4 ? ( //응답한 설문
+          <Participated />
+        ) : null}
+      </div>
     </Container>
   );
 }
