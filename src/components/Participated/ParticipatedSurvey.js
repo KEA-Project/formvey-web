@@ -15,7 +15,11 @@ function ParticipatedSurvey(props) {
       </TitleContainer>
       <Content>{props.survey.surveyContent}</Content>
       <BottomContainer>
-        <EditBtn>수정하기</EditBtn>
+        {props.survey.status === 1 ? (
+          <EditBtn>수정하기</EditBtn>
+        ) : (
+          <EditBtn>응답보기</EditBtn>
+        )}
       </BottomContainer>
     </Container>
   );
