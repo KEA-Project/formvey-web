@@ -26,17 +26,25 @@ function Build(props) {
   const [surveyTitle, setSurveyTitle] = useState(""); //설문 제목
   const [surveyContent, setSurveyContent] = useState(""); //설문 설명
   const [responseCnt, setResponseCnt] = useState(0);
+  const [initialEndDate, setInitialEndDate] = useState("");
+
+  const [surveyId, setSurveyId] = useState(null); //설문 id 초기화
 
   const fetchData = async (surveyId) => {
     //설문조사 수정하기의 경우 설문의 내용을 받아와야 함
+    setSurveyId(surveyId);
     const response = await fetchSurveyInfo(surveyId);
+    //console.log(surveyId);
     console.log(response);
 
+    setSurveyId(surveyId);
     setSurveyTitle(response.surveyTitle);
     setSurveyContent(response.surveyContent);
     setIsAnonymous(response.isAnonymous);
+    setIsPublic(response.isPublic);
     setQuestions(response.questions);
     setExitUrl(response.exitUrl);
+    setInitialEndDate(response.endDate);
     setResponseCnt(response.responseCnt);
   };
 
@@ -46,41 +54,6 @@ function Build(props) {
       fetchData(location.state.surveyId);
     }
   }, [location]);
-
-  /*
-  {
-      qudstionIdx: 0,
-      questionTitle: "객관식 단일",
-      choices: [
-        { choiceContent: "보기1", choiceIdx: 0 },
-        { choiceContent: "보기2", choiceIdx: 1 },
-        { choiceContent: "보기3", choiceIdx: 2 },
-      ],
-      type: 0,
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      qudstionIdx: 1,
-      questionTitle: "객관식 다중",
-      choices: [
-        { choiceContent: "보기1", choiceIdx: 0 },
-        { choiceContent: "보기2", choiceIdx: 1 },
-        { choiceContent: "보기3", choiceIdx: 2 },
-      ],
-      type: 1,
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      qudstionIdx: 2,
-      questionTitle: "주관식",
-      choices: [],
-      type: 0,
-      isShort: false,
-      isEssential: false,
-    },
-  */
 
   const addGPTQuestion = (selectedList) => {
     var temp = [...questions];
@@ -213,10 +186,12 @@ function Build(props) {
           setExitUrl={setExitUrl}
           surveyTitle={surveyTitle}
           surveyContent={surveyContent}
+          initialEndDate={initialEndDate}
           questions={questions}
-          surveyId={location.state.surveyId}
+          surveyId={surveyId}
           responseCnt={responseCnt}
         />
+
         {/*설문조사 작성 부분*/}
         {/*설문조사 제목 + 설명*/}
         <FormContainer>

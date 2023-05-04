@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import BuildCalendar from "./BuildCalendar";
 import DeployModal from "./DeployModal";
@@ -51,7 +51,7 @@ function FormOption(props) {
 
     if (props.surveyId === null) {
       response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/create/1`,
         payload,
         {
           headers: {
@@ -61,7 +61,7 @@ function FormOption(props) {
       );
     } else {
       response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}/1`,
         payload,
         {
           headers: {
@@ -143,7 +143,10 @@ function FormOption(props) {
         <OptionDesc>설문 응답을 익명으로 받습니다.</OptionDesc>
         {/**응답 기한 설정*/}
         <OptionTitle>응답 기한 설정</OptionTitle>
-        <BuildCalendar setEndDate={setEndDate} />
+        <BuildCalendar
+          setEndDate={setEndDate}
+          initialEndDate={props.initialEndDate}
+        />
         {/**나가기 링크 설정 */}
         <OptionTitle>나가기 링크</OptionTitle>
         <ExitUrlInut
