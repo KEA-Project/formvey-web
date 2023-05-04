@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-import { DatePicker } from "antd";
+import { Form, DatePicker } from "antd";
 import { TimePicker } from "antd";
+
+import dayjs from "dayjs";
 
 function BuildCalendar(props) {
   const [date, setDate] = useState("");
@@ -12,6 +14,7 @@ function BuildCalendar(props) {
 
   useEffect(() => {
     //console.log("test");
+    //console.log(props.initialEndDate);
     props.setEndDate(`${date}${time}`);
   }, [date, time, props]);
 
@@ -28,6 +31,7 @@ function BuildCalendar(props) {
           //props.setEndDate(`${date}${time}`);
         }}
         size="medium"
+        //defaultValue={dayjs(props.initialEndDate)}
       />
       <TimePicker
         size="medium"

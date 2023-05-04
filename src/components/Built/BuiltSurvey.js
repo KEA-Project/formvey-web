@@ -37,10 +37,12 @@ const Container = styled.div`
   margin-top: 41px;
   width: 310px;
   height: 151px;
+  border: 0.01em solid #d2d2d2;
   border-radius: 15px;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.06);
   padding: 20px 20px 15px 20px;
   position: relative;
+  margin-right: 2vw;
 
   .flexDiv {
     display: flex;
