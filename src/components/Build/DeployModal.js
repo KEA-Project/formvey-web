@@ -15,7 +15,7 @@ function DeployModal(props) {
     var response;
     if (props.surveyId === null) {
       response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/create/2`,
         props.payload,
         {
           headers: {
@@ -25,7 +25,7 @@ function DeployModal(props) {
       );
     } else {
       response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}/2`,
         props.payload,
         {
           headers: {
@@ -38,7 +38,11 @@ function DeployModal(props) {
     console.log(response.data);
 
     if (response.data.isSuccess) {
-      navigate("/build-complete", { state: { url: props.payload.url } });
+      navigate("/build-complete", {
+        state: {
+          url: `http://localhost:3000/participate/${response.data.result.id}`,
+        },
+      });
     }
   };
 

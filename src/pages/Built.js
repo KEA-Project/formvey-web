@@ -122,9 +122,9 @@ const SurveyList = styled.div`
   margin-top: 16px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: left;
   padding-left: 32px;
-  padding-right: 150px;
+  //padding-right: 150px;
 `;
 
 export default Built;
