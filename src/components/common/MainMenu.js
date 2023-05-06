@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
 import Main from "../../pages/Main";
+import SurveyBoard from "../../pages/SurveyBoard";
 import Built from "../../pages/Built";
 
 function MainMenu() {
@@ -97,7 +98,7 @@ function MainMenu() {
         </LogoutContainer>
       </MenuContainer>
       {/**페이지 라우팅 */}
-      <div>{selected === 0 ? <Main /> : selected === 3 ? <Built /> : null}</div>
+      <div>{selected === 0 ? <Main /> : selected === 1 ? <SurveyBoard/> : selected === 3 ? <Built /> : null}</div>
     </Container>
   );
 }
