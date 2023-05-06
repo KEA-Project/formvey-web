@@ -42,7 +42,6 @@ function FormOption(props) {
       startDate: getToday(),
       surveyContent: props.surveyContent,
       surveyTitle: props.surveyTitle,
-      url: null,
     };
 
     //console.log(payload);
@@ -99,7 +98,6 @@ function FormOption(props) {
             startDate: getToday(),
             surveyContent: props.surveyContent,
             surveyTitle: props.surveyTitle,
-            url: `http://www.formvey.site/participate/${uuid()}`,
           }}
           surveyId={props.surveyId}
         />
