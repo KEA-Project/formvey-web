@@ -1,6 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 
 import FormGPT from "../components/Build/FormGPT";
 import FormOption from "../components/Build/FormOption";
@@ -8,6 +10,7 @@ import FormOption from "../components/Build/FormOption";
 import Dropdown from "../components/Build/Dropdown";
 import Toggle from "../components/Build/Toggle";
 
+import deleteBtn from "../assets/build/delete_btn.png";
 import gptBtn from "../assets/build/gpt_btn.png";
 import plusBtn from "../assets/common/add_btn.png";
 import optionBtn from "../assets/build/option_btn.png";
@@ -82,6 +85,14 @@ function Build(props) {
       isShort: 0,
       isEssential: 0,
     });
+
+    setQuestions(temp);
+  };
+
+  //문항 삭제
+  const deleteQuestion = (i) => {
+    var temp = [...questions];
+    temp.splice(i, 1);
 
     setQuestions(temp);
   };
@@ -260,16 +271,29 @@ function Build(props) {
                   <Toggle
                     option="짧폼"
                     index={i}
+                    initialValue={a.isShort}
                     setShortAndEssential={setShortAndEssential}
                     type="short"
                   />
                   <Toggle
                     option="필수"
                     setShortAndEssential={setShortAndEssential}
+                    initialValue={a.isEssential}
                     index={i}
                     type="essential"
                   />
                 </div>
+                {/**각 문항에 마우스를 올렸을 때 보이는 메뉴(삭제, 위치 이동) */}
+                <MouseOverContainer>
+                  <MouseOverBtn>
+                    <DeleteBtn
+                      src={deleteBtn}
+                      onClick={() => {
+                        deleteQuestion(i);
+                      }}
+                    />
+                  </MouseOverBtn>
+                </MouseOverContainer>
               </QuestionContainer>
             );
           })}
@@ -365,6 +389,44 @@ const QuestionContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
+
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
+
+const MouseOverContainer = styled.div`
+  position: absolute;
+  display: none;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 50px;
+`;
+
+const MouseOverBtn = styled.div`
+  //position: absolute;
+  float: right;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  width: 35px;
+  height: 35px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
+  border-radius: 5px;
+`;
+
+const DeleteBtn = styled.img`
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
 `;
 
 const QuestionNumber = styled.span`
@@ -447,6 +509,7 @@ const OptionBtn = styled.img`
   right: 30px;
   bottom: 30px;
   cursor: pointer;
+  z-index: 999;
 `;
 
 export default Build;

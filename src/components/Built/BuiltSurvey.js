@@ -1,35 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import deleteBtn from "../../assets/build/delete_btn.png";
+import DeleteModal from "./DeleteModal";
 
 function BuiltSurvey(props) {
+  const [showModal, setShowModal] = useState(false); //삭제하기 모달 보여주기 여부
+
   return (
-    <Container>
-      <TitleContainer>
-        <Title>{props.survey.surveyTitle}</Title>
-        {props.survey.status === 1 ? (
-          <Status>제작중</Status>
-        ) : props.survey.status === 2 ? (
-          <Status>진행중</Status>
-        ) : (
-          <Status>완료</Status>
-        )}
-      </TitleContainer>
-      <Content>{props.survey.surveyContent}</Content>
-      <BottomContainer>
-        <div className="flexDiv">
-          <Content>응답수</Content>
-          <ResponseCnt>{props.survey.responseCnt}</ResponseCnt>
-        </div>
-        {props.survey.status === 1 ? (
-          <Link to="/build" state={{ surveyId: props.survey.id }}>
-            <ShowResponseBtn>수정하기</ShowResponseBtn>
-          </Link>
-        ) : (
-          <ShowResponseBtn>응답보기</ShowResponseBtn>
-        )}
-      </BottomContainer>
-    </Container>
+    <>
+      {showModal ? (
+        <DeleteModal
+          setShowModal={setShowModal}
+          reRender={props.reRender}
+          setReRender={props.setReRender}
+          surveyId={props.survey.surveyId}
+        />
+      ) : null}
+      <Container>
+        <TitleContainer>
+          <Title>{props.survey.surveyTitle}</Title>
+          {props.survey.status === 1 ? (
+            <Status>제작중</Status>
+          ) : props.survey.status === 2 ? (
+            <Status
+              className={
+                props.survey.dday > 9
+                  ? "green"
+                  : props.survey.dday <= 5 && props.survey.dday > 1
+                  ? "yellow"
+                  : "red"
+              }
+            >
+              D - {props.survey.dday}
+            </Status>
+          ) : (
+            <Status>완료</Status>
+          )}
+        </TitleContainer>
+        <Content>{props.survey.surveyContent}</Content>
+        <BottomContainer>
+          <div className="flexDiv">
+            <Content>응답수</Content>
+            <ResponseCnt>{props.survey.responseCnt}</ResponseCnt>
+          </div>
+          {props.survey.status === 1 ? (
+            <Link to="/build" state={{ surveyId: props.survey.surveyId }}>
+              <ShowResponseBtn>수정하기</ShowResponseBtn>
+            </Link>
+          ) : (
+            <ShowResponseBtn>응답보기</ShowResponseBtn>
+          )}
+        </BottomContainer>
+
+        {/**마우스 올렸을 때 보이는 삭제 버튼 */}
+        <MouseOverContainer>
+          <MouseOverBtn>
+            <DeleteBtn
+              src={deleteBtn}
+              onClick={() => {
+                setShowModal(true);
+              }}
+            />
+          </MouseOverBtn>
+        </MouseOverContainer>
+      </Container>
+    </>
   );
 }
 
@@ -48,6 +84,43 @@ const Container = styled.div`
     display: flex;
     align-items: center;
   }
+
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
+
+const MouseOverContainer = styled.div`
+  position: absolute;
+  display: none;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 50px;
+  z-index: 990;
+`;
+
+const MouseOverBtn = styled.div`
+  float: right;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
+  border-radius: 5px;
+`;
+
+const DeleteBtn = styled.img`
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
 `;
 
 const TitleContainer = styled.div`
@@ -55,6 +128,19 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+
+  .red {
+    border: 1px solid #fe2e01;
+    color: #fe2e01;
+  }
+  .green {
+    border: 1px solid #1cd88a;
+    color: #1cd88a;
+  }
+  .yellow {
+    border: 1px solid #fac02d;
+    color: #fac02d;
+  }
 `;
 
 const Title = styled.div`
