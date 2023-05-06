@@ -1,43 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import deleteBtn from "../../assets/build/delete_btn.png";
+import DeleteModal from "./DeleteModal";
 
 function BuiltSurvey(props) {
-  return (
-    <Container>
-      <TitleContainer>
-        <Title>{props.survey.surveyTitle}</Title>
-        {props.survey.status === 1 ? (
-          <Status>제작중</Status>
-        ) : props.survey.status === 2 ? (
-          <Status>진행중</Status>
-        ) : (
-          <Status>완료</Status>
-        )}
-      </TitleContainer>
-      <Content>{props.survey.surveyContent}</Content>
-      <BottomContainer>
-        <div className="flexDiv">
-          <Content>응답수</Content>
-          <ResponseCnt>{props.survey.responseCnt}</ResponseCnt>
-        </div>
-        {props.survey.status === 1 ? (
-          <Link to="/build" state={{ surveyId: props.survey.surveyId }}>
-            <ShowResponseBtn>수정하기</ShowResponseBtn>
-          </Link>
-        ) : (
-          <ShowResponseBtn>응답보기</ShowResponseBtn>
-        )}
-      </BottomContainer>
+  const [showModal, setShowModal] = useState(false); //삭제하기 모달 보여주기 여부
 
-      {/**마우스 올렸을 때 보이는 삭제 버튼 */}
-      <MouseOverContainer>
-        <MouseOverBtn>
-          <DeleteBtn src={deleteBtn} onClick={() => {}} />
-        </MouseOverBtn>
-      </MouseOverContainer>
-    </Container>
+  return (
+    <>
+      {showModal ? (
+        <DeleteModal
+          setShowModal={setShowModal}
+          reRender={props.reRender}
+          setReRender={props.setReRender}
+          surveyId={props.survey.surveyId}
+        />
+      ) : null}
+      <Container>
+        <TitleContainer>
+          <Title>{props.survey.surveyTitle}</Title>
+          {props.survey.status === 1 ? (
+            <Status>제작중</Status>
+          ) : props.survey.status === 2 ? (
+            <Status
+              className={
+                props.survey.dday > 9
+                  ? "green"
+                  : props.survey.dday <= 5 && props.survey.dday > 1
+                  ? "yellow"
+                  : "red"
+              }
+            >
+              D - {props.survey.dday}
+            </Status>
+          ) : (
+            <Status>완료</Status>
+          )}
+        </TitleContainer>
+        <Content>{props.survey.surveyContent}</Content>
+        <BottomContainer>
+          <div className="flexDiv">
+            <Content>응답수</Content>
+            <ResponseCnt>{props.survey.responseCnt}</ResponseCnt>
+          </div>
+          {props.survey.status === 1 ? (
+            <Link to="/build" state={{ surveyId: props.survey.surveyId }}>
+              <ShowResponseBtn>수정하기</ShowResponseBtn>
+            </Link>
+          ) : (
+            <ShowResponseBtn>응답보기</ShowResponseBtn>
+          )}
+        </BottomContainer>
+
+        {/**마우스 올렸을 때 보이는 삭제 버튼 */}
+        <MouseOverContainer>
+          <MouseOverBtn>
+            <DeleteBtn
+              src={deleteBtn}
+              onClick={() => {
+                setShowModal(true);
+              }}
+            />
+          </MouseOverBtn>
+        </MouseOverContainer>
+      </Container>
+    </>
   );
 }
 
@@ -100,6 +128,19 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+
+  .red {
+    border: 1px solid #fe2e01;
+    color: #fe2e01;
+  }
+  .green {
+    border: 1px solid #1cd88a;
+    color: #1cd88a;
+  }
+  .yellow {
+    border: 1px solid #fac02d;
+    color: #fac02d;
+  }
 `;
 
 const Title = styled.div`
