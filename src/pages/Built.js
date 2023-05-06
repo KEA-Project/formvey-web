@@ -9,6 +9,7 @@ function Built() {
   const menu = ["전체", "제작중", "진행중", "설문완료"];
   const [selectedMenu, setSelectedMenu] = useState(0);
   const [builtSurvey, setBuiltSurvey] = useState([]);
+  const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -29,7 +30,7 @@ function Built() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reRender]);
 
   return (
     <div>
@@ -66,7 +67,13 @@ function Built() {
               (selectedMenu === 2 && a.status === 2) || //진행중
               (selectedMenu === 3 && a.status === 3) //설문완료
             ) {
-              return <BuiltSurvey survey={a} />;
+              return (
+                <BuiltSurvey
+                  survey={a}
+                  reRender={reRender}
+                  setReRender={setReRender}
+                />
+              );
             } else {
               return null;
             }

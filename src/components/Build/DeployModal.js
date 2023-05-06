@@ -113,7 +113,6 @@ const ContentContainer = styled.div`
   width: 610px;
   height: 387px;
   background: white;
-  //filter: blur(1px);
   border-radius: 44px;
   z-index: 1000;
   padding-top: 40px;

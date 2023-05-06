@@ -271,12 +271,14 @@ function Build(props) {
                   <Toggle
                     option="짧폼"
                     index={i}
+                    initialValue={a.isShort}
                     setShortAndEssential={setShortAndEssential}
                     type="short"
                   />
                   <Toggle
                     option="필수"
                     setShortAndEssential={setShortAndEssential}
+                    initialValue={a.isEssential}
                     index={i}
                     type="essential"
                   />
