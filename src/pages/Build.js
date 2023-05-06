@@ -1,6 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 
 import FormGPT from "../components/Build/FormGPT";
 import FormOption from "../components/Build/FormOption";
@@ -8,6 +10,7 @@ import FormOption from "../components/Build/FormOption";
 import Dropdown from "../components/Build/Dropdown";
 import Toggle from "../components/Build/Toggle";
 
+import deleteBtn from "../assets/build/delete_btn.png";
 import gptBtn from "../assets/build/gpt_btn.png";
 import plusBtn from "../assets/common/add_btn.png";
 import optionBtn from "../assets/build/option_btn.png";
@@ -26,17 +29,25 @@ function Build(props) {
   const [surveyTitle, setSurveyTitle] = useState(""); //설문 제목
   const [surveyContent, setSurveyContent] = useState(""); //설문 설명
   const [responseCnt, setResponseCnt] = useState(0);
+  const [initialEndDate, setInitialEndDate] = useState("");
+
+  const [surveyId, setSurveyId] = useState(null); //설문 id 초기화
 
   const fetchData = async (surveyId) => {
     //설문조사 수정하기의 경우 설문의 내용을 받아와야 함
+    setSurveyId(surveyId);
     const response = await fetchSurveyInfo(surveyId);
+    //console.log(surveyId);
     console.log(response);
 
+    setSurveyId(surveyId);
     setSurveyTitle(response.surveyTitle);
     setSurveyContent(response.surveyContent);
     setIsAnonymous(response.isAnonymous);
+    setIsPublic(response.isPublic);
     setQuestions(response.questions);
     setExitUrl(response.exitUrl);
+    setInitialEndDate(response.endDate);
     setResponseCnt(response.responseCnt);
   };
 
@@ -46,41 +57,6 @@ function Build(props) {
       fetchData(location.state.surveyId);
     }
   }, [location]);
-
-  /*
-  {
-      qudstionIdx: 0,
-      questionTitle: "객관식 단일",
-      choices: [
-        { choiceContent: "보기1", choiceIdx: 0 },
-        { choiceContent: "보기2", choiceIdx: 1 },
-        { choiceContent: "보기3", choiceIdx: 2 },
-      ],
-      type: 0,
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      qudstionIdx: 1,
-      questionTitle: "객관식 다중",
-      choices: [
-        { choiceContent: "보기1", choiceIdx: 0 },
-        { choiceContent: "보기2", choiceIdx: 1 },
-        { choiceContent: "보기3", choiceIdx: 2 },
-      ],
-      type: 1,
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      qudstionIdx: 2,
-      questionTitle: "주관식",
-      choices: [],
-      type: 0,
-      isShort: false,
-      isEssential: false,
-    },
-  */
 
   const addGPTQuestion = (selectedList) => {
     var temp = [...questions];
@@ -109,6 +85,14 @@ function Build(props) {
       isShort: 0,
       isEssential: 0,
     });
+
+    setQuestions(temp);
+  };
+
+  //문항 삭제
+  const deleteQuestion = (i) => {
+    var temp = [...questions];
+    temp.splice(i, 1);
 
     setQuestions(temp);
   };
@@ -213,10 +197,12 @@ function Build(props) {
           setExitUrl={setExitUrl}
           surveyTitle={surveyTitle}
           surveyContent={surveyContent}
+          initialEndDate={initialEndDate}
           questions={questions}
-          surveyId={location.state.surveyId}
+          surveyId={surveyId}
           responseCnt={responseCnt}
         />
+
         {/*설문조사 작성 부분*/}
         {/*설문조사 제목 + 설명*/}
         <FormContainer>
@@ -285,16 +271,29 @@ function Build(props) {
                   <Toggle
                     option="짧폼"
                     index={i}
+                    initialValue={a.isShort}
                     setShortAndEssential={setShortAndEssential}
                     type="short"
                   />
                   <Toggle
                     option="필수"
                     setShortAndEssential={setShortAndEssential}
+                    initialValue={a.isEssential}
                     index={i}
                     type="essential"
                   />
                 </div>
+                {/**각 문항에 마우스를 올렸을 때 보이는 메뉴(삭제, 위치 이동) */}
+                <MouseOverContainer>
+                  <MouseOverBtn>
+                    <DeleteBtn
+                      src={deleteBtn}
+                      onClick={() => {
+                        deleteQuestion(i);
+                      }}
+                    />
+                  </MouseOverBtn>
+                </MouseOverContainer>
               </QuestionContainer>
             );
           })}
@@ -390,6 +389,44 @@ const QuestionContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
+
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
+
+const MouseOverContainer = styled.div`
+  position: absolute;
+  display: none;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 50px;
+`;
+
+const MouseOverBtn = styled.div`
+  //position: absolute;
+  float: right;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  width: 35px;
+  height: 35px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
+  border-radius: 5px;
+`;
+
+const DeleteBtn = styled.img`
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
 `;
 
 const QuestionNumber = styled.span`
@@ -472,6 +509,7 @@ const OptionBtn = styled.img`
   right: 30px;
   bottom: 30px;
   cursor: pointer;
+  z-index: 999;
 `;
 
 export default Build;

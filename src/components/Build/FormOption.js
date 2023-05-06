@@ -1,32 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import BuildCalendar from "./BuildCalendar";
 import DeployModal from "./DeployModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getToday } from "../../Functions";
 
 function FormOption(props) {
   let navigate = useNavigate();
 
   const [endDate, setEndDate] = useState("");
   const [showModal, setShowModal] = useState(false); //배포 모달창 보이기
-
-  //오늘 날짜 받아오기 (설문 시작일)
-  const getToday = () => {
-    var date = new Date();
-
-    return date.toISOString();
-  };
-
-  //설문 url 생성을 위한 uuid 생성 함수
-  const uuid = () => {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-      (
-        c ^
-        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-      ).toString(16)
-    );
-  };
 
   //임시저장 버튼 눌렀을 때 이벤트
   const clickTempSave = async () => {
@@ -42,7 +26,6 @@ function FormOption(props) {
       startDate: getToday(),
       surveyContent: props.surveyContent,
       surveyTitle: props.surveyTitle,
-      url: null,
     };
 
     //console.log(payload);
@@ -51,7 +34,7 @@ function FormOption(props) {
 
     if (props.surveyId === null) {
       response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/surveys/create`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/create/1`,
         payload,
         {
           headers: {
@@ -61,7 +44,7 @@ function FormOption(props) {
       );
     } else {
       response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}`,
+        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}/1`,
         payload,
         {
           headers: {
@@ -99,7 +82,6 @@ function FormOption(props) {
             startDate: getToday(),
             surveyContent: props.surveyContent,
             surveyTitle: props.surveyTitle,
-            url: `http://www.formvey.site/participate/${uuid()}`,
           }}
           surveyId={props.surveyId}
         />
@@ -143,7 +125,10 @@ function FormOption(props) {
         <OptionDesc>설문 응답을 익명으로 받습니다.</OptionDesc>
         {/**응답 기한 설정*/}
         <OptionTitle>응답 기한 설정</OptionTitle>
-        <BuildCalendar setEndDate={setEndDate} />
+        <BuildCalendar
+          setEndDate={setEndDate}
+          initialEndDate={props.initialEndDate}
+        />
         {/**나가기 링크 설정 */}
         <OptionTitle>나가기 링크</OptionTitle>
         <ExitUrlInut

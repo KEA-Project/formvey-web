@@ -2,18 +2,6 @@ import React from 'react';
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
-const tableData = [
-    { id: 1, title: 'John', date: 'D-1', responseCnt: 10, member: '김철수' },
-    { id: 2, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 3, title: '설문조사3', date: 'D-10', responseCnt: 90, member: 'dlfjlejdeffe'}, 
-    { id: 4, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 5, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 6, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 7, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 8, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 9, title: '설문조사', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-    { id: 10, title: '끝', date: 'D-52', responseCnt: 100, member: 'dltjgus'},
-  ];
 
 function BoardTable(props) {
 
