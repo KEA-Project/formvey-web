@@ -5,17 +5,32 @@ import axios from "axios";
 function DeleteModal(props) {
   //설문 삭제하기
   const deleteSurvey = async () => {
-    const response = await axios.patch(
-      `${process.env.REACT_APP_BASE_URL}/surveys/delete/${props.surveyId}`,
-      {
-        memberId: localStorage.getItem("memberId"),
-      },
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+    var response;
+    if (props.mode === "built") {
+      response = await axios.patch(
+        `${process.env.REACT_APP_BASE_URL}/surveys/delete/${props.surveyId}`,
+        {
+          memberId: localStorage.getItem("memberId"),
         },
-      }
-    );
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    } else {
+      response = await axios.patch(
+        `${process.env.REACT_APP_BASE_URL}/responses/delete/${props.responseId}`,
+        {
+          memberId: localStorage.getItem("memberId"),
+        },
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+    }
 
     if (response.data.isSuccess) {
       props.setShowModal(false);
