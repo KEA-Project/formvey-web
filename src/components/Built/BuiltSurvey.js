@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import deleteBtn from "../../assets/build/delete_btn.png";
 
 function BuiltSurvey(props) {
   return (
@@ -22,13 +23,20 @@ function BuiltSurvey(props) {
           <ResponseCnt>{props.survey.responseCnt}</ResponseCnt>
         </div>
         {props.survey.status === 1 ? (
-          <Link to="/build" state={{ surveyId: props.survey.id }}>
+          <Link to="/build" state={{ surveyId: props.survey.surveyId }}>
             <ShowResponseBtn>수정하기</ShowResponseBtn>
           </Link>
         ) : (
           <ShowResponseBtn>응답보기</ShowResponseBtn>
         )}
       </BottomContainer>
+
+      {/**마우스 올렸을 때 보이는 삭제 버튼 */}
+      <MouseOverContainer>
+        <MouseOverBtn>
+          <DeleteBtn src={deleteBtn} onClick={() => {}} />
+        </MouseOverBtn>
+      </MouseOverContainer>
     </Container>
   );
 }
@@ -48,6 +56,43 @@ const Container = styled.div`
     display: flex;
     align-items: center;
   }
+
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
+
+const MouseOverContainer = styled.div`
+  position: absolute;
+  display: none;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 50px;
+  z-index: 990;
+`;
+
+const MouseOverBtn = styled.div`
+  float: right;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
+  border-radius: 5px;
+`;
+
+const DeleteBtn = styled.img`
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
 `;
 
 const TitleContainer = styled.div`

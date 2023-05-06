@@ -14,7 +14,7 @@ function Built() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
         "memberId"
-      )}`,
+      )}?page=0&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
