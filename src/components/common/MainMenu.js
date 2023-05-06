@@ -8,6 +8,8 @@ import logoutIcon from "../../assets/common/logout_icon.png";
 import Main from "../../pages/Main";
 import SurveyBoard from "../../pages/SurveyBoard";
 import Built from "../../pages/Built";
+import Participated from "../../pages/Participated";
+import ShortBoard from "../../pages/ShortBoard";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -98,7 +100,19 @@ function MainMenu() {
         </LogoutContainer>
       </MenuContainer>
       {/**페이지 라우팅 */}
-      <div>{selected === 0 ? <Main /> : selected === 1 ? <SurveyBoard/> : selected === 3 ? <Built /> : null}</div>
+      <div>
+        {selected === 0 ? ( //메인
+          <Main />
+        ) : selected === 1 ? ( //설문 게시판
+          <SurveyBoard />
+        ) : selected === 2 ? ( //짧폼 게시판
+          <ShortBoard/>
+        ) : selected === 3 ? ( //제작한 설문
+          <Built />
+        ) : selected === 4 ? ( //응답한 설문
+          <Participated />
+        ) : null}
+      </div>
     </Container>
   );
 }

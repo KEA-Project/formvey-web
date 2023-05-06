@@ -9,8 +9,10 @@ import Paging from "../components/common/Paging";
 function SurveyBoard(props) {
 
   const [listSurvey, setListSurvey] = useState([]);
+
   const [totalItemsCount, setTotalItemsCount] = useState();
   const [currentPage, setCurrentPage] = useState(0);
+  const [count] = useState(10);
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -46,7 +48,7 @@ function SurveyBoard(props) {
 
                 <BoardTable survey={listSurvey} />
                 <BottomContainer>
-                <Paging page={currentPage} totalItemsCount={totalItemsCount} onPageChange={handlePageChange}/>
+                <Paging page={currentPage} count={count} totalItemsCount={totalItemsCount} onPageChange={handlePageChange}/>
                 </BottomContainer>
             </Container>
         </div>

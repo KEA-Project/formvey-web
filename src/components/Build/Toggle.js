@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
 function Toggle(props) {
+  useEffect(() => {
+    if (props.initialValue === 1) setSelected(true);
+  }, []);
+
   const [selected, setSelected] = useState(false);
   return (
     <>
