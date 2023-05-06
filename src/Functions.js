@@ -52,3 +52,10 @@ export function fetchSurveyInfo(surveyId) {
 
   return fetch();
 }
+
+//현재 날짜 가져오기
+export function getToday() {
+  var date = new Date();
+
+  return date.toISOString();
+}
