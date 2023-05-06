@@ -1,49 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { fetchSurveyInfo } from "../Functions";
+import { getToday } from "../Functions";
 
 function Participate() {
+  const navigate = useNavigate();
   const { surveyId } = useParams(); //url 파라미터에 survey id 값
-
-  /**{
-        qudstionIdx: 0,
-        questionTitle: "객관식 단일",
-        choices: [
-          { choiceContent: "보기1", choiceIdx: 0 },
-          { choiceContent: "보기2", choiceIdx: 1 },
-          { choiceContent: "보기3", choiceIdx: 2 },
-        ],
-        type: 0,
-        isShort: 0,
-        isEssential: 1,
-      },
-      {
-        qudstionIdx: 1,
-        questionTitle: "객관식 다중",
-        choices: [
-          { choiceContent: "보기1", choiceIdx: 0 },
-          { choiceContent: "보기2", choiceIdx: 1 },
-          { choiceContent: "보기3", choiceIdx: 2 },
-        ],
-        type: 1,
-        isShort: 0,
-        isEssential: 0,
-      },
-      {
-        qudstionIdx: 2,
-        questionTitle: "주관식",
-        choices: [],
-        type: 2,
-        isShort: 0,
-        isEssential: 0,
-      }, */
+  const [essentialId, setEssentialId] = useState([]);
 
   //받아올 설문 정보 데이터
   const [surveyInfo, setSurveyInfo] = useState({
-    endDate: "2023-05-03T13:14:54.561Z",
+    endDate: "",
     exitUrl: "",
     isAnonymous: 0,
     memberId: 0,
@@ -56,14 +26,113 @@ function Participate() {
     url: "",
   });
 
+  const checkEssential = () => {
+    //필수 응답 인덱스 값들 넣어주기
+    var temp = [...essentialId];
+    for (let i = 0; i < surveyInfo.questions.length; i++) {
+      if (surveyInfo.questions[i].isEssential === 1) {
+        temp.push(surveyInfo.questions[i].questionId);
+      }
+    }
+    setEssentialId(temp);
+  };
+
   const fetchData = async () => {
     const response = await fetchSurveyInfo(surveyId);
+    //console.log(response);
     setSurveyInfo(response);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (surveyInfo) {
+      checkEssential();
+    }
+  }, [surveyInfo]);
+
+  const [answers, setAnswers] = useState([]); //내 응답
+
+  //단일선택, 주관식 응답하기
+  const respondSingle = (questionId, content) => {
+    //console.log(questionId + " " + content);
+
+    //해당 questionId의 답변이 있는지, 있다면 인덱스 확인
+    let checkIndex = answers.findIndex((obj) => obj.questionId === questionId);
+
+    if (checkIndex === -1) {
+      answers.push({ content: [content], questionId: questionId });
+    } else {
+      if (content === "") {
+        //답변을 지울 경우
+        answers.splice(checkIndex, 1);
+      } else {
+        answers.splice(checkIndex, 1);
+        answers.push({ content: [content], questionId: questionId });
+      }
+    }
+
+    //console.log(answers);
+  };
+
+  // 다중선택 응답하기
+  const respondMulti = (questionId, content, checked) => {
+    //해당 questionId의 답변이 있는지, 있다면 인덱스 확인
+    let checkIndex = answers.findIndex((obj) => obj.questionId === questionId);
+
+    //console.log(`${questionId} ${content} ${checked}`);
+    if (checked && checkIndex === -1) {
+      answers.push({ content: [content], questionId: questionId });
+    } else if (checked && checkIndex !== -1) {
+      var temp = [...answers];
+      temp[checkIndex].content.push(content);
+      setAnswers(temp);
+    } else if (!checked) {
+      var temp2 = [...answers];
+
+      if (temp2[checkIndex].content.length === 1) {
+        answers.splice(checkIndex, 1);
+      } else {
+        var idx = temp2[checkIndex].content.indexOf(content);
+        temp2[checkIndex].content.splice(idx, 1);
+        setAnswers(temp2);
+      }
+    }
+
+    //console.log(answers);
+  };
+
+  //응답 제출하기
+  const submitRespond = async () => {
+    //필수 질문에 응답했는지 확인
+    const isEssentialIncluded = essentialId.every((idx) =>
+      answers.some((answer) => answer.questionId === idx)
+    );
+
+    if (!isEssentialIncluded) {
+      alert("필수 질문에 응답해주세요!");
+    } else {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/responses/${surveyId}`,
+        {
+          answers: answers,
+          memberId: localStorage.getItem("memberId"),
+          responseDate: getToday(),
+        },
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+
+      if (response.data.isSuccess) {
+        navigate("/main");
+      }
+    }
+  };
 
   return (
     <div>
@@ -77,7 +146,7 @@ function Participate() {
           {/**설문조사 각 문항 */}
           {surveyInfo.questions.map((a, i) => {
             return (
-              <QuestionContainer key={a.qudstionIdx}>
+              <QuestionContainer key={a.questionIdx}>
                 <div className="flexDiv">
                   <QuestionNumber>Q{i + 1}.</QuestionNumber>
                   <QuestionTitle>{a.questionTitle}</QuestionTitle>
@@ -87,17 +156,20 @@ function Participate() {
                 </div>
                 {a.type === 0 ? ( //객관식 단일선택
                   <OptionContainer>
-                    {a.choices.map((a, j) => {
+                    {a.choices.map((b, j) => {
                       return (
-                        <ChoiceContainer key={a.choiceIdx}>
+                        <ChoiceContainer key={b.choiceIdx}>
                           <input
                             type="radio"
-                            id={a.choiceIdx}
+                            id={b.choiceIdx}
                             name="choice"
-                            value={a.choiceContent}
+                            value={b.choiceContent}
+                            onChange={() => {
+                              respondSingle(a.questionId, b.choiceContent);
+                            }}
                           />
                           <ChoiceLabel htmlfor="choice">
-                            {a.choiceContent}
+                            {b.choiceContent}
                           </ChoiceLabel>
                         </ChoiceContainer>
                       );
@@ -105,17 +177,24 @@ function Participate() {
                   </OptionContainer>
                 ) : a.type === 1 ? ( //객관식 다중선택
                   <OptionContainer>
-                    {a.choices.map((a, j) => {
+                    {a.choices.map((b, j) => {
                       return (
-                        <ChoiceContainer key={a.choiceIdx}>
+                        <ChoiceContainer key={b.choiceIdx}>
                           <input
                             type="checkbox"
-                            id={a.choiceIdx}
+                            id={b.choiceIdx}
                             name="choice"
-                            value={a.choiceContent}
+                            value={b.choiceContent}
+                            onChange={({ target: { checked } }) => {
+                              respondMulti(
+                                a.questionId,
+                                b.choiceContent,
+                                checked
+                              );
+                            }}
                           />
                           <ChoiceLabel htmlfor="choice">
-                            {a.choiceContent}
+                            {b.choiceContent}
                           </ChoiceLabel>
                         </ChoiceContainer>
                       );
@@ -124,7 +203,12 @@ function Participate() {
                 ) : (
                   //주관식
                   <>
-                    <AnswerInput placeholder="주관식 답변" />
+                    <AnswerInput
+                      placeholder="주관식 답변"
+                      onChange={(e) => {
+                        respondSingle(a.questionId, e.target.value);
+                      }}
+                    />
                   </>
                 )}
               </QuestionContainer>
@@ -132,7 +216,7 @@ function Participate() {
           })}
 
           {surveyInfo.endDate > new Date().toISOString() ? (
-            <SubmitBtn>제출하기</SubmitBtn>
+            <SubmitBtn onClick={submitRespond}>제출하기</SubmitBtn>
           ) : null}
         </FormContainer>
       </Container>
