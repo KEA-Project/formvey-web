@@ -5,6 +5,7 @@ import ParticipatedSurvey from "../Participated/ParticipatedSurvey";
 
 function ParticipatedSection() {
   const [participatedSurvey, setParticipatedSurvey] = useState([]);
+  const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -25,7 +26,7 @@ function ParticipatedSection() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reRender]);
 
   return (
     <Container>
@@ -35,7 +36,13 @@ function ParticipatedSection() {
       {/**설문 리스트 */}
       <SurveyList>
         {participatedSurvey.map((a, i) => {
-          return <ParticipatedSurvey survey={a} />;
+          return (
+            <ParticipatedSurvey
+              survey={a}
+              reRender={reRender}
+              setReRender={setReRender}
+            />
+          );
         })}
       </SurveyList>
     </Container>

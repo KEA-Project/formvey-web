@@ -5,6 +5,7 @@ import BuiltSurvey from "../Built/BuiltSurvey";
 
 function BuiltSection() {
   const [builtSurvey, setBuiltSurvey] = useState([]);
+  const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -25,7 +26,7 @@ function BuiltSection() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reRender]);
 
   return (
     <Container>
@@ -35,7 +36,13 @@ function BuiltSection() {
       {/**설문 리스트 */}
       <SurveyList>
         {builtSurvey.map((a, i) => {
-          return <BuiltSurvey survey={a} />;
+          return (
+            <BuiltSurvey
+              survey={a}
+              reRender={reRender}
+              setReRender={setReRender}
+            />
+          );
         })}
       </SurveyList>
     </Container>
