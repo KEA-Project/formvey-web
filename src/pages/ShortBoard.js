@@ -26,7 +26,7 @@ function ShortBoard(props) {
     const response = await axios.get(
       `${
         process.env.REACT_APP_BASE_URL
-      }/shortforms/board/${localStorage.getItem("memberId")}?page=0&size=6`,
+      }/shortforms/board/${localStorage.getItem("memberId")}?page=${currentPage}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -42,7 +42,7 @@ function ShortBoard(props) {
     const responseResult = await axios.get(
       `${
         process.env.REACT_APP_BASE_URL
-      }/shortresults/board/${localStorage.getItem("memberId")}?page=0&size=6`,
+      }/shortresults/board/${localStorage.getItem("memberId")}?page=${lockPage}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),

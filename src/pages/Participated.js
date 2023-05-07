@@ -27,7 +27,6 @@ function Participated() {
   const [participatedSurvey, setParticipatedSurvey] = useState([]);
   const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
-
   //페이징
   const [count] = useState(6);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -39,11 +38,20 @@ function Participated() {
   const [completeCount, setCompleteCount] = useState(0);
   const [completePage, setCompletePage] = useState(0);
 
+  const page =
+    selectedMenu === 0
+      ? currentPage
+      : selectedMenu === 1
+      ? goingPage
+      : selectedMenu === 2
+      ? completePage
+      : currentPage;
+
   const fetchData = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/responses/list/${localStorage.getItem(
         "memberId"
-        )}?page=0&size=6`,
+      )}?page=${page}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),

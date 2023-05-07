@@ -3,7 +3,7 @@ import Pagination from "react-js-pagination";
 import styled from "@emotion/styled";
 import "./Paging.css";
 
-function Paging ({page, totalItemsCount, onPageChange}) {
+function Paging ({page, count, totalItemsCount, onPageChange}) {
 
     const handlePageChange = (page) => {
         onPageChange(page -1);
@@ -13,7 +13,7 @@ function Paging ({page, totalItemsCount, onPageChange}) {
     <div>
     <Pagination
       activePage={page+1}
-      itemsCountPerPage={10}
+      itemsCountPerPage={count}
       totalItemsCount={totalItemsCount}
       pageRangeDisplayed={5}
       prevPageText={"‹"}

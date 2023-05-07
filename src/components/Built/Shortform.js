@@ -3,40 +3,58 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import unlock from "../../assets/common/shortform/unlock.png";
 import lock from "../../assets/common/shortform/lock.png";
+import InfoModal from "./InfoModal";
 
 function Shortform(props) {
-  return (
-    <Container>
-      <TitleContainer>
-        <Title>{props.shortform.shortQuestion}</Title>
-        {props.shortform.shortResultStatus === 0 ? (
-          <Status src={lock} />
-        ) : (
-          <Status src={unlock} />
-        )}
-      </TitleContainer>
-      <Content>{props.shortform.surveyTitle}</Content>
-      {props.shortform.shortType ===  0 ? (
-        <Content>주관식</Content>
-        ) : props.shortform.shortType === 1 ? (
-            <Content>객관식(단일)</Content>
-        ) : (
-            <Content>객관식(다중)</Content> )}
-      <BottomContainer>
-        <div className="flexDiv">
-          <Content>응답수</Content>
-          <ResponseCnt>{props.shortform.shortResponse}</ResponseCnt>
-        </div>
-        {props.shortform.shortResultStatus === 0 ? (
-          //<Link to="/build" state={{ surveyId: props.survey.surveyId }}>
-            <ShowResponseBtn>잠금 해제</ShowResponseBtn>
-         // </Link>
-        ) : (
-          <ShowResponseBtn>결과보기</ShowResponseBtn>
-        )}
-      </BottomContainer>
+  const [showModal, setShowModal] = useState(false); //상세조회 모달 보여주기 여부
 
-    </Container>
+  return (
+    <>
+      {showModal ? (
+        <InfoModal
+          setShowModal={setShowModal}
+          shortformId={props.shortform.id}
+        />
+      ) : null}
+
+      <Container>
+        <TitleContainer>
+          <Title>{props.shortform.shortQuestion}</Title>
+          {props.shortform.shortResultStatus === 0 ? (
+            <Status src={lock} />
+          ) : (
+            <Status src={unlock} />
+          )}
+        </TitleContainer>
+        <Content>{props.shortform.surveyTitle}</Content>
+        {props.shortform.shortType === 0 ? (
+          <Content>주관식</Content>
+        ) : props.shortform.shortType === 1 ? (
+          <Content>객관식(단일)</Content>
+        ) : (
+          <Content>객관식(다중)</Content>
+        )}
+        <BottomContainer>
+          <div className="flexDiv">
+            <Content>응답수</Content>
+            <ResponseCnt>{props.shortform.shortResponse}</ResponseCnt>
+          </div>
+          {props.shortform.shortResultStatus === 0 ? (
+            //<Link to="/build" state={{ surveyId: props.survey.surveyId }}>
+           <ShowResponseBtn
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              잠금 해제
+            </ShowResponseBtn>
+          ) : (
+            // </Link>
+            <ShowResponseBtn>결과보기</ShowResponseBtn>
+          )}
+        </BottomContainer>
+      </Container>
+    </>
   );
 }
 
@@ -58,35 +76,6 @@ const Container = styled.div`
 
   position: relative;
   overflow: visible;
-
-`;
-
-const MouseOverContainer = styled.div`
-  position: absolute;
-  display: none;
-  top: 0;
-  right: -40px;
-  width: 40px;
-  height: 50px;
-  z-index: 990;
-`;
-
-const MouseOverBtn = styled.div`
-  float: right;
-  background: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 35px;
-  height: 35px;
-  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
-  border-radius: 5px;
-`;
-
-const DeleteBtn = styled.img`
-  width: 10px;
-  height: 10px;
-  cursor: pointer;
 `;
 
 const TitleContainer = styled.div`

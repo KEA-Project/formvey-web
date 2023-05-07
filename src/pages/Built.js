@@ -26,11 +26,22 @@ function Built() {
   const [completeCount, setCompleteCount] = useState(0);
   const [completePage, setCompletePage] = useState(0);
 
+  const page =
+    selectedMenu === 0
+      ? currentPage
+      : selectedMenu === 1
+      ? buildPage
+      : selectedMenu === 2
+      ? goingPage
+      : selectedMenu === 3
+      ? completePage
+      : currentPage;
+
   const fetchData = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
         "memberId"
-      )}?page=0&size=6`,
+      )}?page=${currentPage}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
