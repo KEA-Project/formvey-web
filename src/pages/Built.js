@@ -42,9 +42,9 @@ function Built() {
       setBuiltSurvey(response.data.result.getSurveyListRes);
       setTotalItemsCount(response.data.result.totalPageCnt);
 
-      setBuildCount(response.data.result.unReleasedCnt);
-      setGoingCount(response.datar.result.releasedCnt);
-      setCompleteCount(response.data.result.closedCnt);
+      setBuildCount(response.data.result.unReleasedPageCnt);
+      setGoingCount(response.data.result.releasedPageCnt);
+      setCompleteCount(response.data.result.closedPageCnt);
     }
   };
 
