@@ -130,6 +130,7 @@ function Participate() {
 
       if (response.data.isSuccess) {
         navigate("/main");
+        window.open(`${surveyInfo.exitUrl}`, "_blank");
       }
     }
   };
