@@ -49,18 +49,21 @@ function InfoModal(props) {
         </Header>
         <Title>{shortform.surveyTitle}</Title>
         <Question>{shortform.shortQuestion}</Question>
-        {shortform.shortType === 0 ? (
+        {shortform.shortType === 2 ? (
           <Options>주관식</Options>
         ) : (
-          <Options>선택사항</Options>
+          <>
+            <Options>선택사항</Options>
+            {shortform.options.map((option) => {
+              return (
+                <Option key={option.shortIndex}> {option.shortContent}</Option>
+              );
+            })}
+          </>
         )}
-        {shortform.options.map((option) => {
-          return (
-            <Option key={option.shortIndex}> {option.shortContent}</Option>
-          );
-        })}
+
         <BtnContainer>
-        <Btn>결과보기</Btn>
+          <Btn>결과보기</Btn>
         </BtnContainer>
       </ContentContainer>
     </Container>
@@ -132,7 +135,7 @@ const Options = styled.div`
   padding-right: 35px;
   font-weight: 400;
   font-size: 17px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 `;
 
 const Option = styled.div`
@@ -143,11 +146,11 @@ const Option = styled.div`
 `;
 
 const BtnContainer = styled.div`
-    display: inline-block;
-    text-align:center;
-    align-items: center;
-    
-    margin-right:30px;
+  display: inline-block;
+  text-align: center;
+  align-items: center;
+
+  margin-right: 30px;
 `;
 
 const Btn = styled.div`
