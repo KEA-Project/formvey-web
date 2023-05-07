@@ -39,12 +39,12 @@ function Built() {
     );
     console.log(response);
     if (response.data.isSuccess) {
-      setBuiltSurvey(response.data.result);
-      setTotalItemsCount(response.data.result[0].pages);
+      setBuiltSurvey(response.data.result.getSurveyListRes);
+      setTotalItemsCount(response.data.result.totalPageCnt);
 
-      setBuildCount(response.data.result.filter((item) => item.status === 1).length);
-      setGoingCount(response.data.result.filter((item) => item.status === 2).length);
-      setCompleteCount(response.data.result.filter((item) => item.status === 3).length);
+      setBuildCount(response.data.result.unReleasedCnt);
+      setGoingCount(response.datar.result.releasedCnt);
+      setCompleteCount(response.data.result.closedCnt);
     }
   };
 

@@ -20,7 +20,7 @@ function BuiltSection() {
     );
     console.log(response);
     if (response.data.isSuccess) {
-      setBuiltSurvey(response.data.result);
+      setBuiltSurvey(response.data.result.getSurveyListRes);
     }
   };
 
