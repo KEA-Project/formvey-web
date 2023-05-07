@@ -10,6 +10,7 @@ import SurveyBoard from "../../pages/SurveyBoard";
 import Built from "../../pages/Built";
 import Participated from "../../pages/Participated";
 import ShortBoard from "../../pages/ShortBoard";
+import profile from "../../assets/common/profile.png";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -77,6 +78,7 @@ function MainMenu() {
       {/**메뉴바 영역 */}
       <MenuContainer>
         <Logo src={logo} />
+        <ProfilePic src={profile} />
         <UserName>{userName}</UserName>
         <Link to="/editprofile">
           <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
@@ -106,7 +108,7 @@ function MainMenu() {
         ) : selected === 1 ? ( //설문 게시판
           <SurveyBoard />
         ) : selected === 2 ? ( //짧폼 게시판
-          <ShortBoard/>
+          <ShortBoard />
         ) : selected === 3 ? ( //제작한 설문
           <Built />
         ) : selected === 4 ? ( //응답한 설문
@@ -124,7 +126,7 @@ const Container = styled.div`
 `;
 
 const MenuContainer = styled.div`
-  padding-top: 70px;
+  padding-top: 50px;
   width: 202px;
   height: 100vh;
   align-items: center;
@@ -140,8 +142,13 @@ const Logo = styled.img`
   width: 144px;
 `;
 
-const UserName = styled.div`
+const ProfilePic = styled.img`
   margin-top: 27px;
+  width: 43px;
+  height: 43px;
+`;
+
+const UserName = styled.div`
   font-weight: 700;
   font-size: 18px;
   color: #444444;
