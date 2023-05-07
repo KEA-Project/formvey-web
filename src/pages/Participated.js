@@ -39,7 +39,7 @@ function Participated() {
     );
     console.log(response);
     if (response.data.isSuccess) {
-      setParticipatedSurvey(response.data.result);
+      setParticipatedSurvey(response.data.result.getResponseListRes);
     }
   };
 
