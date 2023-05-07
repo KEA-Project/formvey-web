@@ -12,6 +12,10 @@ function FormOption(props) {
   const [endDate, setEndDate] = useState("");
   const [showModal, setShowModal] = useState(false); //배포 모달창 보이기
 
+  useEffect(() => {
+    console.log(props.initialEndDate);
+  }, [props.initialEndDate]);
+
   //임시저장 버튼 눌렀을 때 이벤트
   const clickTempSave = async () => {
     //console.log(getToday());
