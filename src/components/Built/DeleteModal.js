@@ -70,6 +70,7 @@ const Container = styled.div`
   z-index: 9999;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 `;
 
 const Background = styled.div`
@@ -98,7 +99,6 @@ const Notice = styled.div`
 
 const BtnContainer = styled.div`
   margin-top: 40px;
-  display: flex;
   justify-content: space-between;
   width: 250px;
 `;
