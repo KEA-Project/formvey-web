@@ -100,7 +100,7 @@ function MainMenu() {
       {/**페이지 라우팅 */}
       <div>
         {selected === 0 ? ( //메인
-          <Main />
+          <Main userName={userName} />
         ) : selected === 3 ? ( //제작한 설문
           <Built />
         ) : selected === 4 ? ( //응답한 설문
