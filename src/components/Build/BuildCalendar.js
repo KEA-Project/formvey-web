@@ -6,15 +6,19 @@ import styled from "@emotion/styled";
 import { Form, DatePicker } from "antd";
 import { TimePicker } from "antd";
 
-import dayjs from "dayjs";
+import moment from "moment";
 
 function BuildCalendar(props) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
   useEffect(() => {
-    //console.log("test");
-    //console.log(props.initialEndDate);
+    setDate(props.initialEndDate.substring(0, 10));
+    setTime(props.initialEndDate.substring(10));
+  }, [props.initialEndDate]);
+
+  useEffect(() => {
+    //console.log(`${date}${time}`);
     props.setEndDate(`${date}${time}`);
   }, [date, time, props]);
 
@@ -31,7 +35,7 @@ function BuildCalendar(props) {
           //props.setEndDate(`${date}${time}`);
         }}
         size="medium"
-        //defaultValue={dayjs(props.initialEndDate)}
+        //value={moment(date)}
       />
       <TimePicker
         size="medium"
@@ -39,20 +43,11 @@ function BuildCalendar(props) {
           margin-left: 10px;
         `}
         onChange={(e) => {
-          //console.log(`T` + `${e.$d}`.substring(16, 24) + `.000Z`);
           setTime(`T` + `${e.$d}`.substring(16, 24) + `.000Z`);
-          //props.setEndDate(`${date}${time}`);
         }}
       />
     </Container>
   );
-  /*
-  return (
-    
-    <Container>
-      <Calendar fullscreen={false} />
-    </Container>
-  );*/
 }
 
 export default BuildCalendar;
@@ -62,24 +57,3 @@ const Container = styled.div`
   margin-left: 15px;
   display: flex;
 `;
-
-/*
-export default class BuildCalendar extends Component {
-  handleSelect(ranges) {
-    console.log(ranges);
-    // {
-    //   selection: {
-    //     startDate: [native Date Object],
-    //     endDate: [native Date Object],
-    //   }
-    // }
-  }
-  render() {
-    const selectionRange = {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    };
-    return <DateRange ranges={[selectionRange]} onChange={this.handleSelect} />;
-  }
-}*/
