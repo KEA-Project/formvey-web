@@ -29,25 +29,26 @@ ul.pagination li:last-child{
 
 ul.pagination li a {
   text-decoration: none;
-  color: #337ab7;
+  color: #4e4e4e;
   font-size: 1rem;
 }
 
 ul.pagination li.active a {
-  color: white;
+  color: #5281FF;
 }
 
 ul.pagination li.active {
-  background-color: #337ab7;
+  border-radius: 5px;
+  background-color: #f4f4f4;
 }
 
 ul.pagination li a:hover,
 ul.pagination li a.active {
-  color: blue;
+  color: #5281FF;
 }
 
 .page-selection {
   width: 48px;
   height: 30px;
-  color: #337ab7;
+  color: #5281FF;
 }
