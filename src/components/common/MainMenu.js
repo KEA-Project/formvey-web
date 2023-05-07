@@ -6,8 +6,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
 import Main from "../../pages/Main";
+import SurveyBoard from "../../pages/SurveyBoard";
 import Built from "../../pages/Built";
 import Participated from "../../pages/Participated";
+import ShortBoard from "../../pages/ShortBoard";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -101,6 +103,10 @@ function MainMenu() {
       <div>
         {selected === 0 ? ( //메인
           <Main userName={userName} />
+        ) : selected === 1 ? ( //설문 게시판
+          <SurveyBoard />
+        ) : selected === 2 ? ( //짧폼 게시판
+          <ShortBoard/>
         ) : selected === 3 ? ( //제작한 설문
           <Built />
         ) : selected === 4 ? ( //응답한 설문
