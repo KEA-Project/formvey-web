@@ -43,9 +43,7 @@ function Participated() {
       ? currentPage
       : selectedMenu === 1
       ? goingPage
-      : selectedMenu === 2
-      ? completePage
-      : currentPage;
+      : completePage ;
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -61,10 +59,11 @@ function Participated() {
     console.log(response);
     if (response.data.isSuccess) {
       setParticipatedSurvey(response.data.result.getResponseListRes);
+      console.log(response.data.result.totalPageCnt, response.data.result.releasedPageCnt, response.data.result.closedPageCnt)
 
       setTotalItemsCount(response.data.result.totalPageCnt);
-      setGoingCount(response.data.result.releasedPageCnt);
-      setCompleteCount(response.data.result.closedPageCnt);
+      setGoingCount(response.data.result.closedPageCnt);
+      setCompleteCount(response.data.result.releasedPageCnt);
     }
   };
 
@@ -127,6 +126,8 @@ function Participated() {
           })}
         </SurveyList>
         <BottomContainer>
+
+      
           {selectedMenu === 0 && totalItemsCount !== 0 && (
             <Paging
               page={currentPage}
