@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ParticipatedSurvey from "../components/Participated/ParticipatedSurvey";
+import Paging from "../components/common/Paging";
 
 function Participated() {
   /*
@@ -26,11 +27,23 @@ function Participated() {
   const [participatedSurvey, setParticipatedSurvey] = useState([]);
   const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
+
+  //페이징
+  const [count] = useState(6);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const [goingCount, setGoingCount] = useState(0);
+  const [goingPage, setGoingPage] = useState(0);
+
+  const [completeCount, setCompleteCount] = useState(0);
+  const [completePage, setCompletePage] = useState(0);
+
   const fetchData = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/responses/list/${localStorage.getItem(
         "memberId"
-      )}?page=0&size=6`,
+        )}?page=0&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -40,12 +53,28 @@ function Participated() {
     console.log(response);
     if (response.data.isSuccess) {
       setParticipatedSurvey(response.data.result.getResponseListRes);
+
+      setTotalItemsCount(response.data.result.totalPageCnt);
+      setGoingCount(response.data.result.releasedPageCnt);
+      setCompleteCount(response.data.result.closedPageCnt);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [reRender]);
+  }, [reRender, currentPage, goingPage, completePage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleGoingPageChange = (page) => {
+    setGoingPage(page);
+  };
+
+  const handleCompletePageChange = (page) => {
+    setCompletePage(page);
+  };
 
   return (
     <div>
@@ -89,6 +118,32 @@ function Participated() {
             }
           })}
         </SurveyList>
+        <BottomContainer>
+          {selectedMenu === 0 && totalItemsCount !== 0 && (
+            <Paging
+              page={currentPage}
+              count={count}
+              totalItemsCount={totalItemsCount}
+              onPageChange={handlePageChange}
+            />
+          )}
+          {selectedMenu === 1 && goingCount !== 0 && (
+            <Paging
+              page={goingPage}
+              count={count}
+              totalItemsCount={goingCount}
+              onPageChange={handleGoingPageChange}
+            />
+          )}
+          {selectedMenu === 2 && completeCount !== 0 && (
+            <Paging
+              page={completePage}
+              count={count}
+              totalItemsCount={completeCount}
+              onPageChange={handleCompletePageChange}
+            />
+          )}
+        </BottomContainer>
       </Container>
     </div>
   );
@@ -133,6 +188,13 @@ const SurveyList = styled.div`
   flex-wrap: wrap;
   justify-content: left;
   padding-left: 32px;
+`;
+
+const BottomContainer = styled.div`
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  margin-top: 15px;
 `;
 
 export default Participated;
