@@ -27,9 +27,9 @@ function Shortform(props) {
           )}
         </TitleContainer>
         <Content>{props.shortform.surveyTitle}</Content>
-        {props.shortform.shortType === 0 ? (
+        {props.shortform.shortType === 2 ? (
           <Content>주관식</Content>
-        ) : props.shortform.shortType === 1 ? (
+        ) : props.shortform.shortType === 0 ? (
           <Content>객관식(단일)</Content>
         ) : (
           <Content>객관식(다중)</Content>
@@ -60,8 +60,8 @@ function Shortform(props) {
 
 const Container = styled.div`
   margin-top: 41px;
-  width: 310px;
-  height: 151px;
+  width: 320px;
+  height: 170px;
   border: 0.01em solid #d2d2d2;
   border-radius: 15px;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.06);
@@ -110,7 +110,7 @@ const Status = styled.img`
 `;
 
 const Content = styled.div`
-  font-size: 12px;
+  font-size: 11px;
   color: #667085;
 `;
 

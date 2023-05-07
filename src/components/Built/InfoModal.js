@@ -9,7 +9,8 @@ function InfoModal(props) {
   const [shortform, setShortform] = useState({
     surveyTitle: "",
     shortQuestion: "",
-    options: [],
+    shortType: 0,
+    options: [], // 배열로 초기화
   });
 
   const fetchData = async () => {
@@ -48,10 +49,19 @@ function InfoModal(props) {
         </Header>
         <Title>{shortform.surveyTitle}</Title>
         <Question>{shortform.shortQuestion}</Question>
+        {shortform.shortType === 0 ? (
+          <Options>주관식</Options>
+        ) : (
+          <Options>선택사항</Options>
+        )}
         {shortform.options.map((option) => {
-          return <Option>{option.shortContent}</Option>;
+          return (
+            <Option key={option.shortIndex}> {option.shortContent}</Option>
+          );
         })}
+        <BtnContainer>
         <Btn>결과보기</Btn>
+        </BtnContainer>
       </ContentContainer>
     </Container>
   );
@@ -84,6 +94,8 @@ const ContentContainer = styled.div`
   width: auto;
   height: auto;
 
+  min-width: 600px;
+
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -94,7 +106,7 @@ const ContentContainer = styled.div`
 `;
 
 const Title = styled.div`
-  padding-right: 35px; 
+  padding-right: 35px;
   font-weight: 400;
   font-size: 17px;
 `;
@@ -111,15 +123,31 @@ const CancelBtn = styled.img`
 
 const Question = styled.div`
   padding-right: 35px;
+  margin-bottom: 60px;
   font-weight: 700;
   font-size: 20px;
 `;
 
-const Option = styled.div`
+const Options = styled.div`
+  padding-right: 35px;
+  font-weight: 400;
+  font-size: 17px;
+  margin-bottom:20px;
+`;
 
-padding-right: 35px;
+const Option = styled.div`
+  padding-right: 35px;
   font-weight: 400;
   font-size: 15px;
+  margin-bottom: 15px;
+`;
+
+const BtnContainer = styled.div`
+    display: inline-block;
+    text-align:center;
+    align-items: center;
+    
+    margin-right:30px;
 `;
 
 const Btn = styled.div`
@@ -131,7 +159,7 @@ const Btn = styled.div`
   box-shadow: 0px 10px 30px #aec4ff, inset 0px -3px 10px rgba(0, 0, 0, 0.3),
     inset 3px 2px 10px rgba(255, 255, 255, 0.45);
   border-radius: 15px;
-  margin-top: 40px;
+  margin-top: 60px;
   text-align: center;
 
   font-style: normal;
