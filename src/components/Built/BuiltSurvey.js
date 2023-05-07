@@ -15,6 +15,7 @@ function BuiltSurvey(props) {
           reRender={props.reRender}
           setReRender={props.setReRender}
           surveyId={props.survey.surveyId}
+          mode="built"
         />
       ) : null}
       <Container>

@@ -102,7 +102,7 @@ function MainMenu() {
       {/**페이지 라우팅 */}
       <div>
         {selected === 0 ? ( //메인
-          <Main />
+          <Main userName={userName} />
         ) : selected === 1 ? ( //설문 게시판
           <SurveyBoard />
         ) : selected === 2 ? ( //짧폼 게시판

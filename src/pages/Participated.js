@@ -5,32 +5,32 @@ import axios from "axios";
 import ParticipatedSurvey from "../components/Participated/ParticipatedSurvey";
 
 function Participated() {
+  /*
+  {
+    endDate: "2023-05-04T04:31:11.615Z",
+    id: 0,
+    status: 1,
+    surveyContent:
+      "차세대 챗봇 LAB 카레팀의 새로운 설문조사 플랫폼 폼베이의 이용 만족도 설문조사",
+    surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
+  },
+  {
+    endDate: "2023-05-04T04:31:11.615Z",
+    id: 1,
+    status: 2,
+    surveyContent: "차세대 챗봇 LAB 카레팀",
+    surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
+  },*/
   const menu = ["전체", "진행중", "설문완료"];
   const [selectedMenu, setSelectedMenu] = useState(0);
-  const [participatedSurvey, setParticipatedSurvey] = useState([
-    {
-      endDate: "2023-05-04T04:31:11.615Z",
-      id: 0,
-      status: 1,
-      surveyContent:
-        "차세대 챗봇 LAB 카레팀의 새로운 설문조사 플랫폼 폼베이의 이용 만족도 설문조사",
-      surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
-    },
-    {
-      endDate: "2023-05-04T04:31:11.615Z",
-      id: 1,
-      status: 2,
-      surveyContent: "차세대 챗봇 LAB 카레팀",
-      surveyTitle: "폼베이 이용에 대한 만족도 설문조사",
-    },
-  ]);
+  const [participatedSurvey, setParticipatedSurvey] = useState([]);
+  const [reRender, setReRender] = useState(false); //재렌더링을 위한 state
 
   const fetchData = async () => {
-    /*
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
+      `${process.env.REACT_APP_BASE_URL}/responses/list/${localStorage.getItem(
         "memberId"
-      )}`,
+      )}?page=0&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -39,11 +39,13 @@ function Participated() {
     );
     console.log(response);
     if (response.data.isSuccess) {
-      setBuiltSurvey(response.data.result);
-    }*/
+      setParticipatedSurvey(response.data.result);
+    }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchData();
+  }, [reRender]);
 
   return (
     <div>
@@ -75,7 +77,13 @@ function Participated() {
               (selectedMenu === 1 && a.status === 1) || //진행중
               (selectedMenu === 2 && a.status === 2) //설문완료
             ) {
-              return <ParticipatedSurvey survey={a} />;
+              return (
+                <ParticipatedSurvey
+                  survey={a}
+                  reRender={reRender}
+                  setReRender={setReRender}
+                />
+              );
             } else {
               return null;
             }
