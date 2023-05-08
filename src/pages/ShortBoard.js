@@ -26,7 +26,9 @@ function ShortBoard(props) {
     const response = await axios.get(
       `${
         process.env.REACT_APP_BASE_URL
-      }/shortforms/board/${localStorage.getItem("memberId")}?page=${currentPage}&size=6`,
+      }/shortforms/board/${localStorage.getItem(
+        "memberId"
+      )}?page=${currentPage}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -42,7 +44,9 @@ function ShortBoard(props) {
     const responseResult = await axios.get(
       `${
         process.env.REACT_APP_BASE_URL
-      }/shortresults/board/${localStorage.getItem("memberId")}?page=${lockPage}&size=6`,
+      }/shortresults/board/${localStorage.getItem(
+        "memberId"
+      )}?page=${lockPage}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -72,9 +76,7 @@ function ShortBoard(props) {
     <div>
       <Container>
         <Title>짧폼 게시판</Title>
-        <Info>
-          보유 포인트를 사용하여 설문이 완료된 짧폼의 결과를 확인할 수 있어요!
-        </Info>
+        <Info>보유 포인트를 사용하여 짧폼의 결과를 확인할 수 있어요!</Info>
         {/* 검색창 */}
         <Search></Search>
 
@@ -173,7 +175,7 @@ const Search = styled.input`
 `;
 
 const MenuContainer = styled.div`
-  width: 200px;
+  width: 190px;
   display: flex;
   justify-content: space-between;
 `;
