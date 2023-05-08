@@ -16,6 +16,8 @@ function ShortFormModal() {
 
   // 짧폼 랜덤 조회
   const [listShort, setListShort] = useState([]);
+  // 답변 저장
+  const [answers, setAnswers] = useState([]);
 
   const fetchData = async () => {
     const shortRandom = await axios.get(
@@ -32,22 +34,26 @@ function ShortFormModal() {
     if (shortRandom.data.isSuccess) {
       setListShort(shortRandom.data.result);
     }
+  };
 
-    // const sendResponse = async () => {
-    //   const response = await axios.post(
-    //     `${
-    //       process.env.REACT_APP_BASE_URL
-    //     }/shortanswers/${shortformId}/${localStorage.getItem("memberId")}`,
-    //     {
-    //       shortAnswer: answers,
-    //     },
-    //     {
-    //       headers: {
-    //         "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-    //       },
-    //     }
-    //   );
-    // };
+  const sendResponse = async () => {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/shortanswers/${
+        listShort.id
+      }/${localStorage.getItem("memberId")}`,
+      {
+        shortAnswer: answers,
+      },
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+
+    if (response.data.isSuccess) {
+      shortFormUpdate();
+    }
   };
 
   useEffect(() => {
@@ -58,25 +64,51 @@ function ShortFormModal() {
     fetchData();
     setSelected([]); // 다음 질문으로 넘어갈 때 선택 초기화
     setSelectedMulti([]); // 다음 질문으로 넘어갈 때 선택 초기화
+    setAnswers([]); // 다음 질문으로 넘어갈 때 응답 초기화
   };
 
   // 단일 선택
   const [selected, setSelected] = useState(-1); // 선택된 버튼의 인덱스 값
 
-  const handleSelect = (index) => {
+  const handleSelect = (index, shortContent) => {
     setSelected(index);
+    singleRes(shortContent);
+  };
+
+  const singleRes = (shortContent) => {
+    // if (answers.length > 0) setAnswers([]);
+    // else setAnswers([shortContent]);
+    setAnswers([shortContent]);
+    console.log(answers);
   };
 
   // 다중 선택
   const [selectedMulti, setSelectedMulti] = useState([]); // 선택된 버튼의 인덱스 값
 
-  const handleMultiSelect = (index) => {
+  const handleMultiSelect = (index, shortContent) => {
     if (selectedMulti.includes(index)) {
       // 이미 선택된 버튼일 경우
-      setSelectedMulti(selectedMulti.filter((item) => item !== index)); // 선택된 버튼에서 제거
+      setSelectedMulti(selectedMulti.filter((item) => item !== index));
+      setAnswers(answers.filter((item) => item !== shortContent)); // 선택된 버튼에서 제거
     } else {
-      setSelectedMulti([...selectedMulti, index]); // 선택된 버튼 배열에 추가
+      setSelectedMulti([...selectedMulti, index]);
+      setAnswers([...answers, shortContent]); // 선택된 버튼 배열에 추가
     }
+    console.log(answers);
+  };
+
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  // const handleNextButtonClick = () => {
+  //   if (answers !== []) sendResponse();
+  //   else shortFormUpdate();
+  // };
+
+  const handleNextButtonClick = () => {
+    if (answers.length !== 0) sendResponse();
+    else shortFormUpdate();
   };
 
   return (
@@ -102,7 +134,9 @@ function ShortFormModal() {
                 <ShortOption
                   key={option.shortIndex}
                   selected={selected === option.shortIndex}
-                  onClick={() => handleSelect(option.shortIndex)}
+                  onClick={() =>
+                    handleSelect(option.shortIndex, option.shortContent)
+                  }
                 >
                   {option.shortContent}
                 </ShortOption>
@@ -116,7 +150,9 @@ function ShortFormModal() {
                 <ShortOption
                   key={option.shortIndex}
                   selected={selectedMulti.includes(option.shortIndex)}
-                  onClick={() => handleMultiSelect(option.shortIndex)}
+                  onClick={() =>
+                    handleMultiSelect(option.shortIndex, option.shortContent)
+                  }
                 >
                   {option.shortContent}
                 </ShortOption>
@@ -126,11 +162,16 @@ function ShortFormModal() {
         ) : (
           //주관식
           <>
-            <AnswerInput />
+            <AnswerInput
+              placeholder="주관식 답변"
+              onChange={(e) => {
+                singleRes(e.target.value);
+              }}
+            />
           </>
         )}
       </Body>
-      <NextShortVector src={nextShortVector} onClick={shortFormUpdate} />
+      <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
     </Container>
   );
 }
