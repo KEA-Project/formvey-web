@@ -76,9 +76,8 @@ function ShortFormModal() {
   };
 
   const singleRes = (shortContent) => {
-    // if (answers.length > 0) setAnswers([]);
-    // else setAnswers([shortContent]);
-    setAnswers([shortContent]);
+    if (answers.length > 0) setAnswers([]);
+    else setAnswers([shortContent]);
     console.log(answers);
   };
 
@@ -101,14 +100,9 @@ function ShortFormModal() {
     console.log(answers);
   }, [answers]);
 
-  // const handleNextButtonClick = () => {
-  //   if (answers !== []) sendResponse();
-  //   else shortFormUpdate();
-  // };
-
   const handleNextButtonClick = () => {
     if (answers.length !== 0) sendResponse();
-    else shortFormUpdate();
+    shortFormUpdate();
   };
 
   return (
