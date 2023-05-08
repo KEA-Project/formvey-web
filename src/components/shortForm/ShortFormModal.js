@@ -4,11 +4,19 @@ import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 function ShortFormModal() {
-  const [listShort, setListShort] = useState([]);
+  //전체 설문 참여
+  const navigate = useNavigate();
+
+  const navigateParticipate = (surveyId) => {
+    navigate(`/participate/${surveyId}`);
+  };
 
   // 짧폼 랜덤 조회
+  const [listShort, setListShort] = useState([]);
+
   const fetchData = async () => {
     const shortRandom = await axios.get(
       `${
@@ -76,7 +84,13 @@ function ShortFormModal() {
       <Headers>
         <ShortTitleVector src={shortTitleVector} />
         <ShortTitle>{listShort.surveyTitle}</ShortTitle>
-        <GoToSurvey src={goToSurvey} />
+        <GoToSurvey
+          src={goToSurvey}
+          key={listShort.surveyId}
+          onClick={() => {
+            navigateParticipate(listShort.surveyId);
+          }}
+        />
       </Headers>
       <Body>
         <ShortQuestion>{listShort.shortQuestion}</ShortQuestion>
