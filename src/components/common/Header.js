@@ -37,7 +37,9 @@ function Header() {
 
   return (
     <Container>
-      <Logo src={logo} />
+      <Link to={localStorage.getItem("jwt") == null ? "/" : "/main"}>
+        <Logo src={logo} />
+      </Link>
       {localStorage.getItem("jwt") === null ? (
         <Link to="/login">
           <Login>로그인</Login>

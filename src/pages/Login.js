@@ -12,6 +12,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [PW, setPW] = useState("");
 
+  const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT}&response_type=code`;
+
   const loginBtnClicked = async () => {
     const result = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/login/email`,
@@ -30,6 +32,11 @@ function Login() {
     } else {
       alert(result.data.message);
     }
+  };
+
+  const kakaoBtnClicked = async () => {
+    console.log(kakaoUrl);
+    window.location.href = kakaoUrl;
   };
 
   return (
@@ -62,7 +69,7 @@ function Login() {
             </Link>
           </BtnsContainer>
           <Line />
-          <KaBtn src={kaBtn} />
+          <KaBtn src={kaBtn} onClick={kakaoBtnClicked} />
           <Notice>
             카카오계정으로 간편하고 안전하게 로그인(회원가입)할 수 있습니다.
           </Notice>
@@ -86,7 +93,9 @@ const LoginSection = styled.div`
   padding-top: 59px;
   width: 550px;
   height: 646px;
-  border: 0.1px solid #000000;
+  //border: 0px solid #000000;
+  border: solid;
+  border-color: rgba(0, 0, 0, 0.01);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 
@@ -112,7 +121,8 @@ const Input = styled.input`
   width: 336px;
   height: 48px;
   background: #f7f7f7;
-  border: 0.3px solid #000000;
+  border: solid;
+  border-color: rgba(0, 0, 0, 0.005);
   border-radius: 5px;
   font-weight: 400;
   font-size: 15px;
@@ -135,12 +145,13 @@ const LoginBtn = styled.div`
   height: 48px;
   line-height: 48px;
   background: #a3bcff;
+  border: 1px solid #dadada;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  border-radius: 15px;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
-
+  color: white;
   cursor: pointer;
 `;
 
@@ -149,9 +160,9 @@ const SignupBtn = styled.div`
   height: 48px;
   line-height: 48px;
   background: #ffffff;
-  border: 0.1px solid #000000;
+  border: 0.5px solid #dadada;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  border-radius: 15px;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -166,6 +177,7 @@ const Line = styled.hr`
 const KaBtn = styled.img`
   width: 335px;
   margin-top: 29px;
+  cursor: pointer;
 `;
 
 const Notice = styled.div`

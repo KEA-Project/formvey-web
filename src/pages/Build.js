@@ -1,117 +1,161 @@
-import React, { useState } from "react";
+/** @jsxImportSource @emotion/react */
+import React, { useState, useEffect } from "react";
 import Header from "../components/common/Header";
 import styled from "@emotion/styled";
-import gptBtn from "../assets/build/gpt_btn.png";
+import { css } from "@emotion/react";
+
 import FormGPT from "../components/Build/FormGPT";
-import plusBtn from "../assets/common/add_btn.png";
-//import QuestionContainer from "../components/Build/QuestionContainer";
+import FormOption from "../components/Build/FormOption";
+
 import Dropdown from "../components/Build/Dropdown";
 import Toggle from "../components/Build/Toggle";
 
-function Build() {
+import deleteBtn from "../assets/build/delete_btn.png";
+import gptBtn from "../assets/build/gpt_btn.png";
+import plusBtn from "../assets/common/add_btn.png";
+import optionBtn from "../assets/build/option_btn.png";
+
+import { useLocation } from "react-router-dom";
+import { fetchSurveyInfo } from "../Functions";
+
+function Build(props) {
+  const location = useLocation();
   const [showGPT, setShowGPT] = useState(false);
-  /*
-    {
-      title: "객관식 단일",
-      select: ["보기1", "보기2", "보기3"],
-      type: "단일선택",
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      title: "객관식 다중",
-      select: ["보기1", "보기2", "보기3"],
-      type: "다중선택",
-      isShort: false,
-      isEssential: false,
-    },
-    {
-      title: "주관식",
-      type: "주관식",
-      isShort: false,
-      isEssential: false,
-    },*/
-  const [questionList, setQuestionList] = useState([]);
-  const [title, setTitle] = useState(""); //설문 제목
-  const [desc, setDesc] = useState(""); //설문 설명
+  const [showOption, setShowOption] = useState(false);
+  const [isPublic, setIsPublic] = useState(0); //공개 설정
+  const [isAnonymous, setIsAnonymous] = useState(0); //익명 설정
+  const [exitUrl, setExitUrl] = useState("");
+  const [questions, setQuestions] = useState([]);
+  const [surveyTitle, setSurveyTitle] = useState(""); //설문 제목
+  const [surveyContent, setSurveyContent] = useState(""); //설문 설명
+  const [responseCnt, setResponseCnt] = useState(0);
+  const [initialEndDate, setInitialEndDate] = useState("");
+
+  const [surveyId, setSurveyId] = useState(null); //설문 id 초기화
+
+  const fetchData = async (surveyId) => {
+    //설문조사 수정하기의 경우 설문의 내용을 받아와야 함
+    setSurveyId(surveyId);
+    const response = await fetchSurveyInfo(surveyId);
+    //console.log(surveyId);
+    console.log(response);
+
+    setSurveyId(surveyId);
+    setSurveyTitle(response.surveyTitle);
+    setSurveyContent(response.surveyContent);
+    setIsAnonymous(response.isAnonymous);
+    setIsPublic(response.isPublic);
+    setQuestions(response.questions);
+    setExitUrl(response.exitUrl);
+    setInitialEndDate(response.endDate);
+    setResponseCnt(response.responseCnt);
+  };
+
+  useEffect(() => {
+    if (location.state) {
+      //console.log(location);
+      fetchData(location.state.surveyId);
+    }
+  }, [location]);
 
   const addGPTQuestion = (selectedList) => {
-    var temp = [...questionList];
+    var temp = [...questions];
     for (let i = 0; i < selectedList.length; i++) {
       temp.push({
-        title: selectedList[i],
-        select: [""],
-        type: "단일선택",
-        isShort: false,
-        isEssential: false,
+        questionIdx: temp.length,
+        questionTitle: selectedList[i],
+        choices: [{ choiceContent: "", choiceIdx: 0 }],
+        type: 0,
+        isShort: 0,
+        isEssential: 0,
       });
     }
 
-    setQuestionList(temp);
+    setQuestions(temp);
   };
 
   //문항 추가
   const addQuestion = () => {
-    var temp = [...questionList];
+    var temp = [...questions];
     temp.push({
-      title: "",
-      select: [""],
-      type: "단일선택",
-      isShort: false,
-      isEssential: false,
+      questionIdx: temp.length,
+      questionTitle: "",
+      choices: [{ choiceContent: "", choiceIdx: 0 }],
+      type: 0,
+      isShort: 0,
+      isEssential: 0,
     });
 
-    setQuestionList(temp);
+    setQuestions(temp);
+  };
+
+  //문항 삭제
+  const deleteQuestion = (i) => {
+    var temp = [...questions];
+    temp.splice(i, 1);
+
+    setQuestions(temp);
+  };
+
+  //질문 제목 수정
+  const changeQuestionTitle = (index, title) => {
+    var temp = [...questions];
+    temp[index].questionTitle = title;
+
+    setQuestions(temp);
   };
 
   //문항 유형 변경
   const changeType = (index, type) => {
-    var temp = [...questionList];
+    var temp = [...questions];
     temp[index].type = type;
 
-    setQuestionList(temp);
+    setQuestions(temp);
   };
 
   //짧폼, 필수 선택
   const setShortAndEssential = (index, type, bool) => {
     if (type === "short") {
-      var temp = [...questionList];
+      var temp = [...questions];
       temp[index].isShort = bool;
 
-      setQuestionList(temp);
+      setQuestions(temp);
     } else if (type === "essential") {
-      var temp2 = [...questionList];
+      var temp2 = [...questions];
       temp2[index].isEssential = bool;
 
-      setQuestionList(temp2);
+      setQuestions(temp2);
     }
   };
 
   //객관식 보기 추가
   const addOption = (i) => {
     //console.log(i);
-    var temp = [...questionList];
-    temp[i].select.push("");
+    var temp = [...questions];
+    temp[i].choices.push({
+      choiceContent: "",
+      choiceIdx: temp[i].choices.length,
+    });
 
-    setQuestionList(temp);
+    setQuestions(temp);
   };
 
   //객관식 보기 내용 넣기
   const addOptionContent = (e, i, j) => {
-    var temp = [...questionList];
-    temp[i].select[j] = e.target.value;
+    var temp = [...questions];
+    temp[i].choices[j].choiceContent = e.target.value;
 
-    setQuestionList(temp);
+    setQuestions(temp);
   };
 
   //객관식 보기 삭제
   const deleteOption = (i, j) => {
-    console.log(j);
-    var temp = [...questionList];
-    console.log(temp[i].select);
-    temp[i].select.splice(j, 1);
+    //console.log(j);
+    var temp = [...questions];
+    //console.log(temp[i].choices);
+    temp[i].choices.splice(j, 1);
 
-    setQuestionList(temp);
+    setQuestions(temp);
   };
 
   return (
@@ -135,6 +179,30 @@ function Build() {
             도움을 요청해보세요!
           </GPTDesc>
         </GPTBtnContainer>
+        {/**옵션 설정 부분*/}
+        <OptionBtn
+          src={optionBtn}
+          onClick={() => {
+            setShowOption(!showOption);
+          }}
+          className={showOption ? "optionOnLeft" : "optionOnRight"}
+        />
+        <FormOption
+          showOption={showOption}
+          isPublic={isPublic}
+          setIsPublic={setIsPublic}
+          isAnonymous={isAnonymous}
+          setIsAnonymous={setIsAnonymous}
+          exitUrl={exitUrl}
+          setExitUrl={setExitUrl}
+          surveyTitle={surveyTitle}
+          surveyContent={surveyContent}
+          initialEndDate={initialEndDate}
+          questions={questions}
+          surveyId={surveyId}
+          responseCnt={responseCnt}
+        />
+
         {/*설문조사 작성 부분*/}
         {/*설문조사 제목 + 설명*/}
         <FormContainer>
@@ -142,20 +210,22 @@ function Build() {
             <FormTitle
               placeholder="제목을 입력해주세요"
               onChange={(e) => {
-                setTitle(e.target.value);
+                setSurveyTitle(e.target.value);
               }}
+              value={surveyTitle}
             />
             <FormDesc
               placeholder="설문조사 설명을 입력해주세요"
               onChange={(e) => {
-                setDesc(e.target.value);
+                setSurveyContent(e.target.value);
               }}
+              value={surveyContent}
             />
           </FormHeader>
           {/*설문조사 각 문항*/}
-          {questionList.map((a, i) => {
+          {questions.map((a, i) => {
             return (
-              <QuestionContainer>
+              <QuestionContainer key={a.questionIdx}>
                 <div
                   style={{
                     width: "80%",
@@ -164,22 +234,24 @@ function Build() {
                   <QuestionNumber>Q{i + 1}. </QuestionNumber>
                   <QuestionTitle
                     placeholder="질문을 입력해주세요"
-                    defaultValue={a.title}
+                    defaultValue={a.questionTitle}
+                    onChange={(e) => {
+                      changeQuestionTitle(i, e.target.value);
+                    }}
                   />
-                  <br />
-                  {a.type === "단일선택" || a.type === "다중선택" ? ( //단일 객관식
+                  {a.type === 0 || a.type === 1 ? ( //단일 객관식
                     <>
-                      {a.select.map((a, j) => {
+                      {a.choices.map((a, j) => {
                         return (
-                          <OptionContainer>
+                          <OptionContainer key={a.choiceIdx}>
                             <OptionSelect />
                             <OptionContent
                               placeholder="보기를 입력해주세요"
-                              defaultValue={a}
+                              defaultValue={a.choiceContent}
                               onChange={(e) => {
                                 addOptionContent(e, i, j);
                               }}
-                              value={a}
+                              value={a.choiceContent}
                             />
                             <XBtn onClick={() => deleteOption(i, j)}>x</XBtn>
                           </OptionContainer>
@@ -195,20 +267,33 @@ function Build() {
                   ) : null}
                 </div>
                 <div>
-                  <Dropdown changeType={changeType} index={i} />
+                  <Dropdown changeType={changeType} index={i} type={a.type} />
                   <Toggle
                     option="짧폼"
                     index={i}
+                    initialValue={a.isShort}
                     setShortAndEssential={setShortAndEssential}
                     type="short"
                   />
                   <Toggle
                     option="필수"
                     setShortAndEssential={setShortAndEssential}
+                    initialValue={a.isEssential}
                     index={i}
                     type="essential"
                   />
                 </div>
+                {/**각 문항에 마우스를 올렸을 때 보이는 메뉴(삭제, 위치 이동) */}
+                <MouseOverContainer>
+                  <MouseOverBtn>
+                    <DeleteBtn
+                      src={deleteBtn}
+                      onClick={() => {
+                        deleteQuestion(i);
+                      }}
+                    />
+                  </MouseOverBtn>
+                </MouseOverContainer>
               </QuestionContainer>
             );
           })}
@@ -228,6 +313,16 @@ const Container = styled.div`
   padding-top: 60px;
   padding-bottom: 60px;
   width: 100vw;
+
+  .optionOnLeft {
+    right: 360px;
+    transform: rotate(180deg);
+    transition: 0.5s;
+  }
+  .optionOnRight {
+    right: 30px;
+    transition: 0.5s;
+  }
 `;
 
 const GPTBtnContainer = styled.div`
@@ -294,6 +389,44 @@ const QuestionContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
+
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
+
+const MouseOverContainer = styled.div`
+  position: absolute;
+  display: none;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 50px;
+`;
+
+const MouseOverBtn = styled.div`
+  //position: absolute;
+  float: right;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  width: 35px;
+  height: 35px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.2));
+  border-radius: 5px;
+`;
+
+const DeleteBtn = styled.img`
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
 `;
 
 const QuestionNumber = styled.span`
@@ -367,6 +500,16 @@ const PlusBtn = styled.img`
   width: 40px;
   height: auto;
   cursor: pointer;
+`;
+
+const OptionBtn = styled.img`
+  width: 50px;
+  height: auto;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  cursor: pointer;
+  z-index: 999;
 `;
 
 export default Build;

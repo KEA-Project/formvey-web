@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
 function Toggle(props) {
+  useEffect(() => {
+    if (props.initialValue === 1) setSelected(true);
+  }, []);
+
   const [selected, setSelected] = useState(false);
   return (
     <>
@@ -9,7 +13,7 @@ function Toggle(props) {
         <SelectedContainer
           onClick={() => {
             setSelected(false);
-            props.setShortAndEssential(props.index, props.type, false);
+            props.setShortAndEssential(props.index, props.type, 0);
           }}
         >
           {props.option}
@@ -18,7 +22,7 @@ function Toggle(props) {
         <Container
           onClick={() => {
             setSelected(true);
-            props.setShortAndEssential(props.index, props.type, true);
+            props.setShortAndEssential(props.index, props.type, 1);
           }}
         >
           {props.option}

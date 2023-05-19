@@ -5,7 +5,12 @@ import logo from "../../assets/common/logo.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
-//import * as Functions from "../../Functions.js";
+import Main from "../../pages/Main";
+import SurveyBoard from "../../pages/SurveyBoard";
+import Built from "../../pages/Built";
+import Participated from "../../pages/Participated";
+import ShortBoard from "../../pages/ShortBoard";
+import profile from "../../assets/common/profile.png";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -15,7 +20,12 @@ function MainMenu() {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/members/info/${localStorage.getItem(
         "memberId"
-      )}`
+      )}`,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
     );
 
     console.log(response.data);
@@ -65,34 +75,58 @@ function MainMenu() {
 
   return (
     <Container>
-      <Logo src={logo} />
-      <UserName>{userName}</UserName>
-      <Link to="/editprofile">
-        <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
-      </Link>
-      {menu.map((a, i) => {
-        return selected === i ? (
-          <SelectedMenuBtn>{a}</SelectedMenuBtn>
-        ) : (
-          <MenuBtn
-            onClick={() => {
-              setSelected(i);
-            }}
-          >
-            {a}
-          </MenuBtn>
-        );
-      })}
-      <LogoutContainer onClick={logoutBtnClicked}>
-        <LogoutIcon src={logoutIcon} />
-        <LogoutText>로그아웃</LogoutText>
-      </LogoutContainer>
+      {/**메뉴바 영역 */}
+      <MenuContainer>
+        <Logo src={logo} />
+        <ProfilePic src={profile} />
+        <UserName>{userName}</UserName>
+        <Link to="/editprofile">
+          <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
+        </Link>
+        {menu.map((a, i) => {
+          return selected === i ? (
+            <SelectedMenuBtn>{a}</SelectedMenuBtn>
+          ) : (
+            <MenuBtn
+              onClick={() => {
+                setSelected(i);
+              }}
+            >
+              {a}
+            </MenuBtn>
+          );
+        })}
+        <LogoutContainer onClick={logoutBtnClicked}>
+          <LogoutIcon src={logoutIcon} />
+          <LogoutText>로그아웃</LogoutText>
+        </LogoutContainer>
+      </MenuContainer>
+      {/**페이지 라우팅 */}
+      <div>
+        {selected === 0 ? ( //메인
+          <Main userName={userName} />
+        ) : selected === 1 ? ( //설문 게시판
+          <SurveyBoard />
+        ) : selected === 2 ? ( //짧폼 게시판
+          <ShortBoard />
+        ) : selected === 3 ? ( //제작한 설문
+          <Built />
+        ) : selected === 4 ? ( //응답한 설문
+          <Participated />
+        ) : null}
+      </div>
     </Container>
   );
 }
 
 const Container = styled.div`
-  padding-top: 70px;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const MenuContainer = styled.div`
+  padding-top: 50px;
   width: 202px;
   height: 100vh;
   align-items: center;
@@ -108,8 +142,13 @@ const Logo = styled.img`
   width: 144px;
 `;
 
-const UserName = styled.div`
+const ProfilePic = styled.img`
   margin-top: 27px;
+  width: 43px;
+  height: 43px;
+`;
+
+const UserName = styled.div`
   font-weight: 700;
   font-size: 18px;
   color: #444444;
@@ -119,8 +158,9 @@ const ModifyProfileBtn = styled.div`
   margin-top: 11px;
   width: 85px;
   height: 26px;
-  border: 2px solid #a3bcff;
-  border-radius: 10px;
+  background: #f3f7ff;
+  box-shadow: -5px -5px 10px #ffffff, 10px 10px 20px rgba(174, 174, 192, 0.4);
+  border-radius: 98px;
   font-weight: 700;
   font-size: 10px;
   justify-content: center;
@@ -128,7 +168,7 @@ const ModifyProfileBtn = styled.div`
   align-items: center;
   margin-bottom: 30px;
   cursor: pointer;
-  color: black;
+  color: #444444;
 `;
 
 const MenuBtn = styled.div`
