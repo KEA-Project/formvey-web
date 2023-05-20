@@ -129,7 +129,7 @@ function Participate() {
       );
 
       if (response.data.isSuccess) {
-        navigate("/main");
+        navigate("/main/participated");
         window.open(`${surveyInfo.exitUrl}`, "_blank");
       }
     }
