@@ -32,7 +32,7 @@ function BuildComplete(props) {
           <CopyBtn onClick={copyText}>복사하기</CopyBtn>
         </div>
       </Container>
-      <Link to="/main">
+      <Link to="/main/built">
         <HomeLink>
           <HomeIcon src={homeIcon} />
           메인페이지
