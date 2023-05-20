@@ -171,8 +171,8 @@ function ShortFormModal() {
 }
 
 const Container = styled.div`
-  width: 500px;
-  height: 680px;
+  width: 30vw;
+  height: 83vh;
   margin-top: 20px;
   margin-left: 20px;
 
@@ -192,7 +192,7 @@ const Container = styled.div`
 
 const Headers = styled.div`
   margin-top: 10px;
-  margin-left: 20px;
+  //margin-left: 20px;
   display: flex;
   flex-direction: row;
   // justify-content: space-between;
@@ -214,15 +214,15 @@ const ShortTitle = styled.div`
 
 const GoToSurvey = styled.img`
   width: 120px;
-  height: 40px;
+  height: auto;
   cursor: pointer;
-  margin-right: 15px;
+  //margin-right: 15px;
   margin-left: auto;
 `;
 
 const Body = styled.div`
   margin-top: 10px;
-  margin-left: 20px;
+  //margin-left: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -232,7 +232,7 @@ const Body = styled.div`
 `;
 
 const ShortQuestion = styled.div`
-  font-size: 30px;
+  font-size: 28px;
   color: #101828;
   font-weight: 700;
   margin-top: 20%;
@@ -262,14 +262,15 @@ const ShortOption = styled.button`
 `;
 
 const NextShortVector = styled.img`
-  width: 95px;
+  width: 65px;
   height: 15px;
-  //고정 값 말고 어떻게 설정하는지,,
   margin-bottom: 30px;
-  margin-left: 200px;
+  //margin-left: 200px;
   cursor: pointer;
-  position: fixed;
+  position: absolute;
   bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const AnswerInput = styled.input`
@@ -283,6 +284,7 @@ const AnswerInput = styled.input`
   color: #101828;
   font-weight: 600;
   cursor: pointer;
+  padding-left: 10px;
 `;
 
 export default ShortFormModal;

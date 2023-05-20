@@ -148,7 +148,7 @@ function DonutSection(props) {
 
 const Container = styled.div`
   width: 720px;
-  height: 260px;
+  height: 300px;
   padding-left: 10px;
   .userName {
     color: #5281ff;
@@ -164,6 +164,8 @@ const Title = styled.div`
 
 const ChartContainer = styled.div`
   width: 100%;
+  height: 90%;
+  align-items: center;
   justify-content: center;
   display: flex;
 `;
