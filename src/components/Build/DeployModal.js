@@ -47,7 +47,11 @@ function DeployModal(props) {
   };
 
   const option = [
-    { key: 0, title: "공개", value: props.isPublic === 1 ? "공개" : "비공개" },
+    {
+      key: 0,
+      title: "공개",
+      value: props.payload.isPublic === 1 ? "공개" : "비공개",
+    },
     {
       key: 1,
       title: "익명",
