@@ -11,7 +11,8 @@ function BoardTable(props) {
       console.log("내 설문");
     } else {
       //내가 만든 설문이 아닐 경우
-      navigate(`/participate/${surveyId}`);
+      //암호화 한 id값으로 설문 참여
+      navigate(`/participate/${btoa(surveyId)}`);
     }
   };
 
