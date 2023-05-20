@@ -51,7 +51,7 @@ function BuiltSection() {
 
 const Container = styled.div`
   width: 720px;
-  height: 210px;
+  height: 220px;
 
   .separator {
     border-top: 1px solid #ccc;
@@ -73,7 +73,7 @@ const Title = styled.div`
 `;
 
 const SurveyList = styled.div`
-  margin-top: 0px;
+  margin-top: 10px;
   display: flex;
   //flex-wrap: wrap;
   justify-content: left;

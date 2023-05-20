@@ -22,7 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/main" element={<MainMenu />} />
+        <Route path="/main/:menu" element={<MainMenu />} />
         <Route path="/formgpt" element={<FormGPT />} />
         <Route path="/build" element={<Build />} />
         <Route path="/build-complete" element={<BuildComplete />} />

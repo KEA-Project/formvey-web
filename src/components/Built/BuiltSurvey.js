@@ -152,6 +152,7 @@ const Title = styled.div`
 
 const Status = styled.div`
   width: 42px;
+  min-width: 42px;
   height: 21px;
   text-align: center;
   border-radius: 14px;
