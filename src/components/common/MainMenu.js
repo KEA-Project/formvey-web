@@ -14,6 +14,7 @@ import profile from "../../assets/common/profile.png";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
+  const [userPoint, setUserPoint] = useState("");
   const navigate = useNavigate();
 
   const getUserInfo = async () => {
@@ -30,6 +31,7 @@ function MainMenu() {
 
     console.log(response.data);
     setUserName(response.data.result.nickname);
+    setUserPoint(response.data.result.point);
   };
 
   useEffect(() => {
@@ -83,6 +85,7 @@ function MainMenu() {
         <Link to="/editprofile">
           <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
         </Link>
+        <UserPoint>{userPoint}점</UserPoint>
         {menu.map((a, i) => {
           return selected === i ? (
             <SelectedMenuBtn>{a}</SelectedMenuBtn>
@@ -221,6 +224,13 @@ const LogoutText = styled.div`
   font-size: 15px;
   color: #5280fd;
   margin-left: 5px;
+`;
+
+const UserPoint = styled.div`
+  font-weight: 700;
+  font-size: 15px;
+  color: #444444;
+  // margin-top: 11px;
 `;
 
 export default MainMenu;

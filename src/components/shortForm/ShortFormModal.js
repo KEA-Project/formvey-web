@@ -102,7 +102,7 @@ function ShortFormModal() {
 
   const handleNextButtonClick = () => {
     if (answers.length !== 0) sendResponse();
-    shortFormUpdate();
+    else shortFormUpdate();
   };
 
   return (
@@ -160,6 +160,7 @@ function ShortFormModal() {
               placeholder="주관식 답변"
               onChange={(e) => {
                 singleRes(e.target.value);
+                console.log(e.target.value);
               }}
             />
           </>
