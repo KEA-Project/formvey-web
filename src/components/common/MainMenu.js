@@ -11,6 +11,7 @@ import Built from "../../pages/Built";
 import Participated from "../../pages/Participated";
 import ShortBoard from "../../pages/ShortBoard";
 import profile from "../../assets/common/profile.png";
+import RewardBoard from "../../pages/RewardBoard";
 
 function MainMenu() {
   const [userName, setUserName] = useState("");
@@ -116,6 +117,8 @@ function MainMenu() {
           <Built />
         ) : selected === 4 ? ( //응답한 설문
           <Participated />
+        ) : selected === 5 ? ( //리워드 보관함
+          <RewardBoard />
         ) : null}
       </div>
     </Container>
