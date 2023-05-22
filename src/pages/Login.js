@@ -28,7 +28,7 @@ function Login() {
     if (result.data.isSuccess) {
       localStorage.setItem("jwt", result.data.result.jwt);
       localStorage.setItem("memberId", result.data.result.id);
-      navigate("/main");
+      navigate("/main/main");
     } else {
       alert(result.data.message);
     }

@@ -48,10 +48,27 @@ function DonutSection(props) {
     fetchData();
   }, []);
 
+  //데이터가 없을 때 회색 도넛 차트
+  const emptyDonut = {
+    series: [1],
+    labels: [],
+    options: {
+      chart: {
+        width: 300,
+        type: "pie",
+      },
+      legend: {
+        position: "bottom",
+      },
+      labels: ["데이터가 없습니다"],
+      colors: ["#f0f0f0"],
+    },
+  };
+
   const [donut1Data, setDonut1Data] = useState({
-    createSurveyCnt: 10,
-    responseCnt: 4,
-    shortFormResponseCnt: 2,
+    createSurveyCnt: 0,
+    responseCnt: 0,
+    shortFormResponseCnt: 0,
   });
 
   const donut1Config = {
@@ -86,9 +103,9 @@ function DonutSection(props) {
   };
 
   const [donut2Data, setDonut2Data] = useState({
-    closedSurveyCnt: 3,
-    releasedSurveyCnt: 1,
-    unReleasedSurveyCnt: 1,
+    closedSurveyCnt: 0,
+    releasedSurveyCnt: 0,
+    unReleasedSurveyCnt: 0,
   });
 
   const donut2Config = {
@@ -129,18 +146,41 @@ function DonutSection(props) {
         님의 현황
       </Title>
       <ChartContainer>
-        <ReactApexChart
-          series={donut1Config.series}
-          options={donut1Config.options}
-          type="pie"
-          width={300}
-        />
-        <ReactApexChart
-          series={donut2Config.series}
-          options={donut2Config.options}
-          type="pie"
-          width={300}
-        />
+        {donut1Data.createSurveyCnt === 0 &&
+        donut1Data.responseCnt === 0 &&
+        donut1Data.shortFormResponseCnt === 0 ? (
+          <ReactApexChart
+            series={emptyDonut.series}
+            options={emptyDonut.options}
+            type="pie"
+            width={300}
+          />
+        ) : (
+          <ReactApexChart
+            series={donut1Config.series}
+            options={donut1Config.options}
+            type="pie"
+            width={300}
+          />
+        )}
+
+        {donut2Data.closedSurveyCnt === 0 &&
+        donut2Data.releasedSurveyCnt === 0 &&
+        donut2Data.unReleasedSurveyCnt === 0 ? (
+          <ReactApexChart
+            series={emptyDonut.series}
+            options={emptyDonut.options}
+            type="pie"
+            width={300}
+          />
+        ) : (
+          <ReactApexChart
+            series={donut2Config.series}
+            options={donut2Config.options}
+            type="pie"
+            width={300}
+          />
+        )}
       </ChartContainer>
     </Container>
   );
@@ -168,6 +208,10 @@ const ChartContainer = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
+`;
+
+const NoData = styled.div`
+  position: absolute;
 `;
 
 export default DonutSection;

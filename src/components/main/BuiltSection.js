@@ -34,17 +34,22 @@ function BuiltSection() {
       <div class="separator"></div>
 
       {/**설문 리스트 */}
-      <SurveyList>
-        {builtSurvey.map((a, i) => {
-          return (
-            <BuiltSurvey
-              survey={a}
-              reRender={reRender}
-              setReRender={setReRender}
-            />
-          );
-        })}
-      </SurveyList>
+
+      {builtSurvey.length === 0 ? (
+        <EmptyList>제작한 설문이 없습니다</EmptyList>
+      ) : (
+        <SurveyList>
+          {builtSurvey.map((a, i) => {
+            return (
+              <BuiltSurvey
+                survey={a}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
+            );
+          })}
+        </SurveyList>
+      )}
     </Container>
   );
 }
@@ -78,6 +83,13 @@ const SurveyList = styled.div`
   //flex-wrap: wrap;
   justify-content: left;
   padding-left: 21px;
+`;
+
+const EmptyList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
 
 export default BuiltSection;

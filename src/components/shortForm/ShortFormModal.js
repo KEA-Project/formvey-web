@@ -1,10 +1,14 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+const recaptchaRef = React.createRef();
 
 function ShortFormModal() {
   //전체 설문 참여
@@ -166,13 +170,21 @@ function ShortFormModal() {
         )}
       </Body>
       <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        size="invisible"
+        sitekey={`${process.env.REACT_APP_RECAPTCHA_SITEKEY}`}
+        css={captchaStyle}
+      />
     </Container>
   );
 }
 
+const captchaStyle = css``;
+
 const Container = styled.div`
   width: 30vw;
-  height: 83vh;
+  height: 90%;
   margin-top: 20px;
   margin-left: 20px;
 
