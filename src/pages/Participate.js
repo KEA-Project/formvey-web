@@ -131,7 +131,9 @@ function Participate() {
 
       if (response.data.isSuccess) {
         navigate("/main/participated");
-        window.open(`${surveyInfo.exitUrl}`, "_blank");
+        if (surveyInfo.exitUrl !== null) {
+          window.open(`${surveyInfo.exitUrl}`, "_blank");
+        }
       }
     }
   };
