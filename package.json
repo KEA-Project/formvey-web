@@ -23,8 +23,10 @@
     "react-icons": "^4.8.0",
     "react-intersection-observer": "^9.4.3",
     "react-js-pagination": "^3.0.3",
+    "react-native": "^0.71.8",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
+    "react-slide-fade-in": "^1.0.9",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
