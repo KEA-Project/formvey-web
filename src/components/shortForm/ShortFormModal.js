@@ -7,14 +7,15 @@ import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import ReCAPTCHA from "react-google-recaptcha";
+
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 function ShortFormModal() {
   /*리캡챠 세팅*/
   const [captchaCount, setCaptchaCount] = useState(0);
-  var recaptchaRef = useRef();
+  var captchaRef = useRef();
   const [showCaptcha, setShowCaptcha] = useState(false);
-  const [captchaResponse, setCaptchaResponse] = useState(null);
+  const [captchaResponse, setCaptchaResponse] = useState("");
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
 
   useEffect(() => {
@@ -26,6 +27,15 @@ function ShortFormModal() {
     // 컴포넌트가 언마운트되면 타이머를 정리합니다.
     return () => clearInterval(interval);
   }, []);
+
+  const handleVerify = (token) => {
+    console.log("hCaptcha verification token:", token);
+    if (token !== null) {
+      setCaptchaResponse(token);
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+    }
+  };
 
   //전체 설문 참여
   const navigate = useNavigate();
@@ -137,40 +147,6 @@ function ShortFormModal() {
     shortFormUpdate();*/
   };
 
-  const handleCaptchaVerify = async (response) => {
-    console.log(response);
-    setCaptchaResponse(response);
-
-    if (response !== null) {
-      console.log("test");
-      setCaptchaCount(0);
-      setNextBtnEnabled(true);
-      setShowCaptcha(false);
-    }
-
-    recaptchaRef.current.execute();
-
-    /*
-    console.log(response);
-    setCaptchaResponse(response);
-
-    recaptchaRef.current.execute();
-
-    if (response !== null) {
-      console.log("test");
-      setCaptchaCount(0);
-      setNextBtnEnabled(true);
-      setShowCaptcha(false);
-    }*/
-    /*
-    recaptchaRef.current.execute(() => {
-      console.log("test");
-      setCaptchaCount(0);
-      setNextBtnEnabled(true);
-      setShowCaptcha(false);
-    });*/
-  };
-
   return (
     <Container>
       <Headers>
@@ -242,11 +218,11 @@ function ShortFormModal() {
       <div>
         {showCaptcha ? (
           <div>
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
-              onChange={handleCaptchaVerify}
-              className="grecaptcha-badge"
+            <HCaptcha
+              ref={captchaRef}
+              sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
+              onVerify={handleVerify}
+              onExpire={(e) => setCaptchaResponse("")}
             />
           </div>
         ) : null}
