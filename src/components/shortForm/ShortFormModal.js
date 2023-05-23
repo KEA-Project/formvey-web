@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
@@ -8,9 +8,25 @@ import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-const recaptchaRef = React.createRef();
 
 function ShortFormModal() {
+  /*리캡챠 세팅*/
+  const [captchaCount, setCaptchaCount] = useState(0);
+  var recaptchaRef = useRef();
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaResponse, setCaptchaResponse] = useState(null);
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 1분마다 상태를 초기화합니다.
+      setCaptchaCount(0);
+    }, 60000); // 1분은 60000 밀리초입니다.
+
+    // 컴포넌트가 언마운트되면 타이머를 정리합니다.
+    return () => clearInterval(interval);
+  }, []);
+
   //전체 설문 참여
   const navigate = useNavigate();
 
@@ -105,8 +121,54 @@ function ShortFormModal() {
   }, [answers]);
 
   const handleNextButtonClick = () => {
+    setCaptchaCount(captchaCount + 1);
+    console.log(captchaCount);
+
+    if (captchaCount >= 10) {
+      setShowCaptcha(true);
+      setNextBtnEnabled(false);
+    } else {
+      setShowCaptcha(false);
+      setNextBtnEnabled(true);
+    }
+
+    /*
     if (answers.length !== 0) sendResponse();
-    shortFormUpdate();
+    shortFormUpdate();*/
+  };
+
+  const handleCaptchaVerify = async (response) => {
+    console.log(response);
+    setCaptchaResponse(response);
+
+    if (response !== null) {
+      console.log("test");
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+      setShowCaptcha(false);
+    }
+
+    recaptchaRef.current.execute();
+
+    /*
+    console.log(response);
+    setCaptchaResponse(response);
+
+    recaptchaRef.current.execute();
+
+    if (response !== null) {
+      console.log("test");
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+      setShowCaptcha(false);
+    }*/
+    /*
+    recaptchaRef.current.execute(() => {
+      console.log("test");
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+      setShowCaptcha(false);
+    });*/
   };
 
   return (
@@ -157,7 +219,7 @@ function ShortFormModal() {
               );
             })}
           </OptionDiv>
-        ) : (
+        ) : listShort.shortType === 2 ? (
           //주관식
           <>
             <AnswerInput
@@ -167,15 +229,28 @@ function ShortFormModal() {
               }}
             />
           </>
-        )}
+        ) : null}
       </Body>
-      <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
-      <ReCAPTCHA
-        ref={recaptchaRef}
-        size="invisible"
-        sitekey={`${process.env.REACT_APP_RECAPTCHA_SITEKEY}`}
-        css={captchaStyle}
-      />
+      {nextBtnEnabled ? (
+        <NextShortVector
+          src={nextShortVector}
+          onClick={handleNextButtonClick}
+        />
+      ) : (
+        <NextShortVector src={nextShortVector} />
+      )}
+      <div>
+        {showCaptcha ? (
+          <div>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
+              onChange={handleCaptchaVerify}
+              className="grecaptcha-badge"
+            />
+          </div>
+        ) : null}
+      </div>
     </Container>
   );
 }
