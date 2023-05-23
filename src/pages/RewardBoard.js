@@ -39,6 +39,8 @@ function RewardBoard() {
             />
           )}
         </BottomContainer> */}
+
+        {/* example */}
       </Container>
     </>
   );
@@ -79,11 +81,11 @@ const Reward = styled.img`
   margin-right: 100px;
 `;
 
-const BottomContainer = styled.div`
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  margin-top: 15px;
-`;
+// const BottomContainer = styled.div`
+//   display: flex;
+//   text-align: center;
+//   justify-content: center;
+//   margin-top: 15px;
+// `;
 
 export default RewardBoard;

@@ -13,7 +13,7 @@ import ShortBoard from "../../pages/ShortBoard";
 import profile from "../../assets/common/profile.png";
 import RewardBoard from "../../pages/RewardBoard";
 
-function MainMenu() {
+function MainMenu(props) {
   const [userName, setUserName] = useState("");
   const [userPoint, setUserPoint] = useState("");
   const navigate = useNavigate();
@@ -75,6 +75,7 @@ function MainMenu() {
   ];
 
   const [selected, setSelected] = useState(0);
+  // const [userP]
 
   return (
     <Container>
@@ -86,7 +87,11 @@ function MainMenu() {
         <Link to="/editprofile">
           <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
         </Link>
-        <UserPoint>{userPoint}점</UserPoint>
+        <UserPoint>
+          <span className="userPoint">{userPoint}</span> p
+        </UserPoint>
+        {/* <span className="userName">{props.userName}</span> */}
+        {/* useState로? */}
         {menu.map((a, i) => {
           return selected === i ? (
             <SelectedMenuBtn>{a}</SelectedMenuBtn>
@@ -129,6 +134,9 @@ const Container = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
+  .userPoint {
+    color: #5281ff;
+  }
 `;
 
 const MenuContainer = styled.div`

@@ -4,7 +4,9 @@ import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import coinImg from "../../assets/shortForm/coin.png";
+import coin from "../../assets/shortForm/coin.gif";
 
 function ShortFormModal() {
   //전체 설문 참여
@@ -16,6 +18,7 @@ function ShortFormModal() {
 
   // 짧폼 랜덤 조회
   const [listShort, setListShort] = useState([]);
+
   // 답변 저장
   const [answers, setAnswers] = useState([]);
 
@@ -100,9 +103,19 @@ function ShortFormModal() {
     console.log(answers);
   }, [answers]);
 
+  // point 시각화
+  const [point, setPoint] = useState(null);
+
   const handleNextButtonClick = () => {
+    // setPoint(1);
+    const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
+    setPoint(randomScore);
+
     if (answers.length !== 0) sendResponse();
-    else shortFormUpdate();
+    else {
+      shortFormUpdate();
+      // setPoint(1);
+    }
   };
 
   return (
@@ -167,6 +180,17 @@ function ShortFormModal() {
         )}
       </Body>
       <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
+      {point && (
+        <Div>
+          <Coin src={coin} />
+          <Point>+{point}</Point>
+        </Div>
+      )}
+      {/* <SlideUpDiv selected={point}> */}
+      {/* // <Coin src={coin} /> */}
+      {/* // <Point>+1</Point> */}
+      {/* //{" "} */}
+      {/* </SlideUpDiv> */}
     </Container>
   );
 }
@@ -265,7 +289,6 @@ const ShortOption = styled.button`
 const NextShortVector = styled.img`
   width: 95px;
   height: 15px;
-  //고정 값 말고 어떻게 설정하는지,,
   margin-bottom: 30px;
   margin-left: 200px;
   cursor: pointer;
@@ -284,6 +307,59 @@ const AnswerInput = styled.input`
   color: #101828;
   font-weight: 600;
   cursor: pointer;
+`;
+
+// 애니메이션 쓰는 경우
+// const slideUpAnimation = `
+//   @keyframes slideUp {
+//     0% {
+//       transform: translateY(100%);
+//     }
+//     100% {
+//       transform: translateY(0);
+//     }
+//   }
+// `;
+
+// const SlideUpDiv = styled.div`
+//   animation: ${(props) => (props.point ? "slideUp 1s ease" : "none")};
+//   ${slideUpAnimation}
+// `;
+
+// const SlideUpDiv = styled.div`
+//     display: flex;
+//     flex-direction: row;
+// `;
+
+const Div = styled.div`
+  margin-bottom: 20px;
+  margin-left: 380px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+`;
+
+const Coin = styled.img`
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  // margin-left: 380px;
+  // position: fixed;
+  // bottom: 0;
+
+  font-weight: 700;
+  font-size: 15px;
+  // color: #444444;
+  color: #5281ff;
+`;
+
+const Point = styled.div`
+  font-weight: 700;
+  font-size: 20px;
+  margin: 10px 0px 0px 10px;
+  // color: #444444;
+  color: #5281ff;
 `;
 
 export default ShortFormModal;
