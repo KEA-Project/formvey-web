@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import deleteBtn from "../../assets/build/delete_btn.png";
 import DeleteModal from "./DeleteModal";
 
 function BuiltSurvey(props) {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false); //삭제하기 모달 보여주기 여부
 
   return (
@@ -50,7 +51,13 @@ function BuiltSurvey(props) {
               <ShowResponseBtn>수정하기</ShowResponseBtn>
             </Link>
           ) : (
-            <ShowResponseBtn>응답보기</ShowResponseBtn>
+            <ShowResponseBtn
+              onClick={() => {
+                navigate(`/response/${btoa(props.survey.surveyId)}`);
+              }}
+            >
+              응답보기
+            </ShowResponseBtn>
           )}
         </BottomContainer>
 
@@ -201,6 +208,7 @@ const ShowResponseBtn = styled.div`
   color: white;
   font-weight: 700;
   font-size: 12px;
+  cursor: pointer;
 `;
 
 export default BuiltSurvey;

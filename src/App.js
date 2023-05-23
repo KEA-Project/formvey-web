@@ -13,6 +13,7 @@ import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
 import BuildComplete from "./pages/BuildComplete";
 import Participate from "./pages/Participate";
 import Built from "./pages/Built";
+import Response from "./pages/Response";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/uploader" element={<ImageUploader />} />
         <Route path="/kakao" element={<KakaoRedirectHandler />} />
         <Route path="/participate/:surveyId" element={<Participate />} />
+        <Route path="/response/:surveyId" element={<Response />} />
       </Routes>
     </Container>
   );
