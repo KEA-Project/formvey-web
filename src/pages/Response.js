@@ -4,6 +4,8 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import Header from "../components/common/Header";
 import SurveyQuestionCheck from "../components/Response/SurveyQuestionCheck";
+import SurveyStatistics from "../components/Response/SurveyStatistics";
+import SurveyIndividualResponse from "../components/Response/SurveyIndividualResponse";
 
 function Response() {
   let { surveyId } = useParams(); //url 파라미터에 survey id 값
@@ -34,8 +36,12 @@ function Response() {
         </MenuBar>
 
         {/**메뉴에 따라서 컴포넌트 출력 */}
-        {selectedMenu === 0 ? (
+        {selectedMenu === 0 ? ( //설문 문항 조회
           <SurveyQuestionCheck surveyId={surveyId} />
+        ) : selectedMenu === 1 ? ( //응답 통계 조회
+          <SurveyStatistics surveyId={surveyId} />
+        ) : selectedMenu === 2 ? ( //응답 개별 보기
+          <SurveyIndividualResponse surveyId={surveyId} />
         ) : null}
       </Container>
     </div>
@@ -46,7 +52,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 140px;
+  padding-top: 120px;
 `;
 
 const MenuBar = styled.div`

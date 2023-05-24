@@ -40,7 +40,7 @@ function Participate() {
 
   const fetchData = async () => {
     const response = await fetchSurveyInfo(surveyId);
-    //console.log(response);
+    console.log(response);
     setSurveyInfo(response);
   };
 
@@ -131,7 +131,7 @@ function Participate() {
 
       if (response.data.isSuccess) {
         navigate("/main/participated");
-        if (surveyInfo.exitUrl !== null) {
+        if (surveyInfo.exitUrl !== "") {
           window.open(`${surveyInfo.exitUrl}`, "_blank");
         }
       }

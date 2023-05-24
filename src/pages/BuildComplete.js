@@ -25,7 +25,11 @@ function BuildComplete(props) {
           <Notice>설문이 배포되었습니다</Notice>
           <div className="urlContainer">
             <span style={{ fontSize: "20px" }}>URL</span>
-            <URLInput readOnly value={location.state.url} ref={inputText} />
+            <URLInput
+              readOnly
+              value={btoa(location.state.url)}
+              ref={inputText}
+            />
           </div>
         </div>
         <div className="copyBtnContainer">

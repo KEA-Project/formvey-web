@@ -206,6 +206,19 @@ function ShortFormModal() {
             />
           </>
         ) : null}
+        <div>
+          {showCaptcha ? (
+            <div css={captchaStyle}>
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
+                onVerify={handleVerify}
+                onExpire={(e) => setCaptchaResponse("")}
+                css={captchaStyle}
+              />
+            </div>
+          ) : null}
+        </div>
       </Body>
       {nextBtnEnabled ? (
         <NextShortVector
@@ -215,23 +228,13 @@ function ShortFormModal() {
       ) : (
         <NextShortVector src={nextShortVector} />
       )}
-      <div>
-        {showCaptcha ? (
-          <div>
-            <HCaptcha
-              ref={captchaRef}
-              sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
-              onVerify={handleVerify}
-              onExpire={(e) => setCaptchaResponse("")}
-            />
-          </div>
-        ) : null}
-      </div>
     </Container>
   );
 }
 
-const captchaStyle = css``;
+const captchaStyle = css`
+  margin-top: 30px;
+`;
 
 const Container = styled.div`
   width: 30vw;
