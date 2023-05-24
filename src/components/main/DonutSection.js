@@ -17,6 +17,8 @@ function DonutSection(props) {
       }
     );
 
+    console.log(response);
+
     if (response.data.isSuccess) {
       var temp = {
         createSurveyCnt: 0,
@@ -86,6 +88,7 @@ function DonutSection(props) {
         position: "bottom",
       },
       labels: ["제작 설문", "응답", "숏폼 응답"],
+      colors: ["#3e8df3", "#67e09c", "#f3b344"],
       responsive: [
         {
           breakpoint: 480,
@@ -123,6 +126,7 @@ function DonutSection(props) {
         position: "bottom",
       },
       labels: ["마감", "배포중", "제작중"],
+      colors: ["#3e8df3", "#67e09c", "#f3b344"],
       responsive: [
         {
           breakpoint: 480,
