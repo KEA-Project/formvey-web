@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import coinImg from "../../assets/shortForm/coin.png";
+import coin from "../../assets/shortForm/coin.gif";
 
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
@@ -46,6 +48,7 @@ function ShortFormModal() {
 
   // 짧폼 랜덤 조회
   const [listShort, setListShort] = useState([]);
+
   // 답변 저장
   const [answers, setAnswers] = useState([]);
 
@@ -130,21 +133,19 @@ function ShortFormModal() {
     console.log(answers);
   }, [answers]);
 
+  // point 시각화
+  const [point, setPoint] = useState(null);
+
   const handleNextButtonClick = () => {
-    setCaptchaCount(captchaCount + 1);
-    console.log(captchaCount);
+    // setPoint(1);
+    const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
+    setPoint(randomScore);
 
-    if (captchaCount >= 10) {
-      setShowCaptcha(true);
-      setNextBtnEnabled(false);
-    } else {
-      setShowCaptcha(false);
-      setNextBtnEnabled(true);
-    }
-
-    /*
     if (answers.length !== 0) sendResponse();
-    shortFormUpdate();*/
+    else {
+      shortFormUpdate();
+      // setPoint(1);
+    }
   };
 
   return (
@@ -228,6 +229,17 @@ function ShortFormModal() {
       ) : (
         <NextShortVector src={nextShortVector} />
       )}
+      {point && (
+        <Div>
+          <Coin src={coin} />
+          <Point>+{point}</Point>
+        </Div>
+      )}
+      {/* <SlideUpDiv selected={point}> */}
+      {/* // <Coin src={coin} /> */}
+      {/* // <Point>+1</Point> */}
+      {/* //{" "} */}
+      {/* </SlideUpDiv> */}
     </Container>
   );
 }
@@ -237,8 +249,8 @@ const captchaStyle = css`
 `;
 
 const Container = styled.div`
-  width: 30vw;
-  height: 90%;
+  width: 500px;
+  height: 680px;
   margin-top: 20px;
   margin-left: 20px;
 
@@ -258,7 +270,7 @@ const Container = styled.div`
 
 const Headers = styled.div`
   margin-top: 10px;
-  //margin-left: 20px;
+  margin-left: 20px;
   display: flex;
   flex-direction: row;
   // justify-content: space-between;
@@ -280,15 +292,15 @@ const ShortTitle = styled.div`
 
 const GoToSurvey = styled.img`
   width: 120px;
-  height: auto;
+  height: 40px;
   cursor: pointer;
-  //margin-right: 15px;
+  margin-right: 15px;
   margin-left: auto;
 `;
 
 const Body = styled.div`
   margin-top: 10px;
-  //margin-left: 20px;
+  margin-left: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -298,7 +310,7 @@ const Body = styled.div`
 `;
 
 const ShortQuestion = styled.div`
-  font-size: 28px;
+  font-size: 30px;
   color: #101828;
   font-weight: 700;
   margin-top: 20%;
@@ -328,15 +340,13 @@ const ShortOption = styled.button`
 `;
 
 const NextShortVector = styled.img`
-  width: 65px;
+  width: 95px;
   height: 15px;
   margin-bottom: 30px;
-  //margin-left: 200px;
+  margin-left: 200px;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const AnswerInput = styled.input`
@@ -350,7 +360,59 @@ const AnswerInput = styled.input`
   color: #101828;
   font-weight: 600;
   cursor: pointer;
-  padding-left: 10px;
+`;
+
+// 애니메이션 쓰는 경우
+// const slideUpAnimation = `
+//   @keyframes slideUp {
+//     0% {
+//       transform: translateY(100%);
+//     }
+//     100% {
+//       transform: translateY(0);
+//     }
+//   }
+// `;
+
+// const SlideUpDiv = styled.div`
+//   animation: ${(props) => (props.point ? "slideUp 1s ease" : "none")};
+//   ${slideUpAnimation}
+// `;
+
+// const SlideUpDiv = styled.div`
+//     display: flex;
+//     flex-direction: row;
+// `;
+
+const Div = styled.div`
+  margin-bottom: 20px;
+  margin-left: 380px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+`;
+
+const Coin = styled.img`
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  // margin-left: 380px;
+  // position: fixed;
+  // bottom: 0;
+
+  font-weight: 700;
+  font-size: 15px;
+  // color: #444444;
+  color: #5281ff;
+`;
+
+const Point = styled.div`
+  font-weight: 700;
+  font-size: 20px;
+  margin: 10px 0px 0px 10px;
+  // color: #444444;
+  color: #5281ff;
 `;
 
 export default ShortFormModal;

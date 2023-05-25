@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import DonutSection from "../components/main/DonutSection";
 import BuiltSection from "../components/main/BuiltSection";
 import ParticipatedSection from "../components/main/ParticipatedSection";
-import ShortFormModal from "../components/shortForm/ShortFormModal";
+import ShortFormModal from "../components/main/ShortFormModal";
 
 function Main(props) {
   return (
