@@ -64,18 +64,18 @@ function Participate() {
     let checkIndex = answers.findIndex((obj) => obj.questionId === questionId);
 
     if (checkIndex === -1) {
-      answers.push({ content: [content], questionId: questionId });
+      answers.push({ content: content, questionId: questionId });
     } else {
       if (content === "") {
         //답변을 지울 경우
         answers.splice(checkIndex, 1);
       } else {
         answers.splice(checkIndex, 1);
-        answers.push({ content: [content], questionId: questionId });
+        answers.push({ content: content, questionId: questionId });
       }
     }
 
-    //console.log(answers);
+    console.log(answers);
   };
 
   // 다중선택 응답하기
@@ -102,7 +102,7 @@ function Participate() {
       }
     }
 
-    //console.log(answers);
+    console.log(answers);
   };
 
   //응답 제출하기

@@ -1,3 +1,4 @@
+//응답 통계 객관식 차트
 import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import styled from "@emotion/styled";
