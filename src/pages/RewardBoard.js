@@ -1,15 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 import reward from "../assets/rewardEx.png";
 
 function RewardBoard() {
-  //페이징
-  //   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  //   const [currentPage, setCurrentPage] = useState(0);
-  //   const [count, setCount] = useState(6);
+  // const srollRef = useRef();
+  // const [rewardList, setRewardList] = useState([]);
 
-  //   const [unlockCount, setUnlockCount] = useState(0);
-  //   const [lockPage, setLockPage] = useState(0);
+  const imageLinks = [
+    {
+      id: 1,
+      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
+      width: 200,
+      height: 200,
+    },
+    {
+      id: 2,
+      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
+      width: 200,
+      height: 200,
+    },
+    {
+      id: 3,
+      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
+      width: 200,
+      height: 200,
+    },
+    {
+      id: 3,
+      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
+      width: 200,
+      height: 200,
+    },
+    // ...add more image links as needed
+  ];
 
   return (
     <>
@@ -20,27 +43,25 @@ function RewardBoard() {
           <Reward src={reward} />
           <Reward src={reward} />
           <Reward src={reward} />
-        </RewardList>
-        {/* <BottomContainer>
-          {selectedMenu === 0 && totalItemsCount !== 0 && (
-            <Paging
-              page={currentPage}
-              count={count}
-              totalItemsCount={totalItemsCount}
-              onPageChange={handlePageChange}
-            />
-          )}
-          {selectedMenu === 1 && unlockCount !== 0 && (
-            <Paging
-              page={lockPage}
-              count={count}
-              totalItemsCount={unlockCount}
-              onPageChange={handleLockPageChange}
-            />
-          )}
-        </BottomContainer> */}
 
-        {/* example */}
+          {/* <table>
+            <tbody>
+              <tr>
+                {imageLinks.map((image) => (
+                  <td key={image.id}>
+                    <img
+                      src={image.src}
+                      alt={`Image ${image.id}`}
+                      width={image.width}
+                      height={image.height}
+                      style={{ margin: "10px" }}
+                    />
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table> */}
+        </RewardList>
       </Container>
     </>
   );
