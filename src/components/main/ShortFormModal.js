@@ -21,10 +21,10 @@ function ShortFormModal() {
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
 
   useEffect(() => {
+    //1분마다 캡차 카운트 초기화
     const interval = setInterval(() => {
-      // 1분마다 상태를 초기화합니다.
       setCaptchaCount(0);
-    }, 60000); // 1분은 60000 밀리초입니다.
+    }, 60000);
 
     // 컴포넌트가 언마운트되면 타이머를 정리합니다.
     return () => clearInterval(interval);
@@ -137,6 +137,18 @@ function ShortFormModal() {
   const [point, setPoint] = useState(null);
 
   const handleNextButtonClick = () => {
+    //어뷰징 방지 캡차카운트 증가
+    setCaptchaCount(captchaCount + 1);
+    console.log(captchaCount);
+
+    if (captchaCount >= 10) {
+      setShowCaptcha(true);
+      setNextBtnEnabled(false);
+    } else {
+      setShowCaptcha(false);
+      setNextBtnEnabled(true);
+    }
+
     // setPoint(1);
     const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
     setPoint(randomScore);
