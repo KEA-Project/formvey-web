@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import logo from "../../assets/common/logo.png";
 import axios from "axios";
@@ -17,6 +17,8 @@ function MainMenu(props) {
   const [userName, setUserName] = useState("");
   const [userPoint, setUserPoint] = useState("");
   const navigate = useNavigate();
+
+  const { menu } = useParams();
 
   const getUserInfo = async () => {
     const response = await axios.get(
@@ -65,13 +67,13 @@ function MainMenu(props) {
     }
   };
 
-  const menu = [
-    "메인",
-    "설문 게시판",
-    "짧폼 게시판",
-    "제작한 설문",
-    "응답한 설문",
-    "리워드 보관함",
+  const menuList = [
+    { id: 0, name: "메인", param: "main" },
+    { id: 1, name: "설문 게시판", param: "board" },
+    { id: 2, name: "짧폼 게시판", param: "short-board" },
+    { id: 3, name: "제작한 설문", param: "built" },
+    { id: 4, name: "응답한 설문", param: "participated" },
+    { id: 5, name: "리워드 보관함", param: "rewards" },
   ];
 
   const [selected, setSelected] = useState(0);
@@ -92,16 +94,17 @@ function MainMenu(props) {
         </UserPoint>
         {/* <span className="userName">{props.userName}</span> */}
         {/* useState로? */}
-        {menu.map((a, i) => {
-          return selected === i ? (
-            <SelectedMenuBtn>{a}</SelectedMenuBtn>
+        {menuList.map((a, i) => {
+          return menu === a.param ? (
+            <SelectedMenuBtn key={a.id}>{a.name}</SelectedMenuBtn>
           ) : (
             <MenuBtn
               onClick={() => {
                 setSelected(i);
+                navigate(`/main/${a.param}`);
               }}
             >
-              {a}
+              {a.name}
             </MenuBtn>
           );
         })}
@@ -112,15 +115,15 @@ function MainMenu(props) {
       </MenuContainer>
       {/**페이지 라우팅 */}
       <div>
-        {selected === 0 ? ( //메인
+        {menu === "main" ? ( //메인
           <Main userName={userName} />
-        ) : selected === 1 ? ( //설문 게시판
+        ) : menu === "board" ? ( //설문 게시판
           <SurveyBoard />
-        ) : selected === 2 ? ( //짧폼 게시판
+        ) : menu === "short-board" ? ( //짧폼 게시판
           <ShortBoard />
-        ) : selected === 3 ? ( //제작한 설문
+        ) : menu === "built" ? ( //제작한 설문
           <Built />
-        ) : selected === 4 ? ( //응답한 설문
+        ) : menu === "participated" ? ( //응답한 설문
           <Participated />
         ) : selected === 5 ? ( //리워드 보관함
           <RewardBoard />

@@ -8,7 +8,8 @@ import { getToday } from "../Functions";
 
 function Participate() {
   const navigate = useNavigate();
-  const { surveyId } = useParams(); //url 파라미터에 survey id 값
+  let { surveyId } = useParams(); //url 파라미터에 survey id 값
+  surveyId = atob(surveyId); //survey id 복호화
   const [essentialId, setEssentialId] = useState([]);
 
   //받아올 설문 정보 데이터
@@ -39,13 +40,13 @@ function Participate() {
 
   const fetchData = async () => {
     const response = await fetchSurveyInfo(surveyId);
-    //console.log(response);
+    console.log(response);
     setSurveyInfo(response);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [surveyId]);
 
   useEffect(() => {
     if (surveyInfo) {
@@ -63,18 +64,18 @@ function Participate() {
     let checkIndex = answers.findIndex((obj) => obj.questionId === questionId);
 
     if (checkIndex === -1) {
-      answers.push({ content: [content], questionId: questionId });
+      answers.push({ content: content, questionId: questionId });
     } else {
       if (content === "") {
         //답변을 지울 경우
         answers.splice(checkIndex, 1);
       } else {
         answers.splice(checkIndex, 1);
-        answers.push({ content: [content], questionId: questionId });
+        answers.push({ content: content, questionId: questionId });
       }
     }
 
-    //console.log(answers);
+    console.log(answers);
   };
 
   // 다중선택 응답하기
@@ -101,7 +102,7 @@ function Participate() {
       }
     }
 
-    //console.log(answers);
+    console.log(answers);
   };
 
   //응답 제출하기
@@ -129,8 +130,10 @@ function Participate() {
       );
 
       if (response.data.isSuccess) {
-        navigate("/main");
-        window.open(`${surveyInfo.exitUrl}`, "_blank");
+        navigate("/main/participated");
+        if (surveyInfo.exitUrl !== "") {
+          window.open(`${surveyInfo.exitUrl}`, "_blank");
+        }
       }
     }
   };

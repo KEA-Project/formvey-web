@@ -99,6 +99,7 @@ const Notice = styled.div`
 
 const BtnContainer = styled.div`
   margin-top: 40px;
+  display: flex;
   justify-content: space-between;
   width: 250px;
 `;

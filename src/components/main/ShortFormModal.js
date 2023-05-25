@@ -1,5 +1,7 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
@@ -8,7 +10,35 @@ import { useNavigate } from "react-router-dom";
 // import coinImg from "../../assets/shortForm/coin.png";
 import coin from "../../assets/shortForm/coin.gif";
 
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+
 function ShortFormModal() {
+  /*리캡챠 세팅*/
+  const [captchaCount, setCaptchaCount] = useState(0);
+  var captchaRef = useRef();
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaResponse, setCaptchaResponse] = useState("");
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 1분마다 상태를 초기화합니다.
+      setCaptchaCount(0);
+    }, 60000); // 1분은 60000 밀리초입니다.
+
+    // 컴포넌트가 언마운트되면 타이머를 정리합니다.
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleVerify = (token) => {
+    console.log("hCaptcha verification token:", token);
+    if (token !== null) {
+      setCaptchaResponse(token);
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+    }
+  };
+
   //전체 설문 참여
   const navigate = useNavigate();
 
@@ -166,20 +196,39 @@ function ShortFormModal() {
               );
             })}
           </OptionDiv>
-        ) : (
+        ) : listShort.shortType === 2 ? (
           //주관식
           <>
             <AnswerInput
               placeholder="주관식 답변"
               onChange={(e) => {
                 singleRes(e.target.value);
-                console.log(e.target.value);
               }}
             />
           </>
-        )}
+        ) : null}
+        <div>
+          {showCaptcha ? (
+            <div css={captchaStyle}>
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
+                onVerify={handleVerify}
+                onExpire={(e) => setCaptchaResponse("")}
+                css={captchaStyle}
+              />
+            </div>
+          ) : null}
+        </div>
       </Body>
-      <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
+      {nextBtnEnabled ? (
+        <NextShortVector
+          src={nextShortVector}
+          onClick={handleNextButtonClick}
+        />
+      ) : (
+        <NextShortVector src={nextShortVector} />
+      )}
       {point && (
         <Div>
           <Coin src={coin} />
@@ -194,6 +243,10 @@ function ShortFormModal() {
     </Container>
   );
 }
+
+const captchaStyle = css`
+  margin-top: 30px;
+`;
 
 const Container = styled.div`
   width: 500px;
