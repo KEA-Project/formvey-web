@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
