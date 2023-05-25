@@ -11,9 +11,11 @@ import Built from "../../pages/Built";
 import Participated from "../../pages/Participated";
 import ShortBoard from "../../pages/ShortBoard";
 import profile from "../../assets/common/profile.png";
+import RewardBoard from "../../pages/RewardBoard";
 
-function MainMenu() {
+function MainMenu(props) {
   const [userName, setUserName] = useState("");
+  const [userPoint, setUserPoint] = useState("");
   const navigate = useNavigate();
 
   const { menu } = useParams();
@@ -32,6 +34,7 @@ function MainMenu() {
 
     console.log(response.data);
     setUserName(response.data.result.nickname);
+    setUserPoint(response.data.result.point);
   };
 
   useEffect(() => {
@@ -74,6 +77,7 @@ function MainMenu() {
   ];
 
   const [selected, setSelected] = useState(0);
+  // const [userP]
 
   return (
     <Container>
@@ -85,6 +89,11 @@ function MainMenu() {
         <Link to="/editprofile">
           <ModifyProfileBtn>프로필 수정</ModifyProfileBtn>
         </Link>
+        <UserPoint>
+          <span className="userPoint">{userPoint}</span> p
+        </UserPoint>
+        {/* <span className="userName">{props.userName}</span> */}
+        {/* useState로? */}
         {menuList.map((a, i) => {
           return menu === a.param ? (
             <SelectedMenuBtn key={a.id}>{a.name}</SelectedMenuBtn>
@@ -116,6 +125,8 @@ function MainMenu() {
           <Built />
         ) : menu === "participated" ? ( //응답한 설문
           <Participated />
+        ) : selected === 5 ? ( //리워드 보관함
+          <RewardBoard />
         ) : null}
       </div>
     </Container>
@@ -126,6 +137,9 @@ const Container = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
+  .userPoint {
+    color: #5281ff;
+  }
 `;
 
 const MenuContainer = styled.div`
@@ -224,6 +238,13 @@ const LogoutText = styled.div`
   font-size: 15px;
   color: #5280fd;
   margin-left: 5px;
+`;
+
+const UserPoint = styled.div`
+  font-weight: 700;
+  font-size: 15px;
+  color: #444444;
+  // margin-top: 11px;
 `;
 
 export default MainMenu;
