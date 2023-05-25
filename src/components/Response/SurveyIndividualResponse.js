@@ -24,7 +24,7 @@ function SurveyIndividualResponse(props) {
     console.log(response);
     if (response.data.isSuccess) {
       setResponseList(response.data.result);
-      setTotalItemsCount(1);
+      setTotalItemsCount(response.data.result[0].pages);
     }
   };
 
