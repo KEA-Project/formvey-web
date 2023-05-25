@@ -35,6 +35,7 @@ const Container = styled.div`
 const UserContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-right: 15px;
 `;
 
 const ShortContainer = styled.div`

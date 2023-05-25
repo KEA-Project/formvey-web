@@ -25,14 +25,18 @@ function BuildComplete(props) {
           <Notice>설문이 배포되었습니다</Notice>
           <div className="urlContainer">
             <span style={{ fontSize: "20px" }}>URL</span>
-            <URLInput readOnly value={location.state.url} ref={inputText} />
+            <URLInput
+              readOnly
+              value={btoa(location.state.url)}
+              ref={inputText}
+            />
           </div>
         </div>
         <div className="copyBtnContainer">
           <CopyBtn onClick={copyText}>복사하기</CopyBtn>
         </div>
       </Container>
-      <Link to="/main">
+      <Link to="/main/built">
         <HomeLink>
           <HomeIcon src={homeIcon} />
           메인페이지
