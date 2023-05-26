@@ -1,66 +1,69 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import reward from "../assets/rewardEx.png";
+import axios from "axios";
 
 function RewardBoard() {
-  // const srollRef = useRef();
-  // const [rewardList, setRewardList] = useState([]);
+  const [list, setList] = useState([]);
 
-  const imageLinks = [
-    {
-      id: 1,
-      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
-      width: 200,
-      height: 200,
-    },
-    {
-      id: 2,
-      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
-      width: 200,
-      height: 200,
-    },
-    {
-      id: 3,
-      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
-      width: 200,
-      height: 200,
-    },
-    {
-      id: 3,
-      src: "https://eraofband.s3.ap-northeast-2.amazonaws.com/148b9b3a-c2d9-47a8-93c1-fde216bd9dd2.png",
-      width: 200,
-      height: 200,
-    },
-    // ...add more image links as needed
-  ];
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/rewards/${localStorage.getItem(
+        "memberId"
+      )}`,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+    console.log(response);
+    if (response.data.isSuccess) {
+      setList(response.data.result);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const chunkSize = 5; // 한 줄에 출력할 이미지 개수
+
+  // 이미지 배열을 청크로 나누기
+  const chunkArray = (array, size) => {
+    const chunked_arr = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunked_arr.push(array.slice(i, i + size));
+    }
+    return chunked_arr;
+  };
+
+  // 이미지 배열을 청크로 나눈 결과
+  const chunkedImages = chunkArray(list, chunkSize);
 
   return (
     <>
       <Container>
         <Title>리워드 보관함</Title>
         <RewardList>
-          <Reward src={reward} />
-          <Reward src={reward} />
-          <Reward src={reward} />
-          <Reward src={reward} />
-
-          {/* <table>
+          <table>
             <tbody>
-              <tr>
-                {imageLinks.map((image) => (
-                  <td key={image.id}>
-                    <img
-                      src={image.src}
-                      alt={`Image ${image.id}`}
-                      width={image.width}
-                      height={image.height}
-                      style={{ margin: "10px" }}
-                    />
-                  </td>
-                ))}
-              </tr>
+              {chunkedImages.map((chunk, rowIndex) => (
+                <tr key={rowIndex}>
+                  {chunk.map((image) => (
+                    <td key={image.userRewardId}>
+                      <img
+                        src={image.rewardUrl}
+                        alt={`Image ${image.userRewardId}`}
+                        width={200}
+                        height={300}
+                        style={{ margin: "10px" }}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
-          </table> */}
+          </table>
         </RewardList>
       </Container>
     </>
@@ -101,12 +104,5 @@ const Reward = styled.img`
   cursor: pointer;
   margin-right: 100px;
 `;
-
-// const BottomContainer = styled.div`
-//   display: flex;
-//   text-align: center;
-//   justify-content: center;
-//   margin-top: 15px;
-// `;
 
 export default RewardBoard;
