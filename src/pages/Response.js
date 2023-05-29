@@ -6,6 +6,7 @@ import Header from "../components/common/Header";
 import SurveyQuestionCheck from "../components/Response/SurveyQuestionCheck";
 import SurveyStatistics from "../components/Response/SurveyStatistics";
 import SurveyIndividualResponse from "../components/Response/SurveyIndividualResponse";
+import SendReward from "../components/Response/SendReward";
 
 function Response() {
   let { surveyId } = useParams(); //url 파라미터에 survey id 값
@@ -42,7 +43,9 @@ function Response() {
           <SurveyStatistics surveyId={surveyId} />
         ) : selectedMenu === 2 ? ( //응답 개별 보기
           <SurveyIndividualResponse surveyId={surveyId} />
-        ) : null}
+        ) : (
+          <SendReward surveyId={surveyId} />
+        )}
       </Container>
     </div>
   );

@@ -43,7 +43,7 @@ function ShortFormModal() {
   const navigate = useNavigate();
 
   const navigateParticipate = (surveyId) => {
-    navigate(`/participate/${surveyId}`);
+    navigate(`/participate/${btoa(surveyId)}`);
   };
 
   // 짧폼 랜덤 조회
