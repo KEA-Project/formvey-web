@@ -22,7 +22,7 @@ function Section1() {
           if (localStorage.getItem("jwt") === null) {
             navigate("/login");
           } else {
-            navigate("/main");
+            navigate("/main/main");
           }
         }}
       >
