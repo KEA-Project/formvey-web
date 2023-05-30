@@ -1,33 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import rewardDrop from "../../assets/response/reward_drop.png";
+import SendRewardTable from "./SendRewardTable";
+import { getSurveyResponseList } from "../../Functions";
+import Paging from "../common/Paging";
+import axios from "axios";
 
-function SendReward() {
+function SendReward(props) {
   const [selectedMenu, setSelectedMenu] = useState(0);
   const menu = ["랜덤 발송", "지정 발송"];
   const fileInputRef = useRef(null);
-  const [uploadedImageFiles, setUploadedImageFiles] = useState([]);
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [unuploadedImageFiles, setunUploadedImageFiles] = useState([]);
+  let uploadedImageFiles = [];
 
   //리워드 이미지 드래그 앤 드랍 처리
   const handleDrop = (event) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    //setUploadedImageFiles(files);
+
     handleFiles(files);
   };
 
   const handleFiles = (files) => {
-    const imageFiles = Array.from(files).filter((file) =>
-      file.type.startsWith("image/")
-    );
-    const imageNames = imageFiles.map((file) => file.name);
-    setUploadedImages((prevImages) => [...prevImages, ...imageNames]);
+    //파일 리스트
+    const fileArray = Array.from(files);
+    const newFiles = [...unuploadedImageFiles, ...fileArray];
+    setunUploadedImageFiles(newFiles);
   };
 
   useEffect(() => {
-    console.log(uploadedImages);
-  }, [uploadedImages]);
+    console.log(unuploadedImageFiles);
+  }, [unuploadedImageFiles]);
 
   //파일 찾기 버튼 처리
   const handleBrowseBtnClick = () => {
@@ -37,19 +40,91 @@ function SendReward() {
   const handleBrowseFileChange = (event) => {
     const selectedFile = event.target.files[0];
 
-    setUploadedImages((prevImages) => [...prevImages, selectedFile.name]);
+    setunUploadedImageFiles((prevFiles) => [...prevFiles, selectedFile]);
   };
 
   //리워드 삭제
   const deleteReward = (i) => {
-    const temp = [...uploadedImages];
+    const temp = [...unuploadedImageFiles];
     temp.splice(i, 1);
-    setUploadedImages(temp);
+    setunUploadedImageFiles(temp);
+  };
 
-    /*
-    const temp2 = [...uploadedImageFiles];
-    temp2.splice(i, 1);
-    setUploadedImageFiles(temp2);*/
+  //지정 발송 응답자 리스트 테이블 세팅
+  const [responseList, setResponseList] = useState([
+    {
+      nickname: "",
+      responseDate: "",
+      responseId: 0,
+    },
+  ]);
+
+  const [totalItemsCount, setTotalItemsCount] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [count] = useState(10);
+
+  const fetchData = async () => {
+    const response = await getSurveyResponseList(props.surveyId, currentPage);
+
+    //console.log(response);
+
+    if (response.data.isSuccess) {
+      setResponseList(response.data.result);
+      setTotalItemsCount(response.data.result[0].pages);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  //리워드 등록하기
+  const registerReward = async () => {
+    //이미지 파일 업로드
+    await fileUpload();
+    console.log(uploadedImageFiles);
+
+    if (selectedMenu === 0) {
+      //랜덤발송
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/rewards/random/${props.surveyId}`,
+        { rewardUrl: uploadedImageFiles },
+        {
+          headers: {
+            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+          },
+        }
+      );
+
+      console.log(response);
+    } else {
+      //지정 발송
+    }
+  };
+
+  const fileUpload = async () => {
+    uploadedImageFiles = [];
+    try {
+      for (const file of unuploadedImageFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/images/upload`,
+          formData
+        );
+
+        console.log(response);
+        uploadedImageFiles.push(response.data.result);
+        console.log(uploadedImageFiles);
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -96,10 +171,10 @@ function SendReward() {
           />
         </ImageDrop>
         <ImageList>
-          {uploadedImages.map((a, i) => {
+          {unuploadedImageFiles.map((a, i) => {
             return (
               <div>
-                {a}
+                {a.name}
                 <span
                   className="xBtn"
                   onClick={() => {
@@ -113,6 +188,19 @@ function SendReward() {
           })}
         </ImageList>
       </RewardRegisterContainer>
+      {selectedMenu === 1 ? (
+        <SelectParticipantContainer>
+          <Title className="title">응답자 지정</Title>
+          <SendRewardTable response={responseList} />
+          <Paging
+            page={currentPage}
+            count={count}
+            totalItemsCount={totalItemsCount}
+            onPageChange={handlePageChange}
+          />
+        </SelectParticipantContainer>
+      ) : null}
+      <RegisterBtn onClick={registerReward}>등록하기</RegisterBtn>
     </Container>
   );
 }
@@ -191,6 +279,28 @@ const ImageList = styled.div`
     color: red;
     margin-left: 20px;
     cursor: pointer;
+  }
+`;
+
+const RegisterBtn = styled.div`
+  width: 114px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  cursor: pointer;
+  background: #5281ff;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-top: 70px;
+  float: right;
+`;
+
+const SelectParticipantContainer = styled.div`
+  margin-top: 50px;
+
+  .title {
+    margin-bottom: 15px;
   }
 `;
 

@@ -70,6 +70,19 @@ export function fetchResponseInfo(responseId) {
   return fetch();
 }
 
+//설문 응답자 리스트 조회
+export function getSurveyResponseList(surveyId, currentPage) {
+  const fetch = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/responses/Individual/${surveyId}?page=${currentPage}&size=10`
+    );
+
+    return response;
+  };
+
+  return fetch();
+}
+
 //현재 날짜 가져오기
 export function getToday() {
   var date = new Date();

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
 import IndividualResponseModal from "./IndividualResponseModal";
 
 function IndividualResponseTable(props) {
   const [showModal, setShowModal] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const navigate = useNavigate();
 
   return (
     <>
