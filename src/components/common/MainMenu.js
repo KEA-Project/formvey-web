@@ -34,6 +34,7 @@ function MainMenu(props) {
 
     console.log(response.data);
     setUserName(response.data.result.nickname);
+    console.log(response);
     setUserPoint(response.data.result.point);
   };
 
