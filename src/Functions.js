@@ -1,3 +1,4 @@
+/**여러 컴포넌트에서 사용하는 함수들 (api 요청 등..) */
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -88,4 +89,18 @@ export function getToday() {
   var date = new Date();
 
   return date.toISOString();
+}
+
+//이미지 파일 스토리지 업로드
+export function uploadImageToStorage(formData) {
+  const upload = async () => {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/images/upload`,
+      formData
+    );
+
+    return response;
+  };
+
+  return upload();
 }
