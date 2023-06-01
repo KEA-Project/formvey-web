@@ -1,34 +1,51 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
-import IndividualResponseModal from "./IndividualResponseModal";
+import SendRewardModal from "./SendRewardModal";
 
 function SendRewardTable(props) {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
   return (
-    <Container>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell className="first">선택</TableHeaderCell>
-            <TableHeaderCell className="mid">응답자 닉네임</TableHeaderCell>
-            <TableHeaderCell className="last">응답 날짜</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.response.map((response, i) => {
-            return (
-              <TableRow key={response.responseId} onClick={() => {}}>
-                <TableCell>
-                  <input type="checkbox" />
-                </TableCell>
-                <TableCell>{response.nickname}</TableCell>
-                <TableCell>{response.responseDate}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </Container>
+    <>
+      {showModal ? (
+        <SendRewardModal
+          setShowModal={setShowModal}
+          setShowConfirmModal={props.setShowConfirmModal}
+          nickname={props.response[selectedIdx].nickname}
+          memberId={props.response[selectedIdx].memberId}
+        />
+      ) : null}
+      <Container>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell className="first">No.</TableHeaderCell>
+              <TableHeaderCell className="mid">응답자 닉네임</TableHeaderCell>
+              <TableHeaderCell className="last">응답 날짜</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.response.map((response, i) => {
+              return (
+                <TableRow
+                  key={response.responseId}
+                  onClick={() => {
+                    setSelectedIdx(i);
+                    setShowModal(true);
+                  }}
+                >
+                  <TableCell>{i}</TableCell>
+                  <TableCell>{response.nickname}</TableCell>
+                  <TableCell>{response.responseDate}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Container>
+    </>
   );
 }
 

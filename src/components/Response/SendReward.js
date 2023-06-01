@@ -5,6 +5,8 @@ import SendRewardTable from "./SendRewardTable";
 import { getSurveyResponseList } from "../../Functions";
 import Paging from "../common/Paging";
 import axios from "axios";
+import { uploadImageToStorage } from "../../Functions";
+import AlertModal from "../common/AlertModal";
 
 function SendReward(props) {
   const [selectedMenu, setSelectedMenu] = useState(0);
@@ -12,6 +14,13 @@ function SendReward(props) {
   const fileInputRef = useRef(null);
   const [unuploadedImageFiles, setunUploadedImageFiles] = useState([]);
   let uploadedImageFiles = [];
+
+  //전송완료 alert 모달
+  const [showModal, setShowModal] = useState(false);
+  const handleModalConfirm = () => {
+    setShowModal(false);
+    window.location.reload();
+  };
 
   //리워드 이미지 드래그 앤 드랍 처리
   const handleDrop = (event) => {
@@ -27,10 +36,6 @@ function SendReward(props) {
     const newFiles = [...unuploadedImageFiles, ...fileArray];
     setunUploadedImageFiles(newFiles);
   };
-
-  useEffect(() => {
-    console.log(unuploadedImageFiles);
-  }, [unuploadedImageFiles]);
 
   //파일 찾기 버튼 처리
   const handleBrowseBtnClick = () => {
@@ -56,6 +61,7 @@ function SendReward(props) {
       nickname: "",
       responseDate: "",
       responseId: 0,
+      memberId: 0,
     },
   ]);
 
@@ -87,25 +93,23 @@ function SendReward(props) {
     //이미지 파일 업로드
     await fileUpload();
     console.log(uploadedImageFiles);
-
-    if (selectedMenu === 0) {
-      //랜덤발송
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/rewards/random/${props.surveyId}`,
-        { rewardUrl: uploadedImageFiles },
-        {
-          headers: {
-            "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-          },
-        }
-      );
-
-      console.log(response);
-    } else {
-      //지정 발송
+    //랜덤발송
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/rewards/random/${props.surveyId}`,
+      { rewardUrl: uploadedImageFiles },
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
+    console.log(response);
+    if (response.data.isSuccess) {
+      setShowModal(true);
     }
   };
 
+  //스토리지에 이미지 파일 업로드 후 url 리턴
   const fileUpload = async () => {
     uploadedImageFiles = [];
     try {
@@ -113,14 +117,18 @@ function SendReward(props) {
         const formData = new FormData();
         formData.append("file", file);
 
+        /*
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/images/upload`,
           formData
-        );
+        );*/
+        const response = await uploadImageToStorage(formData);
 
-        console.log(response);
-        uploadedImageFiles.push(response.data.result);
-        console.log(uploadedImageFiles);
+        if (response.data.isSuccess) {
+          console.log(response);
+          uploadedImageFiles.push(response.data.result);
+          console.log(uploadedImageFiles);
+        }
       }
     } catch (err) {
       alert(err);
@@ -128,80 +136,95 @@ function SendReward(props) {
   };
 
   return (
-    <Container>
-      <Title>발송 방식 선택</Title>
-      <MenuContainer>
-        {menu.map((a, i) => {
-          return (
-            <div className="option">
-              {selectedMenu === i ? (
-                <input type="radio" id={i} name="menu" value={a} checked />
-              ) : (
-                <input
-                  type="radio"
-                  id={i}
-                  name="menu"
-                  value={a}
-                  onChange={() => {
-                    setSelectedMenu(i);
-                  }}
-                />
-              )}
-              <div className="optionName">{a}</div>
-            </div>
-          );
-        })}
-      </MenuContainer>
-
-      <Title>리워드 등록</Title>
-      <RewardRegisterContainer>
-        <ImageDrop
-          onDrop={handleDrop}
-          onDragOver={(event) => event.preventDefault()}
-        >
-          <img src={rewardDrop} className="img" />
-          <div className="browseBtn" onClick={handleBrowseBtnClick}>
-            파일 찾기
-          </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleBrowseFileChange}
-          />
-        </ImageDrop>
-        <ImageList>
-          {unuploadedImageFiles.map((a, i) => {
+    <>
+      {showModal ? (
+        <AlertModal
+          message="리워드 전송을 완료했습니다"
+          handleModalConfirm={handleModalConfirm}
+        />
+      ) : null}
+      <Container>
+        <Title>발송 방식 선택</Title>
+        <MenuContainer>
+          {menu.map((a, i) => {
             return (
-              <div>
-                {a.name}
-                <span
-                  className="xBtn"
-                  onClick={() => {
-                    deleteReward(i);
-                  }}
-                >
-                  x
-                </span>
+              <div className="option">
+                {selectedMenu === i ? (
+                  <input type="radio" id={i} name="menu" value={a} checked />
+                ) : (
+                  <input
+                    type="radio"
+                    id={i}
+                    name="menu"
+                    value={a}
+                    onChange={() => {
+                      setSelectedMenu(i);
+                    }}
+                  />
+                )}
+                <div className="optionName">{a}</div>
               </div>
             );
           })}
-        </ImageList>
-      </RewardRegisterContainer>
-      {selectedMenu === 1 ? (
-        <SelectParticipantContainer>
-          <Title className="title">응답자 지정</Title>
-          <SendRewardTable response={responseList} />
-          <Paging
-            page={currentPage}
-            count={count}
-            totalItemsCount={totalItemsCount}
-            onPageChange={handlePageChange}
-          />
-        </SelectParticipantContainer>
-      ) : null}
-      <RegisterBtn onClick={registerReward}>등록하기</RegisterBtn>
-    </Container>
+        </MenuContainer>
+
+        {selectedMenu === 1 ? ( //지정 발송
+          <SelectParticipantContainer>
+            <Title className="title">응답자 지정</Title>
+            <SendRewardTable
+              response={responseList}
+              setShowConfirmModal={setShowModal}
+            />
+            <Paging
+              page={currentPage}
+              count={count}
+              totalItemsCount={totalItemsCount}
+              onPageChange={handlePageChange}
+            />
+          </SelectParticipantContainer>
+        ) : (
+          //랜덤 발송
+          <>
+            <Title>리워드 등록</Title>
+            <RewardRegisterContainer>
+              <ImageDrop
+                onDrop={handleDrop}
+                onDragOver={(event) => event.preventDefault()}
+              >
+                <img src={rewardDrop} className="img" />
+                <div className="browseBtn" onClick={handleBrowseBtnClick}>
+                  파일 찾기
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleBrowseFileChange}
+                />
+              </ImageDrop>
+              <ImageList>
+                {unuploadedImageFiles.map((a, i) => {
+                  return (
+                    <div>
+                      {a.name}
+                      <span
+                        className="xBtn"
+                        onClick={() => {
+                          deleteReward(i);
+                        }}
+                      >
+                        x
+                      </span>
+                    </div>
+                  );
+                })}
+              </ImageList>
+            </RewardRegisterContainer>
+            <RegisterBtn onClick={registerReward}>등록하기</RegisterBtn>
+          </>
+        )}
+      </Container>
+    </>
   );
 }
 
