@@ -126,7 +126,7 @@ function MainMenu(props) {
           <Built />
         ) : menu === "participated" ? ( //응답한 설문
           <Participated />
-        ) : selected === 5 ? ( //리워드 보관함
+        ) : menu === "rewards" ? ( //리워드 보관함
           <RewardBoard />
         ) : null}
       </div>
