@@ -1,21 +1,55 @@
-import React, { useState, useEffect } from "react";
+/** @jsxImportSource @emotion/react */
+import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import goToSurvey from "../../assets/shortForm/goToSurvey.png";
 import nextShortVector from "../../assets/shortForm/nextShortVector.png";
 import shortTitleVector from "../../assets/shortForm/shortTitleVector.png";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import coinImg from "../../assets/shortForm/coin.png";
+import coin from "../../assets/shortForm/coin.gif";
+
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 function ShortFormModal() {
+  /*리캡챠 세팅*/
+  const [captchaCount, setCaptchaCount] = useState(0);
+  var captchaRef = useRef();
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaResponse, setCaptchaResponse] = useState("");
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
+  const [point, setPoint] = useState(0);
+
+  useEffect(() => {
+    //1분마다 캡차 카운트 초기화
+    const interval = setInterval(() => {
+      setCaptchaCount(0);
+    }, 60000);
+
+    // 컴포넌트가 언마운트되면 타이머를 정리합니다.
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleVerify = (token) => {
+    console.log("hCaptcha verification token:", token);
+    if (token !== null) {
+      setCaptchaResponse(token);
+      setCaptchaCount(0);
+      setNextBtnEnabled(true);
+    }
+  };
+
   //전체 설문 참여
   const navigate = useNavigate();
 
   const navigateParticipate = (surveyId) => {
-    navigate(`/participate/${surveyId}`);
+    navigate(`/participate/${btoa(surveyId)}`);
   };
 
   // 짧폼 랜덤 조회
   const [listShort, setListShort] = useState([]);
+
   // 답변 저장
   const [answers, setAnswers] = useState([]);
 
@@ -36,12 +70,14 @@ function ShortFormModal() {
     }
   };
 
-  const sendResponse = async () => {
+  const sendResponse = async (params) => {
+    console.log("이연희", params, answers);
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/shortanswers/${
         listShort.id
       }/${localStorage.getItem("memberId")}`,
       {
+        point: params.point,
         shortAnswer: answers,
       },
       {
@@ -50,6 +86,8 @@ function ShortFormModal() {
         },
       }
     );
+
+    console.log(response.data);
 
     if (response.data.isSuccess) {
       shortFormUpdate();
@@ -65,6 +103,7 @@ function ShortFormModal() {
     setSelected([]); // 다음 질문으로 넘어갈 때 선택 초기화
     setSelectedMulti([]); // 다음 질문으로 넘어갈 때 선택 초기화
     setAnswers([]); // 다음 질문으로 넘어갈 때 응답 초기화
+    setPoint(0); // 다음 질문으로 넘어갈 때 포인트 초기화
   };
 
   // 단일 선택
@@ -101,8 +140,43 @@ function ShortFormModal() {
   }, [answers]);
 
   const handleNextButtonClick = () => {
-    if (answers.length !== 0) sendResponse();
-    shortFormUpdate();
+    //어뷰징 방지 캡차카운트 증가
+    setCaptchaCount(captchaCount + 1);
+    console.log(captchaCount);
+
+    if (captchaCount >= 10) {
+      setShowCaptcha(true);
+      setNextBtnEnabled(false);
+    } else {
+      setShowCaptcha(false);
+      setNextBtnEnabled(true);
+    }
+
+    if (answers.length !== 0) {
+      // setPoint(1);
+      const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
+      setPoint(randomScore);
+      console.log("제발", answers, randomScore, point);
+
+      // function sleep(delay) {
+      //   return new Promise((resolve) => setTimeout(resolve, delay));
+      // }
+
+      function sleep(delay) {
+        return new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      sleep(4000).then(() => {
+        sendResponse({ point: randomScore });
+      });
+
+      // setTimeout(() => {
+      //   // setPoint(null);
+      //   // shortFormUpdate();
+      // }, 3000);
+    } else {
+      shortFormUpdate();
+    }
   };
 
   return (
@@ -153,7 +227,7 @@ function ShortFormModal() {
               );
             })}
           </OptionDiv>
-        ) : (
+        ) : listShort.shortType === 2 ? (
           //주관식
           <>
             <AnswerInput
@@ -163,12 +237,43 @@ function ShortFormModal() {
               }}
             />
           </>
-        )}
+        ) : null}
+        <div>
+          {showCaptcha ? (
+            <div css={captchaStyle}>
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
+                onVerify={handleVerify}
+                onExpire={(e) => setCaptchaResponse("")}
+                css={captchaStyle}
+              />
+            </div>
+          ) : null}
+        </div>
       </Body>
-      <NextShortVector src={nextShortVector} onClick={handleNextButtonClick} />
+
+      {nextBtnEnabled ? (
+        <NextShortVector
+          src={nextShortVector}
+          onClick={handleNextButtonClick}
+        />
+      ) : (
+        <NextShortVector src={nextShortVector} />
+      )}
+      {point != 0 && (
+        <Div>
+          <Coin src={coin} />
+          <Point>+{point}</Point>
+        </Div>
+      )}
     </Container>
   );
 }
+
+const captchaStyle = css`
+  margin-top: 30px;
+`;
 
 const Container = styled.div`
   width: 500px;
@@ -264,7 +369,6 @@ const ShortOption = styled.button`
 const NextShortVector = styled.img`
   width: 95px;
   height: 15px;
-  //고정 값 말고 어떻게 설정하는지,,
   margin-bottom: 30px;
   margin-left: 200px;
   cursor: pointer;
@@ -283,6 +387,59 @@ const AnswerInput = styled.input`
   color: #101828;
   font-weight: 600;
   cursor: pointer;
+`;
+
+// 애니메이션 쓰는 경우
+// const slideUpAnimation = `
+//   @keyframes slideUp {
+//     0% {
+//       transform: translateY(100%);
+//     }
+//     100% {
+//       transform: translateY(0);
+//     }
+//   }
+// `;
+
+// const SlideUpDiv = styled.div`
+//   animation: ${(props) => (props.point ? "slideUp 1s ease" : "none")};
+//   ${slideUpAnimation}
+// `;
+
+// const SlideUpDiv = styled.div`
+//     display: flex;
+//     flex-direction: row;
+// `;
+
+const Div = styled.div`
+  margin-bottom: 20px;
+  margin-left: 380px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+`;
+
+const Coin = styled.img`
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  // margin-left: 380px;
+  // position: fixed;
+  // bottom: 0;
+
+  font-weight: 700;
+  font-size: 15px;
+  // color: #444444;
+  color: #5281ff;
+`;
+
+const Point = styled.div`
+  font-weight: 700;
+  font-size: 20px;
+  margin: 10px 0px 0px 10px;
+  // color: #444444;
+  color: #5281ff;
 `;
 
 export default ShortFormModal;

@@ -13,6 +13,7 @@ import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
 import BuildComplete from "./pages/BuildComplete";
 import Participate from "./pages/Participate";
 import Built from "./pages/Built";
+import Response from "./pages/Response";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/main" element={<MainMenu />} />
+        <Route path="/main/:menu" element={<MainMenu />} />
         <Route path="/formgpt" element={<FormGPT />} />
         <Route path="/build" element={<Build />} />
         <Route path="/build-complete" element={<BuildComplete />} />
@@ -30,6 +31,7 @@ function App() {
         <Route path="/uploader" element={<ImageUploader />} />
         <Route path="/kakao" element={<KakaoRedirectHandler />} />
         <Route path="/participate/:surveyId" element={<Participate />} />
+        <Route path="/response/:surveyId" element={<Response />} />
       </Routes>
     </Container>
   );
