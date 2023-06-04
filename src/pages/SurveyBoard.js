@@ -7,53 +7,72 @@ import BoardTable from "../components/SurveyBoard/BoardTable.js";
 import Paging from "../components/common/Paging";
 
 function SurveyBoard(props) {
-
   const [listSurvey, setListSurvey] = useState([]);
 
   const [totalItemsCount, setTotalItemsCount] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [count] = useState(10);
 
+  // 검색
+  const [keyword, setKeyword] = useState("");
+  const [searchedSurvey, setSearchedSurvey] = useState([]);
+
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/board?page=${currentPage}&size=10`,
+      `${process.env.REACT_APP_BASE_URL}/surveys/board?page=${currentPage}&size=10`
     );
     console.log(response);
     if (response.data.isSuccess) {
-        setListSurvey(response.data.result);
-        setTotalItemsCount(response.data.result[0].pages);
+      setListSurvey(response.data.result);
+      setTotalItemsCount(response.data.result[0].pages);
+    }
+
+    const searchResponse = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/searchs/surveys?keyword=${keyword}&page=${currentPage}&size=10`
+    );
+    console.log(searchResponse);
+    if (searchResponse.data.isSuccess) {
+      setSearchedSurvey(searchResponse.data.result);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, keyword]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-    return(
-        <div>
-            <Container>
-                <Title>설문 게시판</Title>
-                <Info>키워드를 입력해 참여하고자 하는 설문을 찾아보세요!</Info>
-                {/* 검색창 */}
-                <Search></Search>
-                {/* 설문 게시판 리스트 */}
+  return (
+    <div>
+      <Container>
+        <Title>설문 게시판</Title>
+        <Info>키워드를 입력해 참여하고자 하는 설문을 찾아보세요!</Info>
+        {/* 검색창 */}
+        <Search onChange={(e) => setKeyword(e.target.value)} />
+        {/* 설문 게시판 리스트 */}
 
-                {/* {listSurvey.map((survey) => {
+        {/* {listSurvey.map((survey) => {
                     return <BoardTable survey={survey} />;
                 })} */}
 
-                <BoardTable survey={listSurvey} />
-                <BottomContainer>
-                <Paging page={currentPage} count={count} totalItemsCount={totalItemsCount} onPageChange={handlePageChange}/>
-                </BottomContainer>
-            </Container>
-        </div>
-        );
-
+        {keyword ? (
+          <BoardTable survey={searchedSurvey} />
+        ) : (
+          <BoardTable survey={listSurvey} />
+        )}
+        <BottomContainer>
+          <Paging
+            page={currentPage}
+            count={count}
+            totalItemsCount={totalItemsCount}
+            onPageChange={handlePageChange}
+          />
+        </BottomContainer>
+      </Container>
+    </div>
+  );
 }
 
 const Container = styled.div`
@@ -69,7 +88,7 @@ const Title = styled.div`
   margin-bottom: 9px;
 `;
 
-const Info = styled.div`    
+const Info = styled.div`
   font-weight: 400;
   font-size: 12px;
   color: #444444;
@@ -81,7 +100,7 @@ const Search = styled.input`
   height: 32px;
 
   max-width: 1150px;
-  background: #F7F7F7;
+  background: #f7f7f7;
   background-image: url(${search});
   background-repeat: no-repeat;
   background-position: 10px center;
@@ -95,10 +114,10 @@ const Search = styled.input`
 `;
 
 const BottomContainer = styled.div`
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    margin-top: 15px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  margin-top: 15px;
 `;
 
 export default SurveyBoard;

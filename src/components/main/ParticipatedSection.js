@@ -34,24 +34,28 @@ function ParticipatedSection() {
       <div class="separator"></div>
 
       {/**설문 리스트 */}
-      <SurveyList>
-        {participatedSurvey.map((a, i) => {
-          return (
-            <ParticipatedSurvey
-              survey={a}
-              reRender={reRender}
-              setReRender={setReRender}
-            />
-          );
-        })}
-      </SurveyList>
+      {participatedSurvey.length === 0 ? (
+        <EmptyList>응답한 설문이 없습니다</EmptyList>
+      ) : (
+        <SurveyList>
+          {participatedSurvey.map((a, i) => {
+            return (
+              <ParticipatedSurvey
+                survey={a}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
+            );
+          })}
+        </SurveyList>
+      )}
     </Container>
   );
 }
 
 const Container = styled.div`
   width: 720px;
-  height: 210px;
+  height: 220px;
 
   .separator {
     border-top: 1px solid #ccc;
@@ -74,9 +78,17 @@ const Title = styled.div`
 
 const SurveyList = styled.div`
   display: flex;
+  margin-top: 10px;
   //flex-wrap: wrap;
   justify-content: left;
   padding-left: 21px;
+`;
+
+const EmptyList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
 
 export default ParticipatedSection;
