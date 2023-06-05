@@ -3,25 +3,15 @@ import Header from "../components/common/Header";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { fetchUserInfo } from "../Functions";
 
 function EditProfile() {
   const getUserInfo = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/members/info/${localStorage.getItem(
-        "memberId"
-      )}`,
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
-
-    console.log(response.data);
-    setNickname(response.data.result.nickname);
+    const response = await fetchUserInfo();
+    setNickname(response.nickname);
 
     var temp = [...requiredItem];
-    temp[0].value = response.data.result.nickname;
+    temp[0].value = response.nickname;
 
     setRequiredItem(temp);
   };
@@ -55,9 +45,9 @@ function EditProfile() {
   const editBtnClicked = async () => {
     if (PW === confirmPW && PW !== "") {
       const result = await axios.patch(
-        `${process.env.REACT_APP_BASE_URL}/members/edit/${localStorage.getItem(
-          "memberId"
-        )}`,
+        `${
+          process.env.REACT_APP_BASE_URL_MEMBER
+        }/members/edit/${localStorage.getItem("memberId")}`,
         {
           nickname: nickname,
           password: PW,

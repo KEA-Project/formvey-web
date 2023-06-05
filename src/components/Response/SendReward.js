@@ -95,7 +95,7 @@ function SendReward(props) {
     console.log(uploadedImageFiles);
     //랜덤발송
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/rewards/random/${props.surveyId}`,
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/rewards/random/${props.surveyId}`,
       { rewardUrl: uploadedImageFiles },
       {
         headers: {

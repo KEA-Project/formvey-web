@@ -23,7 +23,7 @@ function SurveyStatistics(props) {
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/statistics/${props.surveyId}`
+      `${process.env.REACT_APP_BASE_URL_RESPONSE}/responses/statistics/${props.surveyId}`
     );
 
     console.log(response.data);

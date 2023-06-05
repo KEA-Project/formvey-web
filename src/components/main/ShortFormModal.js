@@ -55,8 +55,8 @@ function ShortFormModal() {
   const fetchData = async () => {
     const shortRandom = await axios.get(
       `${
-        process.env.REACT_APP_BASE_URL
-      }/shortforms/random/${localStorage.getItem("memberId")}`,
+        process.env.REACT_APP_BASE_URL_SURVEY
+      }/shortForms/random/${localStorage.getItem("memberId")}`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -71,7 +71,7 @@ function ShortFormModal() {
 
   const sendResponse = async () => {
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/shortanswers/${
+      `${process.env.REACT_APP_BASE_URL_RESPONSE}/shortanswers/${
         listShort.id
       }/${localStorage.getItem("memberId")}`,
       {

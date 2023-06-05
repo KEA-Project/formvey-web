@@ -15,7 +15,7 @@ function SurveyBoard(props) {
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/board?page=${currentPage}&size=10`
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/board?page=${currentPage}&size=10`
     );
     console.log(response);
     if (response.data.isSuccess) {

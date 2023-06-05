@@ -52,7 +52,7 @@ function SendRewardModal(props) {
 
     //지정발송
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/rewards/select`,
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/rewards/select`,
       {
         rewards: [{ memberId: props.memberId, rewardUrl: uploadedImageFile }],
       },
@@ -179,7 +179,7 @@ const ContentContainer = styled.div`
   border-radius: 21px;
   z-index: 1000;
 
-  overflow: scroll;
+  overflow: auto;
 `;
 
 const Header = styled.div`

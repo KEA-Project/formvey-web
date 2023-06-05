@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
+import RewardModal from "../components/RewardBoard/RewardModal";
 
 function RewardBoard() {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(""); //모달에 띄울 선택된 이미지
   const [list, setList] = useState([]);
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/rewards/${localStorage.getItem(
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/rewards/${localStorage.getItem(
         "memberId"
       )}`,
       {
@@ -42,6 +45,9 @@ function RewardBoard() {
 
   return (
     <>
+      {showModal ? (
+        <RewardModal setShowModal={setShowModal} selectedImg={selectedImg} />
+      ) : null}
       <Container>
         <Title>리워드 보관함</Title>
         <RewardList>
@@ -57,6 +63,10 @@ function RewardBoard() {
                         width={200}
                         height={300}
                         style={{ margin: "10px" }}
+                        onClick={() => {
+                          setShowModal(true);
+                          setSelectedImg(image.rewardUrl);
+                        }}
                       />
                     </td>
                   ))}

@@ -16,7 +16,7 @@ function InfoModal(props) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/shortforms/info/${shortformId}`
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/shortforms/info/${shortformId}`
       );
       if (response.data.isSuccess) {
         setShortform(response.data.result);
