@@ -2,28 +2,15 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import logo from "../../assets/common/logo.png";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
-import * as Functions from "../../Functions.js";
+import { LogOut } from "../../Functions";
 
 function Header() {
   const navigate = useNavigate();
   /*함수 재사용 하려면 어떻게 해야되지?*/
   const logoutBtnClicked = async () => {
-    const response = await axios.patch(
-      `${process.env.REACT_APP_BASE_URL}/logout/${localStorage.getItem(
-        "memberId"
-      )}`,
-      {},
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
-
-    console.log(response);
+    const response = await LogOut();
 
     if (response.data.isSuccess) {
       localStorage.removeItem("jwt");

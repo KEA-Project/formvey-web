@@ -116,7 +116,7 @@ function Participate() {
       alert("필수 질문에 응답해주세요!");
     } else {
       const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/responses/${surveyId}`,
+        `${process.env.REACT_APP_BASE_URL_RESPONSE}/responses/${surveyId}`,
         {
           answers: answers,
           memberId: localStorage.getItem("memberId"),

@@ -43,13 +43,13 @@ function Participated() {
       ? currentPage
       : selectedMenu === 1
       ? goingPage
-      : completePage ;
+      : completePage;
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/list/${localStorage.getItem(
-        "memberId"
-      )}?page=${page}&size=6`,
+      `${
+        process.env.REACT_APP_BASE_URL_RESPONSE
+      }/responses/list/${localStorage.getItem("memberId")}?page=${page}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -59,7 +59,11 @@ function Participated() {
     console.log(response);
     if (response.data.isSuccess) {
       setParticipatedSurvey(response.data.result.getResponseListRes);
-      console.log(response.data.result.totalPageCnt, response.data.result.releasedPageCnt, response.data.result.closedPageCnt)
+      console.log(
+        response.data.result.totalPageCnt,
+        response.data.result.releasedPageCnt,
+        response.data.result.closedPageCnt
+      );
 
       setTotalItemsCount(response.data.result.totalPageCnt);
       setGoingCount(response.data.result.closedPageCnt);
@@ -126,8 +130,6 @@ function Participated() {
           })}
         </SurveyList>
         <BottomContainer>
-
-      
           {selectedMenu === 0 && totalItemsCount !== 0 && (
             <Paging
               page={currentPage}

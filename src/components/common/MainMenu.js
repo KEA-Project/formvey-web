@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import logo from "../../assets/common/logo.png";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import logoutIcon from "../../assets/common/logout_icon.png";
 import Main from "../../pages/Main";
@@ -12,6 +11,8 @@ import Participated from "../../pages/Participated";
 import ShortBoard from "../../pages/ShortBoard";
 import profile from "../../assets/common/profile.png";
 import RewardBoard from "../../pages/RewardBoard";
+import { LogOut } from "../../Functions";
+import { fetchUserInfo } from "../../Functions";
 
 function MainMenu(props) {
   const [userName, setUserName] = useState("");
@@ -21,20 +22,10 @@ function MainMenu(props) {
   const { menu } = useParams();
 
   const getUserInfo = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/members/info/${localStorage.getItem(
-        "memberId"
-      )}`,
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
+    const response = await fetchUserInfo();
 
-    console.log(response.data);
-    setUserName(response.data.result.nickname);
-    setUserPoint(response.data.result.point);
+    setUserName(response.nickname);
+    setUserPoint(response.point);
   };
 
   useEffect(() => {
@@ -43,19 +34,7 @@ function MainMenu(props) {
 
   /*함수 재사용 하려면 어떻게 해야되지?*/
   const logoutBtnClicked = async () => {
-    const response = await axios.patch(
-      `${process.env.REACT_APP_BASE_URL}/logout/${localStorage.getItem(
-        "memberId"
-      )}`,
-      {},
-      {
-        headers: {
-          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
-        },
-      }
-    );
-
-    console.log(response);
+    const response = await LogOut();
 
     if (response.data.isSuccess) {
       localStorage.removeItem("jwt");

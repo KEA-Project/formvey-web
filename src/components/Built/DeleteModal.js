@@ -8,7 +8,7 @@ function DeleteModal(props) {
     var response;
     if (props.mode === "built") {
       response = await axios.patch(
-        `${process.env.REACT_APP_BASE_URL}/surveys/delete/${props.surveyId}`,
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/delete/${props.surveyId}`,
         {
           memberId: localStorage.getItem("memberId"),
         },
@@ -20,7 +20,7 @@ function DeleteModal(props) {
       );
     } else {
       response = await axios.patch(
-        `${process.env.REACT_APP_BASE_URL}/responses/delete/${props.responseId}`,
+        `${process.env.REACT_APP_BASE_URL_RESPONSE}/responses/delete/${props.responseId}`,
         {
           memberId: localStorage.getItem("memberId"),
         },

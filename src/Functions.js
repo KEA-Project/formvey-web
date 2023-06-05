@@ -1,12 +1,11 @@
 /**여러 컴포넌트에서 사용하는 함수들 (api 요청 등..) */
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
+//로그아웃 api
 export function LogOut() {
-  const navigate = useNavigate();
   const logoutHandler = async () => {
     const response = await axios.patch(
-      `${process.env.REACT_APP_BASE_URL}/logout/${localStorage.getItem(
+      `${process.env.REACT_APP_BASE_URL_MEMBER}/${localStorage.getItem(
         "memberId"
       )}`,
       {},
@@ -17,26 +16,41 @@ export function LogOut() {
       }
     );
 
-    console.log(response);
+    return response;
+  };
+
+  return logoutHandler();
+}
+
+//로그인한 유저 정보 불러오기 api
+export function fetchUserInfo() {
+  const fetch = async () => {
+    const response = await axios.get(
+      `${
+        process.env.REACT_APP_BASE_URL_MEMBER
+      }/members/info/${localStorage.getItem("memberId")}`,
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
 
     if (response.data.isSuccess) {
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("memberId");
-
-      navigate("/");
+      return response.data.result;
     } else {
-      alert(response.data.message);
+      return alert(response.data.message);
     }
   };
 
-  logoutHandler();
+  return fetch();
 }
 
 //설문 정보 가져오기 api
 export function fetchSurveyInfo(surveyId) {
   const fetch = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/info/${surveyId}`,
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/info/${surveyId}`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -58,7 +72,7 @@ export function fetchSurveyInfo(surveyId) {
 export function fetchResponseInfo(responseId) {
   const fetch = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/info/${responseId}`
+      `${process.env.REACT_APP_BASE_URL_RESPONSE}/responses/info/${responseId}`
     );
 
     if (response.data.isSuccess) {
@@ -75,7 +89,7 @@ export function fetchResponseInfo(responseId) {
 export function getSurveyResponseList(surveyId, currentPage) {
   const fetch = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/Individual/${surveyId}?page=${currentPage}&size=10`
+      `${process.env.REACT_APP_BASE_URL_RESPONSE}/responses/Individual/${surveyId}?page=${currentPage}&size=10`
     );
 
     return response;

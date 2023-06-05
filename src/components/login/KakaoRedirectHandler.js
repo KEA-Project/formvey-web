@@ -9,7 +9,7 @@ function KakaoRedirectHandler() {
   const kakaoLogin = async (accessToken) => {
     //console.log(accessToken);
     const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/login/kakao/${accessToken}`
+      `${process.env.REACT_APP_BASE_URL_MEMBER}/kakao/${accessToken}`
     );
 
     console.log(response.data);

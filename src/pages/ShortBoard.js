@@ -25,7 +25,7 @@ function ShortBoard(props) {
   const fetchData = async () => {
     const response = await axios.get(
       `${
-        process.env.REACT_APP_BASE_URL
+        process.env.REACT_APP_BASE_URL_SURVEY
       }/shortforms/board/${localStorage.getItem(
         "memberId"
       )}?page=${currentPage}&size=6`,
@@ -43,7 +43,7 @@ function ShortBoard(props) {
 
     const responseResult = await axios.get(
       `${
-        process.env.REACT_APP_BASE_URL
+        process.env.REACT_APP_BASE_URL_SURVEY
       }/shortresults/board/${localStorage.getItem(
         "memberId"
       )}?page=${lockPage}&size=6`,

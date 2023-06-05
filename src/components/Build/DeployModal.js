@@ -15,7 +15,7 @@ function DeployModal(props) {
     var response;
     if (props.surveyId === null) {
       response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/surveys/create/2`,
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/create/2`,
         props.payload,
         {
           headers: {
@@ -25,7 +25,7 @@ function DeployModal(props) {
       );
     } else {
       response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}/2`,
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/update/${props.surveyId}/2`,
         props.payload,
         {
           headers: {
