@@ -9,6 +9,7 @@ import Paging from "../components/common/Paging";
 function SurveyBoard(props) {
   const [listSurvey, setListSurvey] = useState([]);
 
+  // 페이징
   const [totalItemsCount, setTotalItemsCount] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [count] = useState(10);
