@@ -29,7 +29,7 @@ function SurveyBoard(props) {
     }
 
     const searchResponse = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/searchs/surveys?keyword=${keyword}&page=${currentPage}&size=10`
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/searchs/surveys?keyword=${keyword}&page=${currentPage}&size=10`
     );
     console.log(searchResponse);
     if (searchResponse.data.isSuccess) {
