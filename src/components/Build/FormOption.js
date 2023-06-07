@@ -21,6 +21,7 @@ function FormOption(props) {
     //console.log(getToday());
 
     const payload = {
+      memberId: localStorage.getItem("memberId"),
       endDate: endDate,
       exitUrl: props.exitUrl,
       isAnonymous: props.isAnonymous,
@@ -77,6 +78,7 @@ function FormOption(props) {
         <DeployModal
           setShowModal={setShowModal}
           payload={{
+            memberId: localStorage.getItem("memberId"),
             endDate: endDate,
             exitUrl: props.exitUrl,
             isAnonymous: props.isAnonymous,

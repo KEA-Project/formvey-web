@@ -64,14 +64,14 @@ function Participate() {
     let checkIndex = answers.findIndex((obj) => obj.questionId === questionId);
 
     if (checkIndex === -1) {
-      answers.push({ content: content, questionId: questionId });
+      answers.push({ content: [content], questionId: questionId });
     } else {
       if (content === "") {
         //답변을 지울 경우
         answers.splice(checkIndex, 1);
       } else {
         answers.splice(checkIndex, 1);
-        answers.push({ content: content, questionId: questionId });
+        answers.push({ content: [content], questionId: questionId });
       }
     }
 
@@ -111,6 +111,8 @@ function Participate() {
     const isEssentialIncluded = essentialId.every((idx) =>
       answers.some((answer) => answer.questionId === idx)
     );
+
+    console.log(answers);
 
     if (!isEssentialIncluded) {
       alert("필수 질문에 응답해주세요!");

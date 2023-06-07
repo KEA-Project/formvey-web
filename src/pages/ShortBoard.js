@@ -26,7 +26,7 @@ function ShortBoard(props) {
     const response = await axios.get(
       `${
         process.env.REACT_APP_BASE_URL_SURVEY
-      }/shortforms/board/${localStorage.getItem(
+      }/shortForms/board/${localStorage.getItem(
         "memberId"
       )}?page=${currentPage}&size=6`,
       {
