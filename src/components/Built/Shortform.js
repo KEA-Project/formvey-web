@@ -4,18 +4,43 @@ import { Link } from "react-router-dom";
 import unlock from "../../assets/common/shortform/unlock.png";
 import lock from "../../assets/common/shortform/lock.png";
 import InfoModal from "./InfoModal";
+import PointModal from "./PointModal";
+import ResultModal from "./ResultModal";
+import { Result } from "antd";
 
 function Shortform(props) {
   const [showModal, setShowModal] = useState(false); //상세조회 모달 보여주기 여부
+  const [showPointModal, setShowPointModal] = useState(false);
+
+  const handleOpenPointModal = () => {
+    setShowModal(false);
+    setShowPointModal(true);
+  };
 
   return (
     <>
-      {showModal ? (
-        <InfoModal
-          setShowModal={setShowModal}
+      {showModal && props.shortform ? (
+        props.shortform.shortResultStatus === 0 ? (
+          <InfoModal
+            setShowModal={setShowModal}
+            handleOpenPointModal={handleOpenPointModal} // handleOpenPointModal 전달
+            shortformId={props.shortform.id}
+          />
+        ) : (
+          <ResultModal
+            setShowModal={setShowModal}
+            shortformId={props.shortform.id}
+          />
+        )
+      ) : null}
+
+      {showPointModal && (
+        <PointModal
+          setShowModal={setShowPointModal}
           shortformId={props.shortform.id}
         />
-      ) : null}
+      )}
+
 
       <Container>
         <TitleContainer>
@@ -41,7 +66,7 @@ function Shortform(props) {
           </div>
           {props.shortform.shortResultStatus === 0 ? (
             //<Link to="/build" state={{ surveyId: props.survey.surveyId }}>
-           <ShowResponseBtn
+            <ShowResponseBtn
               onClick={() => {
                 setShowModal(true);
               }}
