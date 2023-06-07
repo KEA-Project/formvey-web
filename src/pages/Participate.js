@@ -163,12 +163,13 @@ function Participate() {
                 {a.type === 0 ? ( //객관식 단일선택
                   <OptionContainer>
                     {a.choices.map((b, j) => {
+                      const uniqueName = `choice_${a.questionIdx}_${b.choiceIdx}`;
                       return (
                         <ChoiceContainer key={b.choiceIdx}>
                           <input
                             type="radio"
                             id={b.choiceIdx}
-                            name="choice"
+                            name={uniqueName}
                             value={b.choiceContent}
                             onChange={() => {
                               respondSingle(a.questionId, b.choiceContent);
@@ -184,12 +185,13 @@ function Participate() {
                 ) : a.type === 1 ? ( //객관식 다중선택
                   <OptionContainer>
                     {a.choices.map((b, j) => {
+                      const uniqueName = `choice_${a.questionIdx}_${b.choiceIdx}`;
                       return (
                         <ChoiceContainer key={b.choiceIdx}>
                           <input
                             type="checkbox"
                             id={b.choiceIdx}
-                            name="choice"
+                            name={uniqueName}
                             value={b.choiceContent}
                             onChange={({ target: { checked } }) => {
                               respondMulti(
