@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import qs from "qs";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function KakaoRedirectHandler() {
+  const navigate = useNavigate();
   let code = new URL(window.location.href).searchParams.get("code"); //인가코드
 
   //폼베이 서버 카카오 로그인 처리
@@ -13,7 +15,13 @@ function KakaoRedirectHandler() {
     );
 
     console.log(response.data);
-    console.log(response.data.isSuccess);
+    if (response.data.isSuccess) {
+      localStorage.setItem("jwt", response.data.result.jwt);
+      localStorage.setItem("memberId", response.data.result.id);
+      navigate("/main/main");
+    } else {
+      console.log(response.data.message);
+    }
   };
 
   //엑세스 토큰 발급 받기
