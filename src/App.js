@@ -8,7 +8,6 @@ import MainMenu from "./components/common/MainMenu";
 import FormGPT from "./components/Build/FormGPT";
 import Build from "./pages/Build";
 import "./App.css";
-import ImageUploader from "./components/Build/ImageUploader";
 import KakaoRedirectHandler from "./components/login/KakaoRedirectHandler";
 import BuildComplete from "./pages/BuildComplete";
 import Participate from "./pages/Participate";
@@ -28,7 +27,6 @@ function App() {
         <Route path="/build" element={<Build />} />
         <Route path="/build-complete" element={<BuildComplete />} />
         <Route path="/built" element={<Built />} />
-        <Route path="/uploader" element={<ImageUploader />} />
         <Route path="/kakao" element={<KakaoRedirectHandler />} />
         <Route path="/participate/:surveyId" element={<Participate />} />
         <Route path="/response/:surveyId" element={<Response />} />

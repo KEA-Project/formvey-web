@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import axios from "axios";
 import Header from "../components/common/Header";
 import SurveyQuestionCheck from "../components/Response/SurveyQuestionCheck";
 import SurveyStatistics from "../components/Response/SurveyStatistics";

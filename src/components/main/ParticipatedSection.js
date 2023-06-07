@@ -9,9 +9,9 @@ function ParticipatedSection() {
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/list/${localStorage.getItem(
-        "memberId"
-      )}?page=0&size=2`,
+      `${
+        process.env.REACT_APP_BASE_URL_RESPONSE
+      }/responses/list/${localStorage.getItem("memberId")}?page=0&size=2`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),

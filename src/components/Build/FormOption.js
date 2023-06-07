@@ -21,6 +21,7 @@ function FormOption(props) {
     //console.log(getToday());
 
     const payload = {
+      memberId: localStorage.getItem("memberId"),
       endDate: endDate,
       exitUrl: props.exitUrl,
       isAnonymous: props.isAnonymous,
@@ -38,7 +39,7 @@ function FormOption(props) {
 
     if (props.surveyId === null) {
       response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/surveys/create/1`,
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/create/1`,
         payload,
         {
           headers: {
@@ -48,7 +49,7 @@ function FormOption(props) {
       );
     } else {
       response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/surveys/update/${props.surveyId}/1`,
+        `${process.env.REACT_APP_BASE_URL_SURVEY}/surveys/update/${props.surveyId}/1`,
         payload,
         {
           headers: {
@@ -77,6 +78,7 @@ function FormOption(props) {
         <DeployModal
           setShowModal={setShowModal}
           payload={{
+            memberId: localStorage.getItem("memberId"),
             endDate: endDate,
             exitUrl: props.exitUrl,
             isAnonymous: props.isAnonymous,

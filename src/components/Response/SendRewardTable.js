@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import IndividualResponseModal from "./IndividualResponseModal";
+import { useNavigate } from "react-router-dom";
+import SendRewardModal from "./SendRewardModal";
 
-function IndividualResponseTable(props) {
+function SendRewardTable(props) {
   const [showModal, setShowModal] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
 
   return (
     <>
       {showModal ? (
-        <IndividualResponseModal
+        <SendRewardModal
           setShowModal={setShowModal}
-          responseId={props.response[selectedIdx].responseId}
+          setShowConfirmModal={props.setShowConfirmModal}
           nickname={props.response[selectedIdx].nickname}
+          memberId={props.response[selectedIdx].memberId}
         />
       ) : null}
       <Container>
@@ -111,4 +113,4 @@ const TableCell = styled.td`
   border-bottom: 1px solid #dee2e6;
 `;
 
-export default IndividualResponseTable;
+export default SendRewardTable;

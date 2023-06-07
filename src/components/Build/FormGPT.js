@@ -44,58 +44,66 @@ function FormGPT(props) {
   const sendGPT = async (msg) => {
     //응답 오기 전까지 스피너 출력
     setShowSpinner(true);
+    if (sessionStorage.getItem(msg) === null) {
+      //키워드가 캐싱되지 않은 경우
 
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        model: "gpt-3.5-turbo",
-        temperature: 0.8,
-        messages: [
-          {
-            role: "system",
-            content: "assistant는 설문조사 문항을 만들어주는 시스템이다",
-          },
-          {
-            role: "user",
-            content: `${msg}에 관한 설문조사 문항을 만들어줘. 문항은 숫자로 구분해서 보여주고 각 문항의 제목만 보여줘`,
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.REACT_APP_GPT_KEY}`,
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          temperature: 0.8,
+          messages: [
+            {
+              role: "system",
+              content: "assistant는 설문조사 문항을 만들어주는 시스템이다",
+            },
+            {
+              role: "user",
+              content: `${msg}에 관한 설문조사 문항을 만들어줘. 문항은 숫자로 구분해서 보여주고 각 문항의 제목만 보여줘`,
+            },
+          ],
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_GPT_KEY}`,
+          },
+        }
+      );
+
+      sessionStorage.setItem(msg, response.data.choices[0].message.content);
+
+      const temp = [...chatList];
+      temp.push({ msg: msg, from: "me" });
+      temp.push({
+        msg: response.data.choices[0].message.content.split("\n"),
+        from: "gptAns",
+      });
+      setChatList(temp);
+    } else {
+      //키워드에 대한 답변이 캐싱된 경우
+      const temp = [...chatList];
+      temp.push({ msg: msg, from: "me" });
+      temp.push({
+        msg: sessionStorage.getItem(msg).split("\n"),
+        from: "gptAns",
+      });
+      setChatList(temp);
+    }
 
     //응답 받고 스피너 숨기기
     setShowSpinner(false);
-
-    //console.log(response.data.choices[0].message.content.split("\n"));
-    const temp = [...chatList];
-    temp.push({ msg: msg, from: "me" });
-    temp.push({
-      msg: response.data.choices[0].message.content.split("\n"),
-      from: "gptAns",
-    });
-    setChatList(temp);
-    //console.log(chatList);
   };
 
   const sendMsg = async () => {
-    //console.log(currentMsg);
     var temp = [...chatList];
     temp.push({ msg: currentMsg, from: "me" });
     setChatList(temp);
     sendGPT(currentMsg);
-    //console.log(chatList);
     setCurrentMsg("");
   };
 
   const checkHandler = ({ target }, title) => {
-    //console.log(title);
-    //console.log(target.checked);
     var temp = [];
 
     if (target.checked) {
