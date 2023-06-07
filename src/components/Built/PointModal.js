@@ -3,50 +3,18 @@ import xbtn from "../../assets/common/x_button.png";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import PointModal from "./PointModal";
 
-function InfoModal(props) {
-  const [shortformId, setShortformId] = useState("");
-  const [showModal, setShowModal] = useState(true); //상세조회 모달 보여주기 여부
-  const [showPointModal, setShowPointModal] = useState(false); //결과보기 모달 보여주기 여부
-  const [shortform, setShortform] = useState({
-    surveyTitle: "",
-    shortQuestion: "",
-    shortType: 0,
-    options: [], // 배열로 초기화
-  });
+function PointModal(props) {
+  //const [shortformId, setShortformId] = useState("");
+  const [showPointModal, setShowPointModal] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL_SURVEY}/shortForms/info/${shortformId}`
-      );
-      if (response.data.isSuccess) {
-        setShortform(response.data.result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  useEffect(() => {
-    setShortformId(props.shortformId);
-  }, [props.shortformId]);
+//   useEffect(() => {
+//     setShortformId(props.shortformId);
+//   }, [props.shortformId]);
 
-  useEffect(() => {
-    fetchData();
-  }, [shortformId]);
 
   return (
-    <>
-
-    {showPointModal ? (
-        <PointModal
-          setShowModal={setShowModal}
-          //shortformId={props.shortform.id}
-        />
-    ) : null}
-
     <Container>
       <Background />
 
@@ -55,34 +23,17 @@ function InfoModal(props) {
           <CancelBtn
             src={xbtn}
             onClick={() => {
-              props.setShowModal(false);
+              props.setShowPointModal(false);
             }}
           />
         </Header>
-        <Title>{'<'}{shortform.surveyTitle}{'>'}</Title>
-        <Question>{shortform.shortQuestion}</Question>
-        {shortform.shortType === 2 ? (
-          <Options>주관식</Options>
-        ) : (
-          <>
-            <Options>선택사항</Options>
-            {shortform.options.map((option) => {
-              return (
-                <Option key={option.shortIndex}> {option.shortContent}</Option>
-              );
-            })}
-          </>
-        )}
+        <Question>결과보기를 하면 <span style={{ color: "#DB6868" }}>10 point </span>차감됩니다.<br/><br/>정말로 결과를 확인하시겠습니까?</Question>
 
         <BtnContainer>
-          <Btn onClick={() => {
-                props.setShowModal(false);
-                props.handleOpenPointModal();
-              }}>결과보기</Btn>
+          <Btn>결과보기</Btn>
         </BtnContainer>
       </ContentContainer>
     </Container>
-    </>
   );
 }
 
@@ -143,16 +94,16 @@ const CancelBtn = styled.img`
 const Question = styled.div`
   padding-right: 35px;
   margin-bottom: 60px;
-  font-weight: 750;
+  font-weight: 700;
   font-size: 20px;
+  white-space : pre-line;
 `;
 
 const Options = styled.div`
   padding-right: 35px;
-  font-weight: 550;
+  font-weight: 400;
   font-size: 17px;
   margin-bottom: 20px;
-  color: #6f96ff;
 `;
 
 const Option = styled.div`
@@ -190,4 +141,4 @@ const Btn = styled.div`
   cursor: pointer;
 `;
 
-export default InfoModal;
+export default PointModal;  
