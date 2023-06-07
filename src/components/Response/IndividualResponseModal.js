@@ -39,9 +39,8 @@ function IndividualResponseModal(props) {
         answers: response.answers,
         questions: response.questions,
       }));
-
-      console.log(responseInfo);
     }
+    console.log(response);
   };
 
   useEffect(() => {
@@ -81,17 +80,21 @@ function IndividualResponseModal(props) {
               {a.type === 0 ? ( //객관식 단일선택
                 <OptionContainer>
                   {a.choices.map((b, j) => {
+                    const uniqueName = `choice_${a.questionIdx}_${b.choiceIdx}`;
                     return (
                       <ChoiceContainer key={b.choiceIdx}>
                         {responseInfo.answers[
                           responseInfo.answers.findIndex(
                             (answer) => answer.questionId === a.questionId
                           )
-                        ].answerContent === b.choiceContent ? (
+                        ].answerContent.substring(
+                          1,
+                          answerContent.length - 1
+                        ) === b.choiceContent ? (
                           <input
                             type="radio"
                             id={b.choiceIdx}
-                            name="choice"
+                            name={uniqueName}
                             value={b.choiceContent}
                             disabled
                             checked
@@ -100,7 +103,7 @@ function IndividualResponseModal(props) {
                           <input
                             type="radio"
                             id={b.choiceIdx}
-                            name="choice"
+                            name={uniqueName}
                             value={b.choiceContent}
                             disabled
                           />
@@ -117,12 +120,13 @@ function IndividualResponseModal(props) {
                 <OptionContainer>
                   {a.choices.map((b, j) => {
                     const isChecked = selectedChoices.includes(b.choiceContent);
+                    const uniqueName = `choice_${a.questionIdx}_${b.choiceIdx}`;
                     return (
                       <ChoiceContainer key={b.choiceIdx}>
                         <input
                           type="checkbox"
                           id={b.choiceIdx}
-                          name="choice"
+                          name={uniqueName}
                           value={b.choiceContent}
                           disabled
                           checked={isChecked}
