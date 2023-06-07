@@ -238,19 +238,16 @@ function ShortFormModal() {
             />
           </>
         ) : null}
-        <div>
-          {showCaptcha ? (
-            <div css={captchaStyle}>
-              <HCaptcha
-                ref={captchaRef}
-                sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
-                onVerify={handleVerify}
-                onExpire={(e) => setCaptchaResponse("")}
-                css={captchaStyle}
-              />
-            </div>
-          ) : null}
-        </div>
+        {showCaptcha ? (
+          <div css={captchaStyle}>
+            <HCaptcha
+              ref={captchaRef}
+              sitekey={process.env.REACT_APP_HCAPTCHA_SITEKEY}
+              onVerify={handleVerify}
+              onExpire={(e) => setCaptchaResponse("")}
+            />
+          </div>
+        ) : null}
       </Body>
 
       {nextBtnEnabled ? (
@@ -272,7 +269,9 @@ function ShortFormModal() {
 }
 
 const captchaStyle = css`
-  margin-top: 30px;
+  bottom: 0;
+  z-index: 1000;
+  position: absolute;
 `;
 
 const Container = styled.div`
@@ -284,11 +283,12 @@ const Container = styled.div`
   border: 0.01em solid #d2d2d2;
   border-radius: 15px;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.06);
-  padding: 20px 20px 15px 20px;
+  padding: 20px 20px 15px 0px;
 
   .flexDiv {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   position: relative;
@@ -321,7 +321,7 @@ const GoToSurvey = styled.img`
   width: 120px;
   height: auto;
   cursor: pointer;
-  margin-right: 15px;
+  //margin-right: 15px;
   margin-left: auto;
 `;
 
@@ -337,7 +337,7 @@ const Body = styled.div`
 `;
 
 const ShortQuestion = styled.div`
-  font-size: 30px;
+  font-size: 28px;
   color: #101828;
   font-weight: 700;
   margin-top: 20%;
@@ -354,13 +354,13 @@ const OptionDiv = styled.div`
 
 const ShortOption = styled.button`
   width: 400px;
-  height: 60px;
+  height: 50px;
   border-radius: 8px;
   // background-color: #f9f9f9;
   background-color: ${({ selected }) => (selected ? "#a7a7a7" : "#f9f9f9")};
   border: 1px solid #ececec;
   margin-top: 10px;
-  font-size: 20px;
+  font-size: 18px;
   color: #101828;
   font-weight: 600;
   cursor: pointer;
