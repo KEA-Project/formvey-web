@@ -9,9 +9,9 @@ function BuiltSection() {
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
-        "memberId"
-      )}?page=0&size=2`,
+      `${
+        process.env.REACT_APP_BASE_URL_SURVEY
+      }/surveys/list/${localStorage.getItem("memberId")}?page=0&size=2`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),

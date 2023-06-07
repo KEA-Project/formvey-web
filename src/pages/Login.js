@@ -16,7 +16,7 @@ function Login() {
 
   const loginBtnClicked = async () => {
     const result = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/login/email`,
+      `${process.env.REACT_APP_BASE_URL_MEMBER}/email`,
       {
         email: email,
         password: PW,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import xBtn from "../../assets/common/x_button.png";
 import styled from "@emotion/styled";
-import axios from "axios";
 import { fetchResponseInfo } from "../../Functions";
 
 function IndividualResponseModal(props) {
@@ -198,7 +197,7 @@ const ContentContainer = styled.div`
   border-radius: 21px;
   z-index: 1000;
 
-  overflow: scroll;
+  overflow: auto;
 `;
 
 const Header = styled.div`

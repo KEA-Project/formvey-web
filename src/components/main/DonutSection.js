@@ -6,9 +6,9 @@ import ReactApexChart from "react-apexcharts";
 function DonutSection(props) {
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/chart/${localStorage.getItem(
-        "memberId"
-      )}
+      `${
+        process.env.REACT_APP_BASE_URL_SURVEY
+      }/surveys/chart/${localStorage.getItem("memberId")}
       `,
       {
         headers: {

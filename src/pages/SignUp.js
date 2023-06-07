@@ -29,7 +29,7 @@ function SignUp() {
 
     if (PW === confirmPW) {
       const result = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/members/signup`,
+        `${process.env.REACT_APP_BASE_URL_MEMBER}/members/signup`,
         {
           email: email,
           nickname: nickname,
