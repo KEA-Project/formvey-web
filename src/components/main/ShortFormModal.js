@@ -261,8 +261,8 @@ const captchaStyle = css`
 `;
 
 const Container = styled.div`
-  width: 500px;
-  height: 680px;
+  width: 30vw;
+  height: 80vh;
   margin-top: 20px;
   margin-left: 20px;
 
@@ -304,7 +304,7 @@ const ShortTitle = styled.div`
 
 const GoToSurvey = styled.img`
   width: 120px;
-  height: 40px;
+  height: auto;
   cursor: pointer;
   margin-right: 15px;
   margin-left: auto;
@@ -355,9 +355,10 @@ const NextShortVector = styled.img`
   width: 95px;
   height: 15px;
   margin-bottom: 30px;
-  margin-left: 200px;
+  left: 50%;
+  transform: translate(-50%, 0%);
   cursor: pointer;
-  position: fixed;
+  position: absolute;
   bottom: 0;
 `;
 

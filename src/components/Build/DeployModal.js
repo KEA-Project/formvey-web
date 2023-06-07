@@ -40,7 +40,9 @@ function DeployModal(props) {
     if (response.data.isSuccess) {
       navigate("/build-complete", {
         state: {
-          url: `http://localhost:3000/participate/${response.data.result.id}`,
+          url: `http://127.0.0.1:3000/participate/${btoa(
+            response.data.result.id
+          )}`,
         },
       });
     }
