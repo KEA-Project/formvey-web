@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import Paging from "../common/Paging";
 import IndividualResponseTable from "./IndividualResponseTable";
+import { getSurveyResponseList } from "../../Functions";
 
 function SurveyIndividualResponse(props) {
   const [responseList, setResponseList] = useState([
@@ -18,10 +19,10 @@ function SurveyIndividualResponse(props) {
   const [count] = useState(10);
 
   const fetchData = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/responses/Individual/${props.surveyId}?page=${currentPage}&size=10`
-    );
+    const response = await getSurveyResponseList(props.surveyId, currentPage);
+
     console.log(response);
+
     if (response.data.isSuccess) {
       setResponseList(response.data.result);
       setTotalItemsCount(response.data.result[0].pages);

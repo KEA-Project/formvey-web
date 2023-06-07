@@ -39,9 +39,9 @@ function Built() {
 
   const fetchData = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/surveys/list/${localStorage.getItem(
-        "memberId"
-      )}?page=${page}&size=6`,
+      `${
+        process.env.REACT_APP_BASE_URL_SURVEY
+      }/surveys/list/${localStorage.getItem("memberId")}?page=${page}&size=6`,
       {
         headers: {
           "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
@@ -220,6 +220,5 @@ const BottomContainer = styled.div`
   justify-content: center;
   margin-top: 15px;
 `;
-
 
 export default Built;
