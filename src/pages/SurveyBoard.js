@@ -9,9 +9,14 @@ import Paging from "../components/common/Paging";
 function SurveyBoard(props) {
   const [listSurvey, setListSurvey] = useState([]);
 
+  // 페이징
   const [totalItemsCount, setTotalItemsCount] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [count] = useState(10);
+
+  // 검색
+  const [keyword, setKeyword] = useState("");
+  const [searchedSurvey, setSearchedSurvey] = useState([]);
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -22,11 +27,19 @@ function SurveyBoard(props) {
       setListSurvey(response.data.result);
       setTotalItemsCount(response.data.result[0].pages);
     }
+
+    const searchResponse = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/searchs/surveys?keyword=${keyword}&page=${currentPage}&size=10`
+    );
+    console.log(searchResponse);
+    if (searchResponse.data.isSuccess) {
+      setSearchedSurvey(searchResponse.data.result);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, keyword]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -38,14 +51,18 @@ function SurveyBoard(props) {
         <Title>설문 게시판</Title>
         <Info>키워드를 입력해 참여하고자 하는 설문을 찾아보세요!</Info>
         {/* 검색창 */}
-        <Search></Search>
+        <Search onChange={(e) => setKeyword(e.target.value)} />
         {/* 설문 게시판 리스트 */}
 
         {/* {listSurvey.map((survey) => {
                     return <BoardTable survey={survey} />;
                 })} */}
 
-        <BoardTable survey={listSurvey} />
+        {keyword ? (
+          <BoardTable survey={searchedSurvey} />
+        ) : (
+          <BoardTable survey={listSurvey} />
+        )}
         <BottomContainer>
           <Paging
             page={currentPage}

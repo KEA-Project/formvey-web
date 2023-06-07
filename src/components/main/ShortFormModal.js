@@ -19,6 +19,7 @@ function ShortFormModal() {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [captchaResponse, setCaptchaResponse] = useState("");
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
+  const [point, setPoint] = useState(0);
 
   useEffect(() => {
     //1분마다 캡차 카운트 초기화
@@ -69,12 +70,14 @@ function ShortFormModal() {
     }
   };
 
-  const sendResponse = async () => {
+  const sendResponse = async (params) => {
+    console.log("이연희", params, answers);
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL_RESPONSE}/shortanswers/${
         listShort.id
       }/${localStorage.getItem("memberId")}`,
       {
+        point: params.point,
         shortAnswer: answers,
       },
       {
@@ -83,6 +86,8 @@ function ShortFormModal() {
         },
       }
     );
+
+    console.log(response.data);
 
     if (response.data.isSuccess) {
       shortFormUpdate();
@@ -98,6 +103,7 @@ function ShortFormModal() {
     setSelected([]); // 다음 질문으로 넘어갈 때 선택 초기화
     setSelectedMulti([]); // 다음 질문으로 넘어갈 때 선택 초기화
     setAnswers([]); // 다음 질문으로 넘어갈 때 응답 초기화
+    setPoint(0); // 다음 질문으로 넘어갈 때 포인트 초기화
   };
 
   // 단일 선택
@@ -133,9 +139,6 @@ function ShortFormModal() {
     console.log(answers);
   }, [answers]);
 
-  // point 시각화
-  const [point, setPoint] = useState(null);
-
   const handleNextButtonClick = () => {
     //어뷰징 방지 캡차카운트 증가
     setCaptchaCount(captchaCount + 1);
@@ -149,14 +152,30 @@ function ShortFormModal() {
       setNextBtnEnabled(true);
     }
 
-    // setPoint(1);
-    const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
-    setPoint(randomScore);
-
-    if (answers.length !== 0) sendResponse();
-    else {
-      shortFormUpdate();
+    if (answers.length !== 0) {
       // setPoint(1);
+      const randomScore = Math.floor(Math.random() * 3) + 1; // 1~3점 랜덤
+      setPoint(randomScore);
+      console.log("제발", answers, randomScore, point);
+
+      // function sleep(delay) {
+      //   return new Promise((resolve) => setTimeout(resolve, delay));
+      // }
+
+      function sleep(delay) {
+        return new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      sleep(4000).then(() => {
+        sendResponse({ point: randomScore });
+      });
+
+      // setTimeout(() => {
+      //   // setPoint(null);
+      //   // shortFormUpdate();
+      // }, 3000);
+    } else {
+      shortFormUpdate();
     }
   };
 
@@ -233,6 +252,7 @@ function ShortFormModal() {
           ) : null}
         </div>
       </Body>
+
       {nextBtnEnabled ? (
         <NextShortVector
           src={nextShortVector}
@@ -241,17 +261,12 @@ function ShortFormModal() {
       ) : (
         <NextShortVector src={nextShortVector} />
       )}
-      {point && (
+      {point != 0 && (
         <Div>
           <Coin src={coin} />
           <Point>+{point}</Point>
         </Div>
       )}
-      {/* <SlideUpDiv selected={point}> */}
-      {/* // <Coin src={coin} /> */}
-      {/* // <Point>+1</Point> */}
-      {/* //{" "} */}
-      {/* </SlideUpDiv> */}
     </Container>
   );
 }
