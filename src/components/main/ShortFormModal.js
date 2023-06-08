@@ -36,6 +36,7 @@ function ShortFormModal() {
     if (token !== null) {
       setCaptchaResponse(token);
       setCaptchaCount(0);
+      setShowCaptcha(false);
       setNextBtnEnabled(true);
     }
   };
