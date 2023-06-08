@@ -1,18 +1,38 @@
 import React, { useState, useEffect } from "react";
 import xbtn from "../../assets/common/x_button.png";
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 function PointModal(props) {
   //const [shortformId, setShortformId] = useState("");
-  const [showPointModal, setShowPointModal] = useState(true);
 
+  //   useEffect(() => {
+  //     setShortformId(props.shortformId);
+  //   }, [props.shortformId]);
 
-//   useEffect(() => {
-//     setShortformId(props.shortformId);
-//   }, [props.shortformId]);
+  const showResult = async () => {
+    console.log(props.shortformId);
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL_SURVEY}/shortresults/${
+        props.shortformId
+      }/${localStorage.getItem("memberId")}`,
+      {},
+      {
+        headers: {
+          "X-ACCESS-TOKEN": localStorage.getItem("jwt"),
+        },
+      }
+    );
 
+    console.log(response);
+
+    if (response.data.isSuccess) {
+      props.setShowPointModal(false);
+      props.setShowResultModal(true);
+    } else {
+      alert(response.data.message);
+    }
+  };
 
   return (
     <Container>
@@ -27,10 +47,16 @@ function PointModal(props) {
             }}
           />
         </Header>
-        <Question>결과보기를 하면 <span style={{ color: "#DB6868" }}>10 point </span>차감됩니다.<br/><br/>정말로 결과를 확인하시겠습니까?</Question>
+        <Question>
+          결과보기를 하면 <span style={{ color: "#DB6868" }}>10 point </span>
+          차감됩니다.
+          <br />
+          <br />
+          정말로 결과를 확인하시겠습니까?
+        </Question>
 
         <BtnContainer>
-          <Btn>결과보기</Btn>
+          <Btn onClick={showResult}>결과보기</Btn>
         </BtnContainer>
       </ContentContainer>
     </Container>
@@ -96,7 +122,7 @@ const Question = styled.div`
   margin-bottom: 60px;
   font-weight: 700;
   font-size: 20px;
-  white-space : pre-line;
+  white-space: pre-line;
 `;
 
 const Options = styled.div`
@@ -141,4 +167,4 @@ const Btn = styled.div`
   cursor: pointer;
 `;
 
-export default PointModal;  
+export default PointModal;

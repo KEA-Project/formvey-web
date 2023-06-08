@@ -413,8 +413,8 @@ const AnswerInput = styled.input`
 // `;
 
 const Div = styled.div`
-  margin-bottom: 20px;
-  margin-left: 380px;
+  margin-bottom: 40px;
+  margin-left: 330px;
   position: fixed;
   bottom: 0;
   display: flex;

@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import xbtn from "../../assets/common/x_button.png";
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import PointModal from "./PointModal";
 
 function InfoModal(props) {
   const [shortformId, setShortformId] = useState("");
-  const [showModal, setShowModal] = useState(true); //상세조회 모달 보여주기 여부
-  const [showPointModal, setShowPointModal] = useState(false); //결과보기 모달 보여주기 여부
   const [shortform, setShortform] = useState({
     surveyTitle: "",
     shortQuestion: "",
@@ -21,6 +17,8 @@ function InfoModal(props) {
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL_SURVEY}/shortForms/info/${shortformId}`
       );
+
+      //console.log(response);
       if (response.data.isSuccess) {
         setShortform(response.data.result);
       }
@@ -39,49 +37,52 @@ function InfoModal(props) {
 
   return (
     <>
+      <Container>
+        <Background />
 
-    {showPointModal ? (
-        <PointModal
-          setShowModal={setShowModal}
-          //shortformId={props.shortform.id}
-        />
-    ) : null}
-
-    <Container>
-      <Background />
-
-      <ContentContainer>
-        <Header>
-          <CancelBtn
-            src={xbtn}
-            onClick={() => {
-              props.setShowModal(false);
-            }}
-          />
-        </Header>
-        <Title>{'<'}{shortform.surveyTitle}{'>'}</Title>
-        <Question>{shortform.shortQuestion}</Question>
-        {shortform.shortType === 2 ? (
-          <Options>주관식</Options>
-        ) : (
-          <>
-            <Options>선택사항</Options>
-            {shortform.options.map((option) => {
-              return (
-                <Option key={option.shortIndex}> {option.shortContent}</Option>
-              );
-            })}
-          </>
-        )}
-
-        <BtnContainer>
-          <Btn onClick={() => {
+        <ContentContainer>
+          <Header>
+            <CancelBtn
+              src={xbtn}
+              onClick={() => {
                 props.setShowModal(false);
-                props.handleOpenPointModal();
-              }}>결과보기</Btn>
-        </BtnContainer>
-      </ContentContainer>
-    </Container>
+              }}
+            />
+          </Header>
+          <Title>
+            {"<"}
+            {shortform.surveyTitle}
+            {">"}
+          </Title>
+          <Question>{shortform.shortQuestion}</Question>
+          {shortform.shortType === 2 ? (
+            <Options>주관식</Options>
+          ) : (
+            <>
+              <Options>선택사항</Options>
+              {shortform.options.map((option) => {
+                return (
+                  <Option key={option.shortIndex}>
+                    {" "}
+                    {option.shortContent}
+                  </Option>
+                );
+              })}
+            </>
+          )}
+
+          <BtnContainer>
+            <Btn
+              onClick={() => {
+                props.setShowModal(false);
+                props.setShowPointModal(true);
+              }}
+            >
+              결과보기
+            </Btn>
+          </BtnContainer>
+        </ContentContainer>
+      </Container>
     </>
   );
 }
