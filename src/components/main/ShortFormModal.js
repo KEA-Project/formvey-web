@@ -271,7 +271,7 @@ function ShortFormModal() {
 
 const captchaStyle = css`
   bottom: 0;
-  z-index: 1000;
+  z-index: 1001;
   position: absolute;
 `;
 
