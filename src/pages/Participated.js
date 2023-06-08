@@ -114,8 +114,8 @@ function Participated() {
           {participatedSurvey.map((a, i) => {
             if (
               selectedMenu === 0 || //전체
-              (selectedMenu === 1 && a.status === 1) || //진행중
-              (selectedMenu === 2 && a.status === 2) //설문완료
+              (selectedMenu === 1 && a.status === 2) || //진행중
+              (selectedMenu === 2 && a.status === 1) //설문완료
             ) {
               return (
                 <ParticipatedSurvey
