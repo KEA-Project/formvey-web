@@ -31,7 +31,7 @@ function BoardTable(props) {
           {props.survey.map((survey) => {
             if (survey.dday === 0) survey.dday = "완료";
             else {
-              survey.dday = "D - " + survey.dday;
+              survey.dday = survey.dday;
             }
             return (
               <TableRow
@@ -41,7 +41,9 @@ function BoardTable(props) {
                 }}
               >
                 <TableCell>{survey.surveyTitle}</TableCell>
-                <TableCell>{survey.dday}</TableCell>
+                <TableCell>
+                  {survey.dday === 0 ? "완료" : `D - ${survey.dday}`}
+                </TableCell>
                 <TableCell>{survey.responseCnt}</TableCell>
                 <TableCell>{survey.nickname}</TableCell>
               </TableRow>
