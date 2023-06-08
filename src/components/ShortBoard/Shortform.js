@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import unlock from "../../assets/common/shortform/unlock.png";
@@ -10,12 +10,12 @@ import { Result } from "antd";
 
 function Shortform(props) {
   const [showModal, setShowModal] = useState(false); //상세조회 모달 보여주기 여부
-  const [showPointModal, setShowPointModal] = useState(false);
+  const [showPointModal, setShowPointModal] = useState(false); //포인트 사용 묻는 모달 보여주기 여부
+  const [showResultModal, setShowResultModal] = useState(false);
 
-  const handleOpenPointModal = () => {
-    setShowModal(false);
-    setShowPointModal(true);
-  };
+  useEffect(() => {
+    props.setReRender(!props.reRender);
+  }, [showResultModal]);
 
   return (
     <>
@@ -23,24 +23,36 @@ function Shortform(props) {
         props.shortform.shortResultStatus === 0 ? (
           <InfoModal
             setShowModal={setShowModal}
-            handleOpenPointModal={handleOpenPointModal} // handleOpenPointModal 전달
+            setShowPointModal={setShowPointModal}
             shortformId={props.shortform.id}
           />
         ) : (
           <ResultModal
             setShowModal={setShowModal}
+            shortform={props.shortform}
             shortformId={props.shortform.id}
+            setShowResultModal={setShowResultModal}
           />
         )
       ) : null}
 
       {showPointModal && (
         <PointModal
-          setShowModal={setShowPointModal}
+          setShowPointModal={setShowPointModal}
+          setShowModal={setShowModal}
+          setShowResultModal={setShowResultModal}
           shortformId={props.shortform.id}
         />
       )}
 
+      {showResultModal && (
+        <ResultModal
+          setShowModal={setShowModal}
+          shortform={props.shortform}
+          shortformId={props.shortform.id}
+          setShowResultModal={setShowResultModal}
+        />
+      )}
 
       <Container>
         <TitleContainer>
@@ -75,7 +87,13 @@ function Shortform(props) {
             </ShowResponseBtn>
           ) : (
             // </Link>
-            <ShowResponseBtn>결과보기</ShowResponseBtn>
+            <ShowResponseBtn
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              결과보기
+            </ShowResponseBtn>
           )}
         </BottomContainer>
       </Container>
@@ -173,6 +191,7 @@ const ShowResponseBtn = styled.div`
   color: white;
   font-weight: 700;
   font-size: 12px;
+  cursor: pointer;
 `;
 
 export default Shortform;
