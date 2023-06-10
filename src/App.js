@@ -15,7 +15,7 @@ import Built from "./pages/Built";
 import Response from "./pages/Response";
 
 function App() {
-  //폼베이 v1.0
+  //폼베이 v1.0.0
   return (
     <Container>
       <Routes>
